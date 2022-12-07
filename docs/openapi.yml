@@ -119,10 +119,7 @@ paths:
                   status:
                     type: string
                   data:
-                    type: object
-                    properties:
-                      user:
-                        $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/User'
 
         '400':
           description: fail
@@ -712,7 +709,7 @@ paths:
             schema:
               type: object
               properties:
-                cohortName:
+                name:
                   type: string
                 startDate:
                   type: string
@@ -724,7 +721,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedCohort'
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cohort'
         400:
           description: fail
           content:
@@ -1268,8 +1270,7 @@ components:
       properties:
         id:
           type: integer
-          format: int64
-        cohortName:
+        name:
           type: string
         startDate:
           type: string
