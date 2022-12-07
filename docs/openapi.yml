@@ -1885,32 +1885,37 @@ components:
           type: string
         data:
           properties:
-            log:
+            id:
+              type: integer
+            cohortId:
+              type: integer
+            date:
+              type: string
+            user:
+              type: object
               properties:
                 id:
                   type: integer
-                cohortId:
-                  type: integer
-                date:
-                  type: string
-                author:
+                profile:
                   type: object
                   properties:
-                    id:
-                      type: integer
                     firstName:
                       type: string
                     lastName:
                       type: string
-                lines:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      content:
-                        type: string
+                    bio:
+                      type: string
+                    githubUrl:
+                      type: string
+            lines:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  content:
+                    type: string
 
     AllExercises:
       type: object
