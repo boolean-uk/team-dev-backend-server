@@ -57,7 +57,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"email\": \"ngk2@gmail.com\",\n  \"password\": \"mysecurepassword\"\n}"
+        "text": "{\n  \"email\": \"ngk5@gmail.com\",\n  \"password\": \"mysecurepassword\"\n}"
       },
       "parameters": [],
       "headers": [
@@ -125,7 +125,10 @@
       "name": "Localhost Create Cohort",
       "description": "",
       "method": "POST",
-      "body": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"cohort_id\": 1\n}"
+      },
       "parameters": [],
       "headers": [
         {
@@ -157,7 +160,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"date\": \"2022-05-05\",\n  \"cohort_id\": 3,\n  \"lines\": [\n    {\n      \"content\": \"Caught up with James\"\n    },\n\t\t{\n\t\t\t\"content\": \"Punished Joel\"\n\t\t}\n  ]\n}"
+        "text": "{\n  \"date\": \"2022-05-05\",\n  \"cohort_id\": 1,\n  \"lines\": [\n    {\n      \"content\": \"Caught up with James\"\n    },\n\t\t{\n\t\t\t\"content\": \"Punished Joel\"\n\t\t}\n  ]\n}"
       },
       "parameters": [],
       "headers": [
@@ -195,7 +198,7 @@
       "method": "PATCH",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"cohort_id\": 2\n}"
+        "text": "{\n\t\"cohort_id\": 1\n}"
       },
       "parameters": [],
       "headers": [
