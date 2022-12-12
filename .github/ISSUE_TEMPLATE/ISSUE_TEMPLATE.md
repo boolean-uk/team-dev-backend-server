@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+## Dependencies
+Related to: [add other issues which this issue is realted to using the #number reference]
+
 ## User Story
 [If applicable, add a link to the user story for this task here, if not feel free to delete this section]
 
