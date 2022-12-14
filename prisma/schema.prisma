@@ -53,7 +53,7 @@ model Post {
 
 model DeliveryLog {
   id        Int           @id @default(autoincrement())
-  date      DateTime
+  date      DateTime      @default(now())
   userId    Int
   user      User          @relation(fields: [userId], references: [id])
   cohortId  Int
