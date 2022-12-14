@@ -8,7 +8,6 @@ import dbClient from '../utils/dbClient.js'
 
 export async function createLog(body, user) {
   const { cohort_id: cohortId, lines } = body
-  console.log(cohortId, lines)
   const createdLog = await dbClient.deliveryLog.create({
     data: {
       cohort: {

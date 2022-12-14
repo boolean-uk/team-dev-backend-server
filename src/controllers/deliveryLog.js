@@ -1,5 +1,4 @@
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
-// import dbClient from '../utils/dbClient.js'
 import { createLog } from '../domain/log.js'
 
 export const create = async (req, res) => {
