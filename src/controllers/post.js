@@ -1,5 +1,5 @@
-import dbClient from '../utils/dbClient.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { createPost } from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content, userId } = req.body
@@ -8,16 +8,8 @@ export const create = async (req, res) => {
     return sendMessageResponse(res, 400, { content: 'Must provide content' })
   }
 
-  const post = await dbClient.post.create({
-    data: {
-      content,
-      user: {
-        connect: {
-          id: Number(userId)
-        }
-      }
-    }
-  })
+  console.log(createPost(content, userId))
+  const post = await createPost(content, userId)
 
   return sendDataResponse(res, 201, post)
 }
