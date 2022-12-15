@@ -12,9 +12,26 @@ export async function createCohort() {
   return new Cohort(createdCohort.id)
 }
 
-export async function getAllCohort() {
+export async function getAllCohorts() {
   const allCohorts = await dbClient.cohort.findMany({
-    include: { users: true }
+    include: {
+      users: {
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          cohortId: true,
+          profile: {
+            select: {
+              firstName: true,
+              lastName: true,
+              bio: true,
+              githubUrl: true
+            }
+          }
+        }
+      }
+    }
   })
   return { cohorts: allCohorts }
 }

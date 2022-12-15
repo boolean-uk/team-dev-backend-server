@@ -1,4 +1,4 @@
-import { createCohort, getAllCohort } from '../domain/cohort.js'
+import { createCohort, getAllCohorts } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -12,7 +12,7 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const allCohort = await getAllCohort()
+  const allCohorts = await getAllCohorts()
 
-  return sendDataResponse(res, 200, allCohort)
+  return sendDataResponse(res, 200, allCohorts)
 }
