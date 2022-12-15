@@ -108,6 +108,23 @@ export default class User {
     return User.fromDb(createdUser)
   }
 
+  async update(user, cohortId) {
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        cohort: {
+          connect: { id: cohortId }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+    return User.fromDb(updatedUser)
+  }
+
   static async findByEmail(email) {
     return User._findByUnique('email', email)
   }
