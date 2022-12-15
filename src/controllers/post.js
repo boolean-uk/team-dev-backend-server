@@ -1,17 +1,18 @@
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
-import { createPost } from '../domain/post.js'
+import Post from '../domain/post.js'
 
 export const create = async (req, res) => {
-  const { content, userId } = req.body
+  const postToCreate = await Post.fromJson(req.body)
+  try {
+    if (!postToCreate.content) {
+      return sendMessageResponse(res, 400, { content: 'Must provide content' })
+    }
 
-  if (!content) {
-    return sendMessageResponse(res, 400, { content: 'Must provide content' })
+    const createdPost = await postToCreate.savePost()
+    return sendDataResponse(res, 201, createdPost)
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Unable to create a post')
   }
-
-  console.log(createPost(content, userId))
-  const post = await createPost(content, userId)
-
-  return sendDataResponse(res, 201, post)
 }
 
 export const getAll = async (req, res) => {
