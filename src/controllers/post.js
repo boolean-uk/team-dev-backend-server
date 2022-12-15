@@ -1,8 +1,7 @@
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import Post from '../domain/post.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
-  console.log('here the user: ', req.user)
   const { id } = req.user
   const { content } = req.body
   const postToCreate = await Post.fromJson(content, id)
