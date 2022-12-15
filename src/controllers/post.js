@@ -2,7 +2,10 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import Post from '../domain/post.js'
 
 export const create = async (req, res) => {
-  const postToCreate = await Post.fromJson(req.body)
+  console.log('here the user: ', req.user)
+  const { id } = req.user
+  const { content } = req.body
+  const postToCreate = await Post.fromJson(content, id)
   try {
     if (!postToCreate.content) {
       return sendMessageResponse(res, 400, { content: 'Must provide content' })

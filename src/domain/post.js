@@ -10,8 +10,7 @@ export default class Post {
     return new Post(post.content, post.userId)
   }
 
-  static fromJson(json) {
-    const { content, userId } = json
+  static fromJson(content, userId) {
     return new Post(content, userId)
   }
 
@@ -24,7 +23,11 @@ export default class Post {
     const post = await dbClient.post.create({
       data: {
         content: this.content,
-        userId: this.userId
+        user: {
+          connect: {
+            id: Number(this.userId)
+          }
+        }
       }
     })
     return Post.fromDb(post)
