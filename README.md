@@ -265,6 +265,7 @@ Authorization: Bearer &lt;token&gt;
 <details>
 <summary><strong>GET /cohorts</strong>
  (hardcoded responses)</summary>
+ <em>Only auth tokens for users with the TEACHER role can use this route</em>
 <strong>Headers</strong>
 
 ```sh
