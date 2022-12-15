@@ -11,6 +11,7 @@ export const create = async (req, res) => {
     const createdPost = await postToCreate.savePost()
     return sendDataResponse(res, 201, createdPost)
   } catch (e) {
+    console.log(e)
     return sendMessageResponse(res, 500, 'Unable to create a post')
   }
 }
