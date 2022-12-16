@@ -1,24 +1,15 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { createLog } from '../domain/log.js'
 
 export const create = async (req, res) => {
-  const { date, cohort_id: cohortId, lines } = req.body
-
-  return sendDataResponse(res, 201, {
-    log: {
-      id: 1,
-      cohort_id: cohortId,
-      date,
-      author: {
-        id: req.user.id,
-        first_name: req.user.firstName,
-        last_name: req.user.lastName
-      },
-      lines: lines.map((line, index) => {
-        return {
-          id: index + 1,
-          content: line.content
-        }
-      })
+  try {
+    if (Object.keys(req.body).length === 0) {
+      return sendMessageResponse(res, 400, 'Bad Request')
     }
-  })
+    const createdLog = await createLog(req.body, req.user)
+    return sendDataResponse(res, 201, createdLog)
+  } catch (error) {
+    console.error(error)
+    return sendMessageResponse(res, 500, 'Unable to create log')
+  }
 }
