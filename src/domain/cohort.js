@@ -35,7 +35,7 @@ export async function getAllCohorts() {
 }
 
 export async function getCohortById(id) {
-  const searchedCohort = await dbClient.cohort.findUnique({
+  const cohort = await dbClient.cohort.findUnique({
     where: {
       id: id
     },
@@ -56,7 +56,7 @@ export async function getCohortById(id) {
       }
     }
   })
-  return { cohort: searchedCohort }
+  return { cohort }
 }
 
 export class Cohort {
