@@ -34,6 +34,31 @@ export async function getAllCohorts() {
   return { cohorts: allCohorts }
 }
 
+export async function getCohortById(id) {
+  const searchedCohort = await dbClient.cohort.findUnique({
+    where: {
+      id: id
+    },
+    include: {
+      users: {
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          cohortId: true,
+          profile: {
+            select: {
+              firstName: true,
+              lastName: true
+            }
+          }
+        }
+      }
+    }
+  })
+  return { cohort: searchedCohort }
+}
+
 export class Cohort {
   constructor(id = null) {
     this.id = id
