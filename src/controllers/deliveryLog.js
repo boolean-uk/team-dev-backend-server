@@ -9,6 +9,7 @@ export const create = async (req, res) => {
     const createdLog = await createLog(req.body, req.user)
     return sendDataResponse(res, 201, createdLog)
   } catch (error) {
+    console.error(error)
     return sendMessageResponse(res, 500, 'Unable to create log')
   }
 }
