@@ -1,7 +1,4 @@
-// import { PrismaClient } from '@prisma/client'
 import dbClient from '../src/utils/dbClient.js'
-
-// const prisma = new PrismaClient()
 
 async function main() {
   const nathanTeacher = await dbClient.user.upsert({
