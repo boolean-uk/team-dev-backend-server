@@ -1,7 +1,7 @@
 import dbClient from '../utils/dbClient.js'
 
 /**
- * Create a post class
+ * Create a Comment class
  * @param {content: string, userId: int, postId: int, commentId: int}
  * @returns {Comment}
  */
@@ -38,7 +38,7 @@ export default class Comment {
           },
           post: {
             connect: {
-              id: this.postId
+              id: Number(this.postId)
             }
           }
         }
@@ -61,12 +61,12 @@ export default class Comment {
           },
           post: {
             connect: {
-              id: this.postId
+              id: Number(this.postId)
             }
           },
           parent: {
             connect: {
-              id: this.commentId
+              id: Number(this.commentId)
             }
           }
         }

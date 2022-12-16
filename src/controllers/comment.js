@@ -5,7 +5,7 @@ export const createComment = async (req, res) => {
   const { id } = req.user
   const { postId } = req.params
   const { content } = req.body
-  const commentToCreate = await Comment.fromJson(content, id, Number(postId))
+  const commentToCreate = await Comment.fromJson(content, id, postId)
 
   try {
     if (!commentToCreate.content) {
@@ -21,16 +21,11 @@ export const createComment = async (req, res) => {
   }
 }
 
-export const replayToComment = async (req, res) => {
+export const replyToComment = async (req, res) => {
   const { id } = req.user
   const { postId, commentId } = req.params
   const { content } = req.body
-  const commentToCreate = await Comment.fromJson(
-    content,
-    id,
-    Number(postId),
-    Number(commentId)
-  )
+  const commentToCreate = await Comment.fromJson(content, id, postId, commentId)
   try {
     if (!commentToCreate.content) {
       return sendMessageResponse(res, 400, { content: 'Must provide content' })
