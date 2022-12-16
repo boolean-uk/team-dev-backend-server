@@ -108,7 +108,7 @@ export default class User {
     return User.fromDb(createdUser)
   }
 
-  async update(user, cohortId) {
+  async addCohort(user, cohortId) {
     const updatedUser = await dbClient.user.update({
       where: {
         id: user.id
@@ -116,6 +116,23 @@ export default class User {
       data: {
         cohort: {
           connect: { id: cohortId }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+    return User.fromDb(updatedUser)
+  }
+
+  async removeCohort(user) {
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        cohort: {
+          disconnect: true
         }
       },
       include: {

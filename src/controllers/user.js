@@ -66,6 +66,13 @@ export const updateById = async (req, res) => {
 
   try {
     const userToUpdate = await User.findById(userId)
+
+    if (userToUpdate.cohortId === cohortId) {
+      // Removes the user from the cohort if he is already in the cohort from the req body. TOGGLE Switch
+      const updatedUser = await userToUpdate.removeCohort(userToUpdate)
+      return sendDataResponse(res, 201, updatedUser)
+    }
+
     if (userToUpdate.cohortId) {
       return sendMessageResponse(
         res,
@@ -73,7 +80,7 @@ export const updateById = async (req, res) => {
         'User with that ID is already in a cohort'
       )
     }
-    const updatedUser = await userToUpdate.update(userToUpdate, cohortId)
+    const updatedUser = await userToUpdate.addCohort(userToUpdate, cohortId)
     return sendDataResponse(res, 201, updatedUser)
   } catch (e) {
     console.error(e)
