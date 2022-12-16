@@ -21,7 +21,7 @@ export async function getAllCohorts() {
           email: true,
           role: true,
           cohortId: true,
-          profile: { 
+          profile: {
             select: {
               firstName: true,
               lastName: true
