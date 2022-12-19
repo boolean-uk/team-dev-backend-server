@@ -45,6 +45,6 @@ export const deleteById = async (req, res) => {
     }
     return sendDataResponse(res, 200, searchedCohort)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to get cohort')
+    return sendMessageResponse(res, 500, 'Unable to delete cohort')
   }
 }
