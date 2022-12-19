@@ -59,6 +59,15 @@ export async function getCohortById(id) {
   return { cohort }
 }
 
+export async function deleteCohort(id) {
+  const cohort = await dbClient.cohort.delete({
+    where: {
+      id: id
+    }
+  })
+  return { cohort }
+}
+
 export class Cohort {
   constructor(id = null) {
     this.id = id
