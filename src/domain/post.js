@@ -70,11 +70,7 @@ export default class Post {
             id: Number(post.id)
           }
         },
-        user: {
-          connect: {
-            id: Number(userId)
-          }
-        }
+        userId
       }
     })
     return likedPost

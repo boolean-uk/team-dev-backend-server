@@ -115,11 +115,7 @@ export default class Comment {
             id: Number(comment.id)
           }
         },
-        user: {
-          connect: {
-            id: Number(userId)
-          }
-        }
+        userId
       }
     })
     return likedComment
