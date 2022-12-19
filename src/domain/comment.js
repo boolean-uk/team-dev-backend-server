@@ -77,4 +77,60 @@ export default class Comment {
       console.error(e)
     }
   }
+
+  static async findComment(commentId) {
+    try {
+      const comment = await dbClient.comment.findUnique({
+        where: {
+          id: Number(commentId)
+        }
+      })
+      if (comment) {
+        return comment
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  static async isLiked(commentId, userId) {
+    try {
+      const relation = await dbClient.like.findMany({
+        where: {
+          commentId: Number(commentId),
+          userId: Number(userId)
+        }
+      })
+      return relation
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  static async likeAComment(comment, userId) {
+    const likedComment = await dbClient.like.create({
+      data: {
+        comment: {
+          connect: {
+            id: Number(comment.id)
+          }
+        },
+        user: {
+          connect: {
+            id: Number(userId)
+          }
+        }
+      }
+    })
+    return likedComment
+  }
+
+  static async unlike(like) {
+    const unLikedPost = await dbClient.like.delete({
+      where: {
+        id: like[0].id
+      }
+    })
+    return unLikedPost
+  }
 }
