@@ -1,12 +1,15 @@
 import dbClient from '../src/utils/dbClient.js'
+import bcrypt from 'bcrypt'
 
 async function main() {
+  const passwordHash = await bcrypt.hash('mysecurepassword', 8)
+
   const nathanTeacher = await dbClient.user.upsert({
     where: { email: 'ngk5@gmail.com' },
     update: {},
     create: {
       email: 'ngk5@gmail.com',
-      password: 'mysecurepassword',
+      password: passwordHash,
       role: 'TEACHER',
       profile: {
         create: {
@@ -24,11 +27,11 @@ async function main() {
   })
 
   const nathanStudent = await dbClient.user.upsert({
-    where: { email: 'ngk10@gmail.co' },
+    where: { email: 'ngk10@gmail.com' },
     update: {},
     create: {
-      email: 'ngk10@gmail.co',
-      password: 'mysecurepassword',
+      email: 'ngk10@gmail.com',
+      password: passwordHash,
       profile: {
         create: {
           firstName: 'Nathan',
