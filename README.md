@@ -263,6 +263,96 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
+<summary><strong>GET /cohorts</strong>
+ (hardcoded responses)</summary>
+ <em>Only auth tokens for users with the TEACHER role can use this route</em>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+<strong>Example response</strong>
+
+```sh
+{
+	"status": "success",
+	"data": {
+		"cohorts": [
+			{
+				"id": 1,
+				"users": [
+					{
+						"id": 2,
+						"email": "ngk52@gmail.com",
+						"password": "$2b$08$3szi3hKHQ9fhnrrFa//EMelEN81qN9Kq3rKG.nGKkMzxIJBIVRHKa",
+						"role": "STUDENT",
+						"cohortId": 1
+					},
+					{
+						"id": 3,
+						"email": "ngk53@gmail.com",
+						"password": "$2b$08$ppRLzYR/VLkgCiZuObOKPui41AkPvOrFffBgJJ0V7QoT0D2.47AOS",
+						"role": "STUDENT",
+						"cohortId": 1
+					}
+				]
+			},
+			{
+				"id": 2,
+				"users": []
+			}
+		]
+	}
+}
+```
+</details>
+
+<details>
+<summary><strong>GET /cohorts/:id</strong>
+ (hardcoded responses)</summary>
+ <em>Only auth tokens for users with the TEACHER role can use this route</em>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+<strong>Example response</strong>
+
+```sh
+{
+  "status": "success",
+  "data": {
+    "cohort": {
+      "id": 1,
+      "users": [
+        {
+          "id": 2,
+          "email": "ngk52@gmail.com",
+          "role": "STUDENT",
+          "cohortId": 1,
+          "profile": {
+            "firstName": "Nathan2",
+            "lastName": "King2"
+          }
+        },
+        {
+          "id": 1,
+          "email": "ngk5@gmail.com",
+          "role": "TEACHER",
+          "cohortId": 1,
+          "profile": {
+            "firstName": "Nathan",
+            "lastName": "King"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+</details>
+
+<details>
 <summary><strong>GET /users/:id</strong>
 </summary>
 <strong>Headers</strong>

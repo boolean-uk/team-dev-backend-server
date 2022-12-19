@@ -58,10 +58,35 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const { cohort_id: cohortId } = req.body
+  const userId = Number(req.params.id)
 
   if (!cohortId) {
     return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
   }
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  try {
+    const userToUpdate = await User.findById(userId)
+
+    if (userToUpdate.cohortId === cohortId) {
+      // Removes the user from the cohort if he is already in the cohort from the req body. TOGGLE Switch
+      const updatedUser = await userToUpdate.removeCohort(userToUpdate)
+      return sendDataResponse(res, 201, updatedUser)
+    }
+
+    if (userToUpdate.cohortId) {
+      return sendMessageResponse(
+        res,
+        403,
+        'User with that ID is already in a cohort'
+      )
+    }
+    const updatedUser = await userToUpdate.addCohort(userToUpdate, cohortId)
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (e) {
+    console.error(e)
+    if (e.code === 'P2025') {
+      return sendMessageResponse(res, 400, 'Provided cohort ID not found')
+    }
+    return sendMessageResponse(res, 500, 'Unable to update user')
+  }
 }

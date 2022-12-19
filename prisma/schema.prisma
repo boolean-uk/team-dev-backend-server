@@ -82,7 +82,7 @@ model Like {
 
 model DeliveryLog {
   id        Int               @id @default(autoincrement())
-  createdAt DateTime          @default(now())
+  date      DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   userId    Int
   user      User              @relation(fields: [userId], references: [id])
