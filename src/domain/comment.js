@@ -46,32 +46,28 @@ export default class Comment {
   }
 
   async saveCommentToComment() {
-    try {
-      const comment = await dbClient.comment.create({
-        data: {
-          content: this.content,
-          user: {
-            connect: {
-              id: Number(this.userId)
-            }
-          },
-          post: {
-            connect: {
-              id: Number(this.postId)
-            }
-          },
-          parent: {
-            connect: {
-              id: Number(this.commentId)
-            }
+    const comment = await dbClient.comment.create({
+      data: {
+        content: this.content,
+        user: {
+          connect: {
+            id: Number(this.userId)
+          }
+        },
+        post: {
+          connect: {
+            id: Number(this.postId)
+          }
+        },
+        parent: {
+          connect: {
+            id: Number(this.commentId)
           }
         }
-      })
+      }
+    })
 
-      return Comment.fromDb(comment)
-    } catch (e) {
-      console.error(e)
-    }
+    return Comment.fromDb(comment)
   }
 
   static async findComment(commentId) {
