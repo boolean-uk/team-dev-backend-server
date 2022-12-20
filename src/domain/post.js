@@ -45,4 +45,11 @@ export default class Post {
     })
     return Post.fromDb(post)
   }
+
+  static async deletePost(postId) {
+    const post = await dbClient.post.delete({
+      where: { id: postId }
+    })
+    return Post.fromDb(post)
+  }
 }
