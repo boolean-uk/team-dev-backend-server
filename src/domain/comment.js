@@ -92,7 +92,7 @@ export default class Comment {
         userId: Number(userId)
       }
     })
-    return relation
+    return !!relation.length
   }
 
   static async likeAComment(comment, userId) {
@@ -109,12 +109,19 @@ export default class Comment {
     return likedComment
   }
 
-  static async unlike(like) {
-    const unLikedPost = await dbClient.like.delete({
+  static async unlike(commentId, userId) {
+    const unLikedComment = await dbClient.like.findMany({
       where: {
-        id: like[0].id
+        commentId: Number(commentId),
+        userId
       }
     })
-    return unLikedPost
+    const deletedUnlikedComment = await dbClient.like.delete({
+      where: {
+        id: Number(unLikedComment[0].id)
+      }
+    })
+
+    return deletedUnlikedComment
   }
 }
