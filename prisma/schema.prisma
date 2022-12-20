@@ -95,3 +95,33 @@ model DeliveryLogLine {
   logId   Int
   log     DeliveryLog @relation(fields: [logId], references: [id])
 }
+
+model Module {
+  id Int @id @default(autoincrement())
+  name String
+  sequences Sequence[]
+}
+
+model Sequence {
+  id Int @id @default(autoincrement())
+  name String
+  module Module @relation(fields: [moduleId], references: [id])
+  moduleId Int
+  workshops Workshop[]
+}
+
+model Workshop {
+  id Int @id @default(autoincrement())
+  name String
+  sequence Sequence @relation(fields: [sequenceId], references: [id])
+  sequenceId Int
+  exercises Exercise[]
+}
+
+model Exercise {
+  id Int @id @default(autoincrement())
+  name String
+  url String
+  workshops Workshop @relation(fields: [workshopId], references: [id])
+  workshopId Int
+}
