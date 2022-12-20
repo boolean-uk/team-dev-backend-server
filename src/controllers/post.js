@@ -34,17 +34,21 @@ export const getAll = async (req, res) => {
   })
 }
 
+export const checkContent = (content) => {
+  if (!content || typeof content !== 'string' || content.trim().length === 0) {
+    throw new Error('Content field is required and must be a non-empty string')
+  }
+}
+
 export const edit = async (req, res) => {
   const { id } = req.user
   const { content } = req.body
   const postId = parseInt(req.params.postId)
 
-  if (!content || typeof content !== 'string' || content.trim().length === 0) {
-    return sendMessageResponse(
-      res,
-      400,
-      'Content field is required and must be a non-empty string'
-    )
+  try {
+    checkContent(content)
+  } catch (error) {
+    return sendMessageResponse(res, 400, error.message)
   }
 
   const postToEdit = await Post.findOnePost(postId)
