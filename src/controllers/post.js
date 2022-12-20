@@ -59,7 +59,7 @@ export const edit = async (req, res) => {
   try {
     const updatedPost = await Post.updatePost(postId, content)
 
-    return sendDataResponse(res, 200, Post.fromDb(updatedPost))
+    return sendDataResponse(res, 200, { post: Post.fromDb(updatedPost) })
   } catch {
     return sendMessageResponse(res, 500, 'Unable to update the post')
   }
@@ -81,7 +81,7 @@ export const deletePost = async (req, res) => {
   try {
     const deletedPost = await Post.deletePost(postId)
 
-    return sendDataResponse(res, 200, Post.fromDb(deletedPost))
+    return sendDataResponse(res, 200, { post: Post.fromDb(deletedPost) })
   } catch {
     return sendMessageResponse(res, 500, 'Unable to delete the post')
   }
