@@ -44,6 +44,17 @@ export default class Post {
     }
   }
 
+  static async findAll() {
+    const posts = await dbClient.post.findMany({
+      include: {
+        user: true
+      }
+    })
+    if (posts) {
+      return posts
+    }
+  }
+
   static async isLiked(postId, userId) {
     const relation = await dbClient.like.findMany({
       where: {

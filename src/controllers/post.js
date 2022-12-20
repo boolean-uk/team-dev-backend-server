@@ -18,18 +18,15 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  return sendDataResponse(res, 200, {
-    posts: [
-      {
-        id: 1,
-        content: 'Hello world!',
-        author: { ...req.user }
-      },
-      {
-        id: 2,
-        content: 'Hello from the void!',
-        author: { ...req.user }
-      }
-    ]
-  })
+  try {
+    let posts = await Post.findAll()
+    posts = posts.forEach((post) => {
+      delete post.userId
+      return post
+    })
+
+    return sendDataResponse(res, 200, posts)
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to create a post')
+  }
 }
