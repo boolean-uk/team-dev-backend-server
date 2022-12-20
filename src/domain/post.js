@@ -32,4 +32,17 @@ export default class Post {
     })
     return Post.fromDb(post)
   }
+
+  static async findOnePost(postId) {
+    const post = await dbClient.post.findUnique({ where: { id: postId } })
+    return Post.fromDb(post)
+  }
+
+  static async updatePost(postId, content) {
+    const post = await dbClient.post.update({
+      where: { id: postId },
+      data: { content }
+    })
+    return Post.fromDb(post)
+  }
 }

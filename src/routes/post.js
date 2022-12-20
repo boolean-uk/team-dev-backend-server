@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { create, getAll } from '../controllers/post.js'
+import { create, getAll, edit } from '../controllers/post.js'
 import { validateAuthentication } from '../middleware/auth.js'
 import { createComment, replyToComment } from '../controllers/comment.js'
 
@@ -13,5 +13,6 @@ router.post(
   validateAuthentication,
   replyToComment
 )
+router.put('/:postId', validateAuthentication, edit)
 
 export default router
