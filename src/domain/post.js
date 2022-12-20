@@ -52,4 +52,66 @@ export default class Post {
     })
     return Post.fromDb(post)
   }
+
+  static async findPost(postId) {
+    const post = await dbClient.post.findUnique({
+      where: {
+        id: Number(postId)
+      }
+    })
+    if (post) {
+      return post
+    }
+  }
+
+  static async findAll() {
+    const posts = await dbClient.post.findMany({
+      include: {
+        user: true
+      }
+    })
+    if (posts) {
+      return posts
+    }
+  }
+
+  static async isLiked(postId, userId) {
+    const relation = await dbClient.like.findMany({
+      where: {
+        postId: Number(postId),
+        userId: Number(userId)
+      }
+    })
+    return !!relation.length
+  }
+
+  static async likeAPost(post, userId) {
+    const likedPost = await dbClient.like.create({
+      data: {
+        post: {
+          connect: {
+            id: Number(post.id)
+          }
+        },
+        userId
+      }
+    })
+    return likedPost
+  }
+
+  static async unlike(postId, userId) {
+    const unLikedPost = await dbClient.like.findMany({
+      where: {
+        postId: Number(postId),
+        userId
+      }
+    })
+    const deletedUnlikedPost = await dbClient.like.delete({
+      where: {
+        id: Number(unLikedPost[0].id)
+      }
+    })
+
+    return deletedUnlikedPost
+  }
 }
