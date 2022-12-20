@@ -1,12 +1,15 @@
 import dbClient from '../src/utils/dbClient.js'
+import bcrypt from 'bcrypt'
 
 async function main() {
+  const passwordHash = await bcrypt.hash('mysecurepassword', 8)
+
   const nathanTeacher = await dbClient.user.upsert({
     where: { email: 'ngk5@gmail.com' },
     update: {},
     create: {
       email: 'ngk5@gmail.com',
-      password: 'mysecurepassword',
+      password: passwordHash,
       role: 'TEACHER',
       profile: {
         create: {
@@ -24,11 +27,11 @@ async function main() {
   })
 
   const nathanStudent = await dbClient.user.upsert({
-    where: { email: 'ngk10@gmail.co' },
+    where: { email: 'ngk10@gmail.com' },
     update: {},
     create: {
-      email: 'ngk10@gmail.co',
-      password: 'mysecurepassword',
+      email: 'ngk10@gmail.com',
+      password: passwordHash,
       profile: {
         create: {
           firstName: 'Nathan',
@@ -121,6 +124,21 @@ async function main() {
     }
   })
 
+  const createModule = await dbClient.module.create({
+    data: {
+      name: 'My module'
+    }
+  })
+
+  const createSequence = await dbClient.sequence.create({
+    data: {
+      name: 'My sequence',
+      module: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+
   const deliveryLogForCohort1 = await dbClient.deliveryLog.create({
     data: {
       cohort: {
@@ -128,6 +146,9 @@ async function main() {
       },
       user: {
         connect: { id: nathanTeacher.id }
+      },
+      sequence: {
+        connect: { id: createSequence.id }
       }
     }
   })
@@ -137,6 +158,35 @@ async function main() {
       content: 'My delivery log line',
       log: {
         connect: { id: deliveryLogForCohort1.id }
+      }
+    }
+  })
+
+  const createChallenge = await dbClient.sequence.create({
+    data: {
+      name: 'My challenge',
+      isChallenge: true,
+      module: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+
+  const createWorkshop = await dbClient.workshop.create({
+    data: {
+      name: 'My workshop',
+      sequence: {
+        connect: { id: createSequence.id }
+      }
+    }
+  })
+
+  const createExercise = await dbClient.exercise.create({
+    data: {
+      name: 'My exercise',
+      url: 'https://github.com/boolean-uk/team-dev-server-template',
+      workshop: {
+        connect: { id: createWorkshop.id }
       }
     }
   })
