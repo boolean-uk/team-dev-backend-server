@@ -48,7 +48,6 @@ export const edit = async (req, res) => {
   }
 
   const postToEdit = await Post.findOnePost(postId)
-
   if (!postToEdit || postToEdit.userId !== id) {
     return sendMessageResponse(
       res,
