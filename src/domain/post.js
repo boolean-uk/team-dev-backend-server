@@ -34,32 +34,24 @@ export default class Post {
   }
 
   static async findPost(postId) {
-    try {
-      const post = await dbClient.post.findUnique({
-        where: {
-          id: Number(postId)
-        }
-      })
-      if (post) {
-        return post
+    const post = await dbClient.post.findUnique({
+      where: {
+        id: Number(postId)
       }
-    } catch (e) {
-      console.error(e)
+    })
+    if (post) {
+      return post
     }
   }
 
   static async isLiked(postId, userId) {
-    try {
-      const relation = await dbClient.like.findMany({
-        where: {
-          postId: Number(postId),
-          userId: Number(userId)
-        }
-      })
-      return relation
-    } catch (e) {
-      console.error(e)
-    }
+    const relation = await dbClient.like.findMany({
+      where: {
+        postId: Number(postId),
+        userId: Number(userId)
+      }
+    })
+    return relation
   }
 
   static async likeAPost(post, userId) {

@@ -27,26 +27,22 @@ export default class Comment {
   }
 
   async saveComment() {
-    try {
-      const comment = await dbClient.comment.create({
-        data: {
-          content: this.content,
-          user: {
-            connect: {
-              id: this.userId
-            }
-          },
-          post: {
-            connect: {
-              id: Number(this.postId)
-            }
+    const comment = await dbClient.comment.create({
+      data: {
+        content: this.content,
+        user: {
+          connect: {
+            id: this.userId
+          }
+        },
+        post: {
+          connect: {
+            id: Number(this.postId)
           }
         }
-      })
-      return Comment.fromDb(comment)
-    } catch (e) {
-      console.error(e)
-    }
+      }
+    })
+    return Comment.fromDb(comment)
   }
 
   async saveCommentToComment() {
@@ -79,32 +75,24 @@ export default class Comment {
   }
 
   static async findComment(commentId) {
-    try {
-      const comment = await dbClient.comment.findUnique({
-        where: {
-          id: Number(commentId)
-        }
-      })
-      if (comment) {
-        return comment
+    const comment = await dbClient.comment.findUnique({
+      where: {
+        id: Number(commentId)
       }
-    } catch (e) {
-      console.error(e)
+    })
+    if (comment) {
+      return comment
     }
   }
 
   static async isLiked(commentId, userId) {
-    try {
-      const relation = await dbClient.like.findMany({
-        where: {
-          commentId: Number(commentId),
-          userId: Number(userId)
-        }
-      })
-      return relation
-    } catch (e) {
-      console.error(e)
-    }
+    const relation = await dbClient.like.findMany({
+      where: {
+        commentId: Number(commentId),
+        userId: Number(userId)
+      }
+    })
+    return relation
   }
 
   static async likeAComment(comment, userId) {
