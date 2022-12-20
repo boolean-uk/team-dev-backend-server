@@ -13,8 +13,8 @@ export const likePost = async (req, res) => {
     }
     const isLikedAlready = await Post.isLiked(postId, id)
 
-    if (isLikedAlready.length) {
-      const unlikedPost = await Post.unlike(isLikedAlready)
+    if (isLikedAlready) {
+      const unlikedPost = await Post.unlike(postId, id)
       delete unlikedPost.commentId
       return res.status(201).json({ unlikedPost })
     }
@@ -41,8 +41,8 @@ export const likeComment = async (req, res) => {
 
     const isLikedAlready = await Comment.isLiked(commentId, id)
 
-    if (isLikedAlready.length) {
-      const unlikedComment = await Comment.unlike(isLikedAlready)
+    if (isLikedAlready) {
+      const unlikedComment = await Comment.unlike(commentId, id)
       delete unlikedComment.commentId
       return res.status(201).json({ unlikedComment })
     }
