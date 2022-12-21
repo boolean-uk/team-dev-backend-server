@@ -131,6 +131,65 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
+<summary><strong>PUT /posts/:postId</strong>
+ (hardcoded responses)</summary>
+ This endpoint allows a user to update a post by sending a PUT request with the post's ID and the updated content.
+
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+<strong>Example body</strong>
+
+```sh
+{
+  "content": "This is my first post"
+}
+```
+<strong>Example response</strong>
+
+```sh
+{
+  "status": "success",
+  "data": {
+    "post": {
+      "id": 1,
+      "content": "This is my first post"
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><strong>DELETE /posts/:postId</strong>
+ (hardcoded responses)</summary>
+ This endpoint allows a user to delete a post by sending a DELETE request with the post's ID.
+
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+No body required
+
+<strong>Example response</strong>
+
+```sh
+{
+  "status": "success",
+  "data": {
+    "post": {
+      "id": 1,
+      "content": "This is my first post"
+    }
+  }
+}
+```
+</details>
+
+<details>
 <summary><strong>POST /cohorts</strong>
 </summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>

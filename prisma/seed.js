@@ -124,6 +124,21 @@ async function main() {
     }
   })
 
+  const createModule = await dbClient.module.create({
+    data: {
+      name: 'My module'
+    }
+  })
+
+  const createSequence = await dbClient.sequence.create({
+    data: {
+      name: 'My sequence',
+      module: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+
   const deliveryLogForCohort1 = await dbClient.deliveryLog.create({
     data: {
       cohort: {
@@ -131,6 +146,9 @@ async function main() {
       },
       user: {
         connect: { id: nathanTeacher.id }
+      },
+      sequence: {
+        connect: { id: createSequence.id }
       }
     }
   })
@@ -140,6 +158,35 @@ async function main() {
       content: 'My delivery log line',
       log: {
         connect: { id: deliveryLogForCohort1.id }
+      }
+    }
+  })
+
+  const createChallenge = await dbClient.sequence.create({
+    data: {
+      name: 'My challenge',
+      isChallenge: true,
+      module: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+
+  const createWorkshop = await dbClient.workshop.create({
+    data: {
+      name: 'My workshop',
+      sequence: {
+        connect: { id: createSequence.id }
+      }
+    }
+  })
+
+  const createExercise = await dbClient.exercise.create({
+    data: {
+      name: 'My exercise',
+      url: 'https://github.com/boolean-uk/team-dev-server-template',
+      workshop: {
+        connect: { id: createWorkshop.id }
       }
     }
   })

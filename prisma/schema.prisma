@@ -79,14 +79,16 @@ model Like {
 }
 
 model DeliveryLog {
-  id        Int               @id @default(autoincrement())
-  date      DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  userId    Int
-  user      User              @relation(fields: [userId], references: [id])
-  cohortId  Int
-  cohort    Cohort            @relation(fields: [cohortId], references: [id])
-  lines     DeliveryLogLine[]
+  id         Int               @id @default(autoincrement())
+  date       DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  userId     Int
+  user       User              @relation(fields: [userId], references: [id])
+  cohortId   Int
+  cohort     Cohort            @relation(fields: [cohortId], references: [id])
+  lines      DeliveryLogLine[]
+  sequence   Sequence          @relation(fields: [sequenceId], references: [id])
+  sequenceId Int               @unique
 }
 
 model DeliveryLogLine {
@@ -94,4 +96,36 @@ model DeliveryLogLine {
   content String
   logId   Int
   log     DeliveryLog @relation(fields: [logId], references: [id])
+}
+
+model Module {
+  id        Int        @id @default(autoincrement())
+  name      String
+  sequences Sequence[]
+}
+
+model Sequence {
+  id          Int          @id @default(autoincrement())
+  name        String
+  isChallenge Boolean      @default(false)
+  module      Module       @relation(fields: [moduleId], references: [id])
+  moduleId    Int
+  workshops   Workshop[]
+  log         DeliveryLog?
+}
+
+model Workshop {
+  id         Int        @id @default(autoincrement())
+  name       String
+  sequence   Sequence   @relation(fields: [sequenceId], references: [id])
+  sequenceId Int
+  exercises  Exercise[]
+}
+
+model Exercise {
+  id         Int      @id @default(autoincrement())
+  name       String
+  url        String
+  workshop   Workshop @relation(fields: [workshopId], references: [id])
+  workshopId Int
 }
