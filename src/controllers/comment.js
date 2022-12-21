@@ -18,6 +18,21 @@ export const createComment = async (req, res) => {
   }
 }
 
+export const getComment = async (req, res) => {
+  try {
+    const { commentId } = req.params
+    const comment = await Comment.findCommentById(commentId)
+    if (!comment) {
+      return sendMessageResponse(res, 404, 'Comment not found.')
+    }
+
+    return sendDataResponse(res, 201, comment)
+  } catch (e) {
+    console.error(e)
+    return sendMessageResponse(res, 500, 'Something went wrong.')
+  }
+}
+
 export const replyToComment = async (req, res) => {
   const { id } = req.user
   const { postId, commentId } = req.params
