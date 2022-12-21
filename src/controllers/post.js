@@ -80,11 +80,11 @@ export const deletePost = async (req, res) => {
   }
 
   try {
-    const deletedPost = await Post.deletePost(postId)
-
     if (postToDelete.comment.length > 0) {
       await Post.deletePostComments(postId)
     }
+
+    const deletedPost = await Post.deletePost(postId)
 
     return sendDataResponse(res, 200, { post: Post.fromDb(deletedPost) })
   } catch {
