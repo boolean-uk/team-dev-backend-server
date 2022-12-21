@@ -10,6 +10,12 @@ export const create = async (req, res) => {
     return sendDataResponse(res, 201, createdLog)
   } catch (error) {
     console.error(error)
+    if (error.code === 'P2025') {
+      return sendMessageResponse(res, 404, 'Sequence not found')
+    }
+    if (error.code === 'P2014') {
+      return sendMessageResponse(res, 404, 'Sequence log already exists')
+    }
     return sendMessageResponse(res, 500, 'Unable to create log')
   }
 }
