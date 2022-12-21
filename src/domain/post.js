@@ -44,6 +44,43 @@ export default class Post {
     }
   }
 
+  static async getPostById(postId) {
+    const post = await dbClient.post.findUnique({
+      where: {
+        id: Number(postId)
+      },
+      select: {
+        user: {
+          select: {
+            profile: true
+          }
+        },
+        comment: true,
+        like: true
+      }
+    })
+
+    post.comment.forEach((c) => {
+      if (c.parentId === null) {
+        delete c.parentId
+      }
+      delete c.createdAt
+      delete c.updatedAt
+    })
+
+    let likesCounter = 0
+    post.like.forEach(() => likesCounter++)
+
+    const completePost = {
+      id: post.id,
+      content: post.content,
+      user: post.user,
+      comment: post.comment,
+      like: likesCounter
+    }
+    return completePost
+  }
+
   static async findAll() {
     const posts = await dbClient.post.findMany({
       include: {

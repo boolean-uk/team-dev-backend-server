@@ -81,6 +81,33 @@ export default class Comment {
     }
   }
 
+  static async findCommentById(commentId) {
+    const comment = await dbClient.comment.findUnique({
+      where: {
+        id: Number(commentId)
+      },
+      select: {
+        user: {
+          select: {
+            profile: true
+          }
+        },
+        like: true
+      }
+    })
+    let likesCounter = 0
+    comment.like.forEach(() => likesCounter++)
+
+    const completeComment = {
+      id: comment.id,
+      content: comment.content,
+      user: comment.user,
+      like: likesCounter
+    }
+
+    return completeComment
+  }
+
   static async isLiked(commentId, userId) {
     const relation = await dbClient.like.findMany({
       where: {
