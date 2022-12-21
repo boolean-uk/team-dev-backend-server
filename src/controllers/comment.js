@@ -21,7 +21,6 @@ export const createComment = async (req, res) => {
 export const getComment = async (req, res) => {
   try {
     const { commentId } = req.params
-    console.log('HELLO')
     const comment = await Comment.findCommentById(commentId)
     if (!comment) {
       return sendMessageResponse(res, 404, 'Comment not found.')
