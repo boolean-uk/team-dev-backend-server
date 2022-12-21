@@ -55,7 +55,7 @@ const checkContent = (content) => {
 }
 
 export const edit = async (req, res) => {
-  const { id } = req.user
+  const { id, role } = req.user
   const { content } = req.body
   const postId = parseInt(req.params.postId)
 
@@ -65,13 +65,10 @@ export const edit = async (req, res) => {
     return sendMessageResponse(res, 400, error.message)
   }
 
-  const postToEdit = await Post.findOnePost(postId)
-  if (!postToEdit || postToEdit.userId !== id) {
-    return sendMessageResponse(
-      res,
-      404,
-      'Post not found or you are not the author'
-    )
+  const postToEdit = await Post.findPost(postId, true)
+  const { canWork, error } = canWorkOnPost({ id, role }, postToEdit)
+  if (!canWork) {
+    return sendMessageResponse(res, 404, error)
   }
   try {
     const updatedPost = await Post.updatePost(postId, content)
@@ -82,18 +79,25 @@ export const edit = async (req, res) => {
   }
 }
 
+const canWorkOnPost = (user, post) => {
+  if (!post) {
+    return { canWork: false, error: 'Post not found' }
+  }
+  if (user.id !== post.userId && user.role !== 'TEACHER') {
+    return { canWork: false, error: 'You are not the author' }
+  }
+  return { canWork: true }
+}
+
 export const deletePost = async (req, res) => {
-  const { id } = req.user
+  const { id, role } = req.user
   const postId = parseInt(req.params.postId)
 
   const postToDelete = await Post.findPost(postId, true)
 
-  if (!postToDelete || postToDelete.userId !== id) {
-    return sendMessageResponse(
-      res,
-      404,
-      'Post not found or you are not the author'
-    )
+  const { canWork, error } = canWorkOnPost({ id, role }, postToDelete)
+  if (!canWork) {
+    return sendMessageResponse(res, 404, error)
   }
 
   try {
