@@ -97,11 +97,9 @@ export default class Comment {
       }
     })
 
-    const likesCounter = comment.like.length
-
     const completeComment = {
       ...comment,
-      like: likesCounter
+      like: comment.like.length
     }
 
     return completeComment

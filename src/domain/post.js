@@ -69,11 +69,9 @@ export default class Post {
       delete c.updatedAt
     })
 
-    const likesCounter = post.like.length
-
     const completePost = {
       ...post,
-      like: likesCounter
+      like: post.like.length
     }
     return completePost
   }
