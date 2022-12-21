@@ -50,6 +50,7 @@ export default class Post {
         id: Number(postId)
       },
       select: {
+        content: true,
         user: {
           select: {
             profile: true
@@ -68,14 +69,10 @@ export default class Post {
       delete c.updatedAt
     })
 
-    let likesCounter = 0
-    post.like.forEach(() => likesCounter++)
+    const likesCounter = post.like.length
 
     const completePost = {
-      id: post.id,
-      content: post.content,
-      user: post.user,
-      comment: post.comment,
+      ...post,
       like: likesCounter
     }
     return completePost

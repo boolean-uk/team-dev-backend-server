@@ -87,6 +87,7 @@ export default class Comment {
         id: Number(commentId)
       },
       select: {
+        content: true,
         user: {
           select: {
             profile: true
@@ -95,13 +96,11 @@ export default class Comment {
         like: true
       }
     })
-    let likesCounter = 0
-    comment.like.forEach(() => likesCounter++)
+
+    const likesCounter = comment.like.length
 
     const completeComment = {
-      id: comment.id,
-      content: comment.content,
-      user: comment.user,
+      ...comment,
       like: likesCounter
     }
 
