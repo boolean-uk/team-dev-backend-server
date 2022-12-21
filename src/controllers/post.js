@@ -71,8 +71,6 @@ export const deletePost = async (req, res) => {
 
   const postToDelete = await Post.findOnePost(postId)
 
-  console.log(postToDelete)
-
   if (!postToDelete || postToDelete.userId !== id) {
     return sendMessageResponse(
       res,
@@ -83,7 +81,6 @@ export const deletePost = async (req, res) => {
 
   if (postToDelete.comment.length > 0) {
     await Post.deletePostComments(postId)
-    console.log('I was triggered')
   }
   try {
     const deletedPost = await Post.deletePost(postId)
