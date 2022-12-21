@@ -32,4 +32,125 @@ export default class Post {
     })
     return Post.fromDb(post)
   }
+
+  static async updatePost(postId, content) {
+    const post = await dbClient.post.update({
+      where: { id: postId },
+      data: { content }
+    })
+    return Post.fromDb(post)
+  }
+
+  static async deletePost(postId) {
+    const post = await dbClient.post.delete({
+      where: { id: postId }
+    })
+    return Post.fromDb(post)
+  }
+
+  static async deletePostComments(postId) {
+    const deletedComments = await dbClient.comment.deleteMany({
+      where: {
+        postId: Number(postId)
+      }
+    })
+    return deletedComments
+  }
+
+  static async findPost(postId, includeComments = false) {
+    const post = await dbClient.post.findUnique({
+      where: {
+        id: Number(postId)
+      },
+      include: {
+        comment: includeComments
+      }
+    })
+    if (post) {
+      return post
+    }
+  }
+
+  static async getPostById(postId) {
+    const post = await dbClient.post.findUnique({
+      where: {
+        id: Number(postId)
+      },
+      select: {
+        content: true,
+        user: {
+          select: {
+            profile: true
+          }
+        },
+        comment: true,
+        like: true
+      }
+    })
+
+    post.comment.forEach((c) => {
+      if (c.parentId === null) {
+        delete c.parentId
+      }
+      delete c.createdAt
+      delete c.updatedAt
+    })
+
+    const completePost = {
+      ...post,
+      like: post.like.length
+    }
+    return completePost
+  }
+
+  static async findAll() {
+    const posts = await dbClient.post.findMany({
+      include: {
+        user: true
+      }
+    })
+    if (posts) {
+      return posts
+    }
+  }
+
+  static async isLiked(postId, userId) {
+    const relation = await dbClient.like.findMany({
+      where: {
+        postId: Number(postId),
+        userId: Number(userId)
+      }
+    })
+    return !!relation.length
+  }
+
+  static async likeAPost(post, userId) {
+    const likedPost = await dbClient.like.create({
+      data: {
+        post: {
+          connect: {
+            id: Number(post.id)
+          }
+        },
+        userId
+      }
+    })
+    return likedPost
+  }
+
+  static async unlike(postId, userId) {
+    const unLikedPost = await dbClient.like.findMany({
+      where: {
+        postId: Number(postId),
+        userId
+      }
+    })
+    const deletedUnlikedPost = await dbClient.like.delete({
+      where: {
+        id: Number(unLikedPost[0].id)
+      }
+    })
+
+    return deletedUnlikedPost
+  }
 }
