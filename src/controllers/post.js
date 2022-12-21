@@ -31,7 +31,7 @@ export const getAll = async (req, res) => {
   }
 }
 
-export const checkContent = (content) => {
+const checkContent = (content) => {
   if (!content || typeof content !== 'string' || content.trim().length === 0) {
     throw new Error('Content field is required and must be a non-empty string')
   }
@@ -59,7 +59,7 @@ export const edit = async (req, res) => {
   try {
     const updatedPost = await Post.updatePost(postId, content)
 
-    return sendDataResponse(res, 200, { post: Post.fromDb(updatedPost) })
+    return sendDataResponse(res, 200, { post: updatedPost })
   } catch {
     return sendMessageResponse(res, 500, 'Unable to update the post')
   }
@@ -69,7 +69,7 @@ export const deletePost = async (req, res) => {
   const { id } = req.user
   const postId = parseInt(req.params.postId)
 
-  const postToDelete = await Post.findOnePost(postId)
+  const postToDelete = await Post.findPost(postId, true)
 
   if (!postToDelete || postToDelete.userId !== id) {
     return sendMessageResponse(
@@ -79,11 +79,12 @@ export const deletePost = async (req, res) => {
     )
   }
 
-  if (postToDelete.comment.length > 0) {
-    await Post.deletePostComments(postId)
-  }
   try {
     const deletedPost = await Post.deletePost(postId)
+
+    if (postToDelete.comment.length > 0) {
+      await Post.deletePostComments(postId)
+    }
 
     return sendDataResponse(res, 200, { post: Post.fromDb(deletedPost) })
   } catch {
