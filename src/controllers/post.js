@@ -47,3 +47,64 @@ export const getAll = async (req, res) => {
     return sendMessageResponse(res, 500, 'Unable to create a post')
   }
 }
+
+const checkContent = (content) => {
+  if (!content || typeof content !== 'string' || content.trim().length === 0) {
+    throw new Error('Content field is required and must be a non-empty string')
+  }
+}
+
+export const edit = async (req, res) => {
+  const { id } = req.user
+  const { content } = req.body
+  const postId = parseInt(req.params.postId)
+
+  try {
+    checkContent(content)
+  } catch (error) {
+    return sendMessageResponse(res, 400, error.message)
+  }
+
+  const postToEdit = await Post.findOnePost(postId)
+  if (!postToEdit || postToEdit.userId !== id) {
+    return sendMessageResponse(
+      res,
+      404,
+      'Post not found or you are not the author'
+    )
+  }
+  try {
+    const updatedPost = await Post.updatePost(postId, content)
+
+    return sendDataResponse(res, 200, { post: updatedPost })
+  } catch {
+    return sendMessageResponse(res, 500, 'Unable to update the post')
+  }
+}
+
+export const deletePost = async (req, res) => {
+  const { id } = req.user
+  const postId = parseInt(req.params.postId)
+
+  const postToDelete = await Post.findPost(postId, true)
+
+  if (!postToDelete || postToDelete.userId !== id) {
+    return sendMessageResponse(
+      res,
+      404,
+      'Post not found or you are not the author'
+    )
+  }
+
+  try {
+    if (postToDelete.comment.length > 0) {
+      await Post.deletePostComments(postId)
+    }
+
+    const deletedPost = await Post.deletePost(postId)
+
+    return sendDataResponse(res, 200, { post: Post.fromDb(deletedPost) })
+  } catch {
+    return sendMessageResponse(res, 500, 'Unable to delete the post')
+  }
+}

@@ -33,10 +33,37 @@ export default class Post {
     return Post.fromDb(post)
   }
 
-  static async findPost(postId) {
+  static async updatePost(postId, content) {
+    const post = await dbClient.post.update({
+      where: { id: postId },
+      data: { content }
+    })
+    return Post.fromDb(post)
+  }
+
+  static async deletePost(postId) {
+    const post = await dbClient.post.delete({
+      where: { id: postId }
+    })
+    return Post.fromDb(post)
+  }
+
+  static async deletePostComments(postId) {
+    const deletedComments = await dbClient.comment.deleteMany({
+      where: {
+        postId: Number(postId)
+      }
+    })
+    return deletedComments
+  }
+
+  static async findPost(postId, includeComments = false) {
     const post = await dbClient.post.findUnique({
       where: {
         id: Number(postId)
+      },
+      include: {
+        comment: includeComments
       }
     })
     if (post) {
