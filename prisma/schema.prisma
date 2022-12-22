@@ -105,13 +105,13 @@ model Module {
 }
 
 model Sequence {
-  id          Int          @id @default(autoincrement())
-  name        String
-  isChallenge Boolean      @default(false)
-  module      Module       @relation(fields: [moduleId], references: [id])
-  moduleId    Int
-  workshops   Workshop[]
-  log         DeliveryLog?
+  id           Int           @id @default(autoincrement())
+  name         String
+  isChallenge  Boolean       @default(false)
+  module       Module        @relation(fields: [moduleId], references: [id])
+  moduleId     Int
+  workshops    Workshop[]
+  deliveryLogs DeliveryLog?
 }
 
 model Workshop {
