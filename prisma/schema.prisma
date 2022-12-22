@@ -43,6 +43,7 @@ model Cohort {
   id           Int           @id @default(autoincrement())
   users        User[]
   deliveryLogs DeliveryLog[]
+  modules      Module[]
 }
 
 model Post {
@@ -102,13 +103,14 @@ model Module {
   id        Int        @id @default(autoincrement())
   name      String
   sequences Sequence[]
+  Cohorts    Cohort[]    
 }
 
 model Sequence {
-  id           Int           @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
-  isChallenge  Boolean       @default(false)
-  module       Module        @relation(fields: [moduleId], references: [id])
+  isChallenge  Boolean      @default(false)
+  module       Module       @relation(fields: [moduleId], references: [id])
   moduleId     Int
   workshops    Workshop[]
   deliveryLogs DeliveryLog?
