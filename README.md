@@ -134,7 +134,6 @@ Authorization: Bearer &lt;token&gt;
 <summary><strong>PUT /posts/:postId</strong>
  (hardcoded responses)</summary>
  This endpoint allows a user his own post by sending a PUT request with the post's ID and the updated content.
- A teacher can edit posts that he didn't create.
 
 <strong>Headers</strong>
 
