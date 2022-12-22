@@ -133,7 +133,7 @@ Authorization: Bearer &lt;token&gt;
 <details>
 <summary><strong>PUT /posts/:postId</strong>
  (hardcoded responses)</summary>
- This endpoint allows a user to update a post by sending a PUT request with the post's ID and the updated content.
+ This endpoint allows a user his own post by sending a PUT request with the post's ID and the updated content.
 
 <strong>Headers</strong>
 
@@ -165,7 +165,8 @@ Authorization: Bearer &lt;token&gt;
 <details>
 <summary><strong>DELETE /posts/:postId</strong>
  (hardcoded responses)</summary>
- This endpoint allows a user to delete a post by sending a DELETE request with the post's ID.
+ This endpoint allows a user to delete its own post by sending a DELETE request with the post's ID.
+ A teacher can delete posts that he didn't create.
 
 <strong>Headers</strong>
 
