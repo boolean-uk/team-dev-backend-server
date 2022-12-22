@@ -35,8 +35,7 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { firstName } = req.query
 
   let foundUsers
 
@@ -55,12 +54,12 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
-export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+export const updateCohortById = async (req, res) => {
+  const { cohortId } = req.body
   const userId = Number(req.params.id)
 
   if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+    return sendDataResponse(res, 400, { cohortId: 'Cohort ID is required' })
   }
 
   try {
@@ -87,5 +86,22 @@ export const updateById = async (req, res) => {
       return sendMessageResponse(res, 400, 'Provided cohort ID not found')
     }
     return sendMessageResponse(res, 500, 'Unable to update user')
+  }
+}
+
+export const updateUserById = async (req, res) => {
+  const userId = Number(req.params.id)
+
+  try {
+    const userToUpdate = await User.findById(userId)
+    if (!userToUpdate) {
+      return sendMessageResponse(res, 404, 'Provided user ID not found')
+    }
+    const updatedUser = await User.updateUser(userId, req.body)
+    console.log(userToUpdate)
+
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Unable to get user')
   }
 }
