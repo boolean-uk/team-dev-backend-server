@@ -102,28 +102,6 @@ async function main() {
     }
   })
 
-  const createCohorts = await dbClient.cohort.createMany({
-    data: [{}, {}]
-  })
-
-  const connectStudentToCohort1 = await dbClient.user.update({
-    where: { id: nathanStudent.id },
-    data: {
-      cohort: {
-        connect: { id: 1 }
-      }
-    }
-  })
-
-  const connectTeacherToCohort1 = await dbClient.user.update({
-    where: { id: nathanTeacher.id },
-    data: {
-      cohort: {
-        connect: { id: 1 }
-      }
-    }
-  })
-
   const createModule = await dbClient.module.create({
     data: {
       name: 'My module'
@@ -135,29 +113,6 @@ async function main() {
       name: 'My sequence',
       module: {
         connect: { id: createModule.id }
-      }
-    }
-  })
-
-  const deliveryLogForCohort1 = await dbClient.deliveryLog.create({
-    data: {
-      cohort: {
-        connect: { id: 1 }
-      },
-      user: {
-        connect: { id: nathanTeacher.id }
-      },
-      sequence: {
-        connect: { id: createSequence.id }
-      }
-    }
-  })
-
-  const createDeliveryLogLine = await dbClient.deliveryLogLine.create({
-    data: {
-      content: 'My delivery log line',
-      log: {
-        connect: { id: deliveryLogForCohort1.id }
       }
     }
   })
@@ -188,6 +143,74 @@ async function main() {
       workshop: {
         connect: { id: createWorkshop.id }
       }
+    }
+  })
+
+  const createCohort1 = await dbClient.cohort.create({
+    data: {
+      modules: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+  
+  const createCohort2 = await dbClient.cohort.create({
+    data: {
+      modules: {
+        connect: { id: createModule.id }
+      }
+    }
+  })
+
+  const connectStudentToCohort1 = await dbClient.user.update({
+    where: { id: nathanStudent.id },
+    data: {
+      cohort: {
+        connect: { id: 1 }
+      }
+    }
+  })
+
+  const connectTeacherToCohort1 = await dbClient.user.update({
+    where: { id: nathanTeacher.id },
+    data: {
+      cohort: {
+        connect: { id: 1 }
+      }
+    }
+  })
+
+  const deliveryLogForCohort1 = await dbClient.deliveryLog.create({
+    data: {
+      cohort: {
+        connect: { id: 1 }
+      },
+      user: {
+        connect: { id: nathanTeacher.id }
+      },
+      sequence: {
+        connect: { id: createSequence.id }
+      }
+    }
+  })
+
+  const createDeliveryLogLine = await dbClient.deliveryLogLine.create({
+    data: {
+      content: 'My delivery log line',
+      log: {
+        connect: { id: deliveryLogForCohort1.id }
+      }
+    }
+  })
+
+  const likeFirstPost = await dbClient.like.create({
+    data: {
+      post: {
+        connect: {
+          id: 1
+        }
+      },
+      userId: nathanTeacher.id
     }
   })
 }
