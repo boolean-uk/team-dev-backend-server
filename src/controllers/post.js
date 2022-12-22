@@ -65,12 +65,12 @@ export const edit = async (req, res) => {
     return sendMessageResponse(res, 400, error.message)
   }
 
-  const postToEdit = await Post.findPost(postId, true)
-  const { canWork, error } = canWorkOnPost({ id, role }, postToEdit)
-  if (!canWork) {
-    return sendMessageResponse(res, 404, error)
-  }
   try {
+    const postToEdit = await Post.findPost(postId, true)
+    const { canWork, error } = canWorkOnPost({ id, role }, postToEdit)
+    if (!canWork) {
+      return sendMessageResponse(res, 404, error)
+    }
     const updatedPost = await Post.updatePost(postId, content)
 
     return sendDataResponse(res, 200, { post: updatedPost })
