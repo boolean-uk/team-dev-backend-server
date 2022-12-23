@@ -146,16 +146,21 @@ async function main() {
     }
   })
 
-  const createCohort1 = await dbClient.cohort.create({
+  const createCohort7 = await dbClient.cohort.create({
     data: {
+      cohortName: 'Cohort 7 - AKA The Best Cohort',
+      startDate: new Date(2022, 6, 3),
+      endDate: new Date(2023, 1, 30),
       modules: {
         connect: { id: createModule.id }
       }
     }
   })
-  
+
   const createCohort2 = await dbClient.cohort.create({
     data: {
+      startDate: new Date(2023, 6, 3),
+      endDate: new Date(2024, 1, 30),
       modules: {
         connect: { id: createModule.id }
       }
