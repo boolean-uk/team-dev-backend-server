@@ -4,12 +4,17 @@ import dbClient from '../utils/dbClient.js'
  * Create a new Cohort in the database
  * @returns {Cohort}
  */
-export async function createCohort() {
+export async function createCohort(request) {
+  const { cohortName = null, startDate, endDate } = request
   const createdCohort = await dbClient.cohort.create({
-    data: {}
+    data: {
+      cohortName: cohortName,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate)
+    }
   })
 
-  return new Cohort(createdCohort.id)
+  return new Cohort(createdCohort.id, cohortName, startDate, endDate)
 }
 
 export async function getAllCohorts() {
@@ -69,14 +74,20 @@ export async function deleteCohort(id) {
 }
 
 export class Cohort {
-  constructor(id = null) {
+  constructor(id, name, startDate, endDate) {
     this.id = id
+    this.cohortName = name
+    this.startDate = startDate
+    this.endDate = endDate
   }
 
   toJSON() {
     return {
       cohort: {
-        id: this.id
+        id: this.id,
+        cohortName: this.cohortName,
+        startDate: this.startDate,
+        endDate: this.endDate
       }
     }
   }

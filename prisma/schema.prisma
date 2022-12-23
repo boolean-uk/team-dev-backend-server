@@ -41,6 +41,9 @@ model Profile {
 
 model Cohort {
   id           Int           @id @default(autoincrement())
+  cohortName   String?       @unique
+  startDate    DateTime
+  endDate      DateTime
   users        User[]
   deliveryLogs DeliveryLog[]
   modules      Module[]
@@ -103,7 +106,7 @@ model Module {
   id        Int        @id @default(autoincrement())
   name      String
   sequences Sequence[]
-  Cohorts    Cohort[]    
+  Cohorts   Cohort[]
 }
 
 model Sequence {

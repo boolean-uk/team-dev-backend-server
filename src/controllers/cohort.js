@@ -5,13 +5,22 @@ import {
   deleteCohort
 } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { errorCodes } from '../utils/dbClient.js'
 
 export const create = async (req, res) => {
   try {
-    const createdCohort = await createCohort()
+    const createdCohort = await createCohort(req.body)
 
     return sendDataResponse(res, 201, createdCohort)
   } catch (e) {
+    console.error(e)
+    if (e.code === errorCodes.uniqueConstraint) {
+      return sendMessageResponse(
+        res,
+        403,
+        'A cohort with that name already exists'
+      )
+    }
     return sendMessageResponse(res, 500, 'Unable to create cohort')
   }
 }
