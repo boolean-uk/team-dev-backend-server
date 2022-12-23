@@ -6,7 +6,6 @@ import dbClient from '../utils/dbClient.js'
  */
 export async function createCohort(request) {
   const { cohortName = null, startDate, endDate } = request
-  console.log(request)
   const createdCohort = await dbClient.cohort.create({
     data: {
       cohortName: cohortName,
