@@ -22,11 +22,6 @@ router.put(
   validateTeacherRole,
   updateCohortById
 )
-router.patch(
-  '/:id',
-  validateAuthentication,
-  validateTeacherRole,
-  updateUserById
-)
+router.patch('/:id', validateAuthentication, updateUserById)
 
 export default router

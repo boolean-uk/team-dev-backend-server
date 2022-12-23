@@ -91,12 +91,17 @@ export const updateCohortById = async (req, res) => {
 
 export const updateUserById = async (req, res) => {
   const userId = Number(req.params.id)
+  const { id } = req.user
 
   try {
     const userToUpdate = await User.findById(userId)
     if (!userToUpdate) {
       return sendMessageResponse(res, 404, 'Provided user ID not found')
     }
+    if (id !== userId) {
+      return sendMessageResponse(res, 400, 'Invalid credentials')
+    }
+
     const updatedUser = await User.updateUser(userId, req.body)
 
     return sendDataResponse(res, 201, updatedUser)
