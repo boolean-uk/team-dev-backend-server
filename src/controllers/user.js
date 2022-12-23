@@ -54,7 +54,7 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
-export const updateCohortById = async (req, res) => {
+export const updateUserCohortById = async (req, res) => {
   const { cohortId } = req.body
   const userId = Number(req.params.id)
 

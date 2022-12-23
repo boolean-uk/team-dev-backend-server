@@ -211,8 +211,6 @@ export default class User {
         id: Number(userId)
       },
       update: {
-        email,
-        password: passwordHash,
         cohortId,
         profile: {
           update: {

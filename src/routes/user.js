@@ -3,7 +3,7 @@ import {
   create,
   getById,
   getAll,
-  updateCohortById,
+  updateUserCohortById,
   updateUserById
 } from '../controllers/user.js'
 import {
@@ -16,12 +16,12 @@ const router = Router()
 router.post('/', create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
-router.put(
-  '/:id',
+router.patch(
+  '/:id/cohort',
   validateAuthentication,
   validateTeacherRole,
-  updateCohortById
+  updateUserCohortById
 )
-router.patch('/:id', validateAuthentication, updateUserById)
+router.patch('/:id/profile', validateAuthentication, updateUserById)
 
 export default router
