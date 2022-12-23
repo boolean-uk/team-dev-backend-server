@@ -98,7 +98,6 @@ export const updateUserById = async (req, res) => {
       return sendMessageResponse(res, 404, 'Provided user ID not found')
     }
     const updatedUser = await User.updateUser(userId, req.body)
-    console.log(userToUpdate)
 
     return sendDataResponse(res, 201, updatedUser)
   } catch (e) {

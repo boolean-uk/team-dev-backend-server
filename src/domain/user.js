@@ -206,49 +206,44 @@ export default class User {
     } = reqBody
     const passwordHash = await bcrypt.hash(password, 8)
 
-    console.log(cohortId)
-    try {
-      const updatedUser = await dbClient.user.upsert({
-        where: {
-          id: Number(userId)
-        },
-        update: {
-          email,
-          password: passwordHash,
-          cohortId,
-          profile: {
-            update: {
-              firstName,
-              lastName,
-              bio,
-              githubUrl,
-              mobile
-            }
+    const updatedUser = await dbClient.user.upsert({
+      where: {
+        id: Number(userId)
+      },
+      update: {
+        email,
+        password: passwordHash,
+        cohortId,
+        profile: {
+          update: {
+            firstName,
+            lastName,
+            bio,
+            githubUrl,
+            mobile
           }
-        },
-        create: {
-          email,
-          password: passwordHash,
-          cohortId,
-          profile: {
-            create: {
-              firstName,
-              lastName,
-              bio,
-              githubUrl,
-              mobile
-            }
-          }
-        },
-        include: {
-          profile: true
         }
-      })
-      delete updatedUser.password
+      },
+      create: {
+        email,
+        password: passwordHash,
+        cohortId,
+        profile: {
+          create: {
+            firstName,
+            lastName,
+            bio,
+            githubUrl,
+            mobile
+          }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+    delete updatedUser.password
 
-      return updatedUser
-    } catch (error) {
-      console.error(error)
-    }
+    return updatedUser
   }
 }
