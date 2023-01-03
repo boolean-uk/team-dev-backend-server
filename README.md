@@ -237,7 +237,7 @@ No body required
 </details>
 
 <details>
-<summary><strong>POST /logs<strong><summary>
+<summary><strong>POST /logs</strong></summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
@@ -368,15 +368,23 @@ Authorization: Bearer &lt;token&gt;
     "users": [
      {
       "id": 2,
-      "email": "ngk52@gmail.com",
+      "email": "email1@l.com",
       "role": "STUDENT",
-      "cohortId": 1
+      "cohortId": 1,
+      "profile": {
+       "firstName": "Patrik",
+       "lastName": "test"
+      }
      },
      {
-      "id": 3,
-      "email": "ngk53@gmail.com",
-      "role": "STUDENT",
-      "cohortId": 1
+      "id": 1,
+      "email": "email1s@l.com",
+      "role": "TEACHER",
+      "cohortId": 1,
+      "profile": {
+       "firstName": "Patrik",
+       "lastName": "test"
+      }
      }
     ]
    },
@@ -409,7 +417,11 @@ Authorization: Bearer &lt;token&gt;
       "id": 2,
       "email": "ngk52@gmail.com",
       "role": "STUDENT",
-      "cohortId": 1
+      "cohortId": 1,
+      "profile": {
+       "firstName": "TestName",
+       "lastName": "TestLastName"
+      }
      }
     ]
    }
@@ -435,7 +447,7 @@ Authorization: Bearer &lt;token&gt;
 {
   "status": "success",
   "data": {
-    "`cohort`": {
+    "cohort": {
       "id": 1,
       "users": [
         {
@@ -543,7 +555,7 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
-<summary><strong>PATCH /users/:id</strong>
+<summary><strong>PATCH /users/:id/profile</strong>
 </summary>
 
 <strong>Headers</strong>
