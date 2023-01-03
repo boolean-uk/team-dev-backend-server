@@ -149,7 +149,6 @@ Authorization: Bearer &lt;token&gt;
  </summary>
  This endpoint allows a user to update his own post by sending a PUT request with the post's ID and the updated content.
 
-
 <strong>Headers</strong>
 
 ```sh
@@ -185,7 +184,6 @@ Authorization: Bearer &lt;token&gt;
 </summary>
  This endpoint allows a user to delete its own post by sending a DELETE request with the post's ID.
  A teacher can delete posts that he didn't create.
-
 
 <strong>Headers</strong>
 
@@ -403,11 +401,13 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
-<strong>DELETE /cohort/:id</strong>
+<summary><strong>DELETE /cohort/:id</strong></summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
+
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 ```sh
 {
  "status": "success",
@@ -481,8 +481,9 @@ Authorization: Bearer &lt;token&gt;
 
 </details>
 
-<summary><strong>PATCH /users/:id/cohort</strong>
-</summary>
+<details>
+<summary><strong>PATCH /users/:id/cohort</strong></summary>
+
 
 <strong>Headers</strong>
 
