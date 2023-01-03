@@ -16,6 +16,7 @@ async function main() {
           firstName: 'Nathan',
           lastName: 'King',
           bio: 'Hello world',
+          mobile: 123,
           githubUrl: 'https://github.com/vherus'
         }
       }
@@ -37,6 +38,7 @@ async function main() {
           firstName: 'Nathan',
           lastName: 'King',
           bio: 'Hello world',
+          mobile: 123,
           githubUrl: 'https://github.com/vherus'
         }
       }
