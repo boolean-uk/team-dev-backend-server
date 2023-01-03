@@ -31,8 +31,16 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 ```sh
 curl -X POST  http://localhost:4000/users \
 -H 'Content-Type: application/json' \
--d '{"first_name":"Nathan","last_name":"King","email":"ngk5@gmail.com","password":"mysecurepassword","biography":"Hello world","github_url":"https://github.com/vherus"}'
+-d {
+  "first_name":"Nathan",
+  "last_name":"King",
+  "email":"ngk5@gmail.com",
+  "password":"mysecurepassword",
+  "biography":"Hello world",
+  "github_url":"https://github.com/vherus"
+}
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -45,6 +53,7 @@ curl -X POST  http://localhost:4000/users \
   "github_url": "https://github.com/vherus"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -64,6 +73,7 @@ curl -X POST  http://localhost:4000/users \
   }
 }
 ```
+
 </details>
 
 <details>
@@ -71,13 +81,13 @@ curl -X POST  http://localhost:4000/users \
 </summary>
 <strong>Example body</strong>
 
-
 ```sh
 {
   "email": "ngk5@gmail.com",
   "password": "mysecurepassword"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -98,16 +108,18 @@ curl -X POST  http://localhost:4000/users \
   }
 }
 ```
+
 </details>
 
 <details>
 <summary><strong>POST /posts</strong>
- (hardcoded responses)</summary>
+ </summary>
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -115,6 +127,7 @@ Authorization: Bearer &lt;token&gt;
   "content": "Hello world!"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -128,18 +141,20 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
 <summary><strong>PUT /posts/:postId</strong>
- (hardcoded responses)</summary>
- This endpoint allows a user his own post by sending a PUT request with the post's ID and the updated content.
+ </summary>
+ This endpoint allows a user to update his own post by sending a PUT request with the post's ID and the updated content.
 
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -147,6 +162,7 @@ Authorization: Bearer &lt;token&gt;
   "content": "This is my first post"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -160,11 +176,12 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
 <summary><strong>DELETE /posts/:postId</strong>
- (hardcoded responses)</summary>
+</summary>
  This endpoint allows a user to delete its own post by sending a DELETE request with the post's ID.
  A teacher can delete posts that he didn't create.
 
@@ -173,6 +190,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 No body required
 
 <strong>Example response</strong>
@@ -188,6 +206,7 @@ No body required
   }
 }
 ```
+
 </details>
 
 <details>
@@ -200,6 +219,7 @@ No body required
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 No body required
 
 <strong>Example response</strong>
@@ -214,11 +234,11 @@ No body required
   }
 }
 ```
+
 </details>
 
 <details>
-<summary><strong>POST /logs</strong>
- (hardcoded responses)</summary>
+<summary><strong>POST /logs</strong></summary>
 <em>Only auth tokens for users with the TEACHER role can use this route</em>
 
 <strong>Headers</strong>
@@ -226,6 +246,7 @@ No body required
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -242,6 +263,7 @@ Authorization: Bearer &lt;token&gt;
   ]
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -271,16 +293,18 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
 <summary><strong>GET /posts</strong>
- (hardcoded responses)</summary>
+</summary>
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -320,62 +344,106 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
 <summary><strong>GET /cohorts</strong>
- (hardcoded responses)</summary>
+</summary>
  <em>Only auth tokens for users with the TEACHER role can use this route</em>
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"cohorts": [
-			{
-				"id": 1,
-				"users": [
-					{
-						"id": 2,
-						"email": "ngk52@gmail.com",
-						"password": "$2b$08$3szi3hKHQ9fhnrrFa//EMelEN81qN9Kq3rKG.nGKkMzxIJBIVRHKa",
-						"role": "STUDENT",
-						"cohortId": 1
-					},
-					{
-						"id": 3,
-						"email": "ngk53@gmail.com",
-						"password": "$2b$08$ppRLzYR/VLkgCiZuObOKPui41AkPvOrFffBgJJ0V7QoT0D2.47AOS",
-						"role": "STUDENT",
-						"cohortId": 1
-					}
-				]
-			},
-			{
-				"id": 2,
-				"users": []
-			}
-		]
-	}
+ "status": "success",
+ "data": {
+  "cohorts": [
+   {
+    "id": 1,
+    "users": [
+     {
+      "id": 2,
+      "email": "email1@l.com",
+      "role": "STUDENT",
+      "cohortId": 1,
+      "profile": {
+       "firstName": "Patrik",
+       "lastName": "test"
+      }
+     },
+     {
+      "id": 1,
+      "email": "email1s@l.com",
+      "role": "TEACHER",
+      "cohortId": 1,
+      "profile": {
+       "firstName": "Patrik",
+       "lastName": "test"
+      }
+     }
+    ]
+   },
+   {
+    "id": 2,
+    "users": []
+   }
+  ]
+ }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>DELETE /cohort/:id</strong></summary>
+<em>Only auth tokens for users with the TEACHER role can use this route</em>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+```sh
+{
+ "status": "success",
+ "data": {
+  "cohort": [
+   {
+    "id": 1,
+    "users": [
+     {
+      "id": 2,
+      "email": "ngk52@gmail.com",
+      "role": "STUDENT",
+      "cohortId": 1,
+      "profile": {
+       "firstName": "TestName",
+       "lastName": "TestLastName"
+      }
+     }
+    ]
+   }
+  ]
+ }
 }
 ```
 </details>
 
 <details>
 <summary><strong>GET /cohorts/:id</strong>
- (hardcoded responses)</summary>
+</summary>
  <em>Only auth tokens for users with the TEACHER role can use this route</em>
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -410,6 +478,47 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
+</details>
+
+<details>
+<summary><strong>PATCH /users/:id/cohort</strong></summary>
+
+
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example body</strong>
+
+```sh
+{
+  "cohortId": 1
+}
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+  "status": "success",
+  "data": {
+    "user": {
+      "id": 1,
+      "cohortId": 1,
+      "role": "STUDENT" OR "TEACHER"
+      "firstName": "My First Name",
+      "lastName": "My Last Name",
+      "email": myemail@email.com,
+      "biography": "My biography",
+      "githubUrl": "https://github.com/MyGitHubUserName"
+    }
+  }
+}
+```
+
 </details>
 
 <details>
@@ -420,6 +529,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -439,6 +549,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -451,6 +562,7 @@ The <em>first_name</em> query parameter is optional and case sensitive
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -482,35 +594,221 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
-<summary><strong>PATCH /users/:id</strong>
- (hardcoded responses)</summary>
-<em>Only auth tokens for users with the TEACHER role can use this route</em>
+
+<summary><strong>PATCH /users/:id/profile</strong>
+</summary>
 
 <strong>Headers</strong>
 
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
 {
-  "cohort_id": 3
+ "cohortId": 1,
+ "firstName": "Patrik",
+ "lastName": "test",
+ "username": "testUsername",
+ "bio": "bio here",
+ "githubUrl": "github.com",
+ "email": "email5@l.com",
+ "mobile": 123,
+ "password": "secretPassword"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
-  "status": "success",
-  "data": {
-    "user": {
-      "cohort_id": 3
-    }
+ "status": "success",
+ "data": {
+  "id": 1,
+  "email": "email1s@l.com",
+  "role": "TEACHER",
+  "cohortId": 1,
+  "profile": {
+   "id": 1,
+   "userId": 1,
+   "firstName": "Patrik",
+   "lastName": "test",
+   "bio": "bio here",
+   "githubUrl": "github.com",
+   "mobile": 123
   }
+ }
 }
 ```
+
+</details>
+
+<details><summary><strong>GET /comment/:id</strong>
+</summary>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+ "status": "success",
+ "data": {
+  "content": "Students first comment!",
+  "user": {
+   "profile": {
+    "id": 2,
+    "userId": 2,
+    "firstName": "Nathan",
+    "lastName": "King",
+    "bio": "Hello world",
+    "githubUrl": "https://github.com/vherus"
+   }
+  },
+  "like": 3
+ }
+}
+```
+
+</details>
+
+<details><summary><strong>POST posts/:postId/comments</strong>
+</summary>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example request</strong>
+
+```sh
+{
+  "content": "test comment a comment"
+}
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+ "status": "success",
+ "data": {
+  "content": "test post N2",
+  "userId": 3,
+  "postId": 2
+ }
+}
+```
+
+</details>
+
+<details><summary><strong>POST posts/:postId/comments/:commentId</strong>
+</summary>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example request</strong>
+
+```sh
+{
+  "content": "test comment a comment"
+}
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+ "status": "success",
+ "data": {
+  "content": "test post N2",
+  "userId": 3,
+  "postId": 2
+ }
+}
+```
+
+</details>
+
+<details><summary><strong>POST posts/:postId/like</strong>
+</summary>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+ "likedPost": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
+}
+```
+
+<strong>If post is liked already</strong>
+<strong>Example response</strong>
+
+```sh
+{
+ "unlikedPost": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
+}
+```
+
+</details>
+
+<details><summary><strong>POST posts/:postId/comments/:commentId/like</strong>
+</summary>
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+ "likedComment": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
+}
+```
+
+<strong>If comment is liked already</strong>
+<strong>Example response</strong>
+
+```sh
+{
+ "unlikedComment": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
+}
+```
+
 </details>
