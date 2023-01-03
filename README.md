@@ -31,8 +31,16 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 ```sh
 curl -X POST  http://localhost:4000/users \
 -H 'Content-Type: application/json' \
--d '{"first_name":"Nathan","last_name":"King","email":"ngk5@gmail.com","password":"mysecurepassword","biography":"Hello world","github_url":"https://github.com/vherus"}'
+-d {
+  "first_name":"Nathan",
+  "last_name":"King",
+  "email":"ngk5@gmail.com",
+  "password":"mysecurepassword",
+  "biography":"Hello world",
+  "github_url":"https://github.com/vherus"
+}
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -45,6 +53,7 @@ curl -X POST  http://localhost:4000/users \
   "github_url": "https://github.com/vherus"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -64,6 +73,7 @@ curl -X POST  http://localhost:4000/users \
   }
 }
 ```
+
 </details>
 
 <details>
@@ -71,13 +81,13 @@ curl -X POST  http://localhost:4000/users \
 </summary>
 <strong>Example body</strong>
 
-
 ```sh
 {
   "email": "ngk5@gmail.com",
   "password": "mysecurepassword"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -98,6 +108,7 @@ curl -X POST  http://localhost:4000/users \
   }
 }
 ```
+
 </details>
 
 <details>
@@ -108,6 +119,7 @@ curl -X POST  http://localhost:4000/users \
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -115,6 +127,7 @@ Authorization: Bearer &lt;token&gt;
   "content": "Hello world!"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -128,6 +141,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -140,6 +154,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -147,6 +162,7 @@ Authorization: Bearer &lt;token&gt;
   "content": "This is my first post"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -160,6 +176,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -172,6 +189,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 No body required
 
 <strong>Example response</strong>
@@ -187,6 +205,7 @@ No body required
   }
 }
 ```
+
 </details>
 
 <details>
@@ -199,6 +218,7 @@ No body required
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 No body required
 
 <strong>Example response</strong>
@@ -213,6 +233,7 @@ No body required
   }
 }
 ```
+
 </details>
 
 <details>
@@ -224,6 +245,7 @@ No body required
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
@@ -240,6 +262,7 @@ Authorization: Bearer &lt;token&gt;
   ]
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -269,6 +292,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -279,6 +303,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -318,6 +343,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -329,40 +355,40 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"cohorts": [
-			{
-				"id": 1,
-				"users": [
-					{
-						"id": 2,
-						"email": "ngk52@gmail.com",
-						"password": "$2b$08$3szi3hKHQ9fhnrrFa//EMelEN81qN9Kq3rKG.nGKkMzxIJBIVRHKa",
-						"role": "STUDENT",
-						"cohortId": 1
-					},
-					{
-						"id": 3,
-						"email": "ngk53@gmail.com",
-						"password": "$2b$08$ppRLzYR/VLkgCiZuObOKPui41AkPvOrFffBgJJ0V7QoT0D2.47AOS",
-						"role": "STUDENT",
-						"cohortId": 1
-					}
-				]
-			},
-			{
-				"id": 2,
-				"users": []
-			}
-		]
-	}
+ "status": "success",
+ "data": {
+  "cohorts": [
+   {
+    "id": 1,
+    "users": [
+     {
+      "id": 2,
+      "email": "ngk52@gmail.com",
+      "role": "STUDENT",
+      "cohortId": 1
+     },
+     {
+      "id": 3,
+      "email": "ngk53@gmail.com",
+      "role": "STUDENT",
+      "cohortId": 1
+     }
+    ]
+   },
+   {
+    "id": 2,
+    "users": []
+   }
+  ]
+ }
 }
 ```
+
 </details>
 
 <details>
@@ -373,23 +399,22 @@ Authorization: Bearer &lt;token&gt;
 ```
 ```sh
 {
-	"status": "success",
-	"data": {
-		"cohort": [
-			{
-				"id": 1,
-				"users": [
-					{
-						"id": 2,
-						"email": "ngk52@gmail.com",
-						"password": "$2b$08$3szi3hKHQ9fhnrrFa//EMelEN81qN9Kq3rKG.nGKkMzxIJBIVRHKa",
-						"role": "STUDENT",
-						"cohortId": 1
-					}
-				]
-			}
-		]
-	}
+ "status": "success",
+ "data": {
+  "cohort": [
+   {
+    "id": 1,
+    "users": [
+     {
+      "id": 2,
+      "email": "ngk52@gmail.com",
+      "role": "STUDENT",
+      "cohortId": 1
+     }
+    ]
+   }
+  ]
+ }
 }
 ```
 </details>
@@ -403,13 +428,14 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
   "status": "success",
   "data": {
-    "cohort": {
+    "`cohort`": {
       "id": 1,
       "users": [
         {
@@ -437,6 +463,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -447,6 +474,7 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -466,6 +494,7 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
 <details>
@@ -478,6 +507,7 @@ The <em>first_name</em> query parameter is optional and case sensitive
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
@@ -509,10 +539,10 @@ Authorization: Bearer &lt;token&gt;
   }
 }
 ```
+
 </details>
 
-<!--  NEEDS TO BE UPDATED -->
-<!-- <details>
+<details>
 <summary><strong>PATCH /users/:id</strong>
 </summary>
 
@@ -521,32 +551,47 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example body</strong>
 
 ```sh
 {
-  "firstName": "James"
-  "lastName": "Gunn"
-  "bio": "I'm a filmmaker"
-  "githubUrl": "mygithublink.com"
+ "cohortId": 1,
+ "firstName": "Patrik",
+ "lastName": "test",
+ "username": "testUsername",
+ "bio": "bio here",
+ "githubUrl": "github.com",
+ "email": "email5@l.com",
+ "mobile": 123,
+ "password": "secretPassword"
 }
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
-  "status": "success",
-  "data": {
-    "user": {
-      "firstName": "James"
-      "lastName": "Gunn"
-      "bio": "I'm a filmmaker"
-      "githubUrl": "mygithublink.com"
-    }
+ "status": "success",
+ "data": {
+  "id": 1,
+  "email": "email1s@l.com",
+  "role": "TEACHER",
+  "cohortId": 1,
+  "profile": {
+   "id": 1,
+   "userId": 1,
+   "firstName": "Patrik",
+   "lastName": "test",
+   "bio": "bio here",
+   "githubUrl": "github.com",
+   "mobile": 123
   }
+ }
 }
 ```
-</details> -->
+
+</details>
 
 <details><summary><strong>GET /comment/:id</strong>
 </summary>
@@ -555,27 +600,29 @@ Authorization: Bearer &lt;token&gt;
 ```sh
 Authorization: Bearer &lt;token&gt;
 ```
+
 <strong>Example response</strong>
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"content": "Students first comment!",
-		"user": {
-			"profile": {
-				"id": 2,
-				"userId": 2,
-				"firstName": "Nathan",
-				"lastName": "King",
-				"bio": "Hello world",
-				"githubUrl": "https://github.com/vherus"
-			}
-		},
-		"like": 3
-	}
+ "status": "success",
+ "data": {
+  "content": "Students first comment!",
+  "user": {
+   "profile": {
+    "id": 2,
+    "userId": 2,
+    "firstName": "Nathan",
+    "lastName": "King",
+    "bio": "Hello world",
+    "githubUrl": "https://github.com/vherus"
+   }
+  },
+  "like": 3
+ }
 }
 ```
+
 </details>
 
 <details><summary><strong>POST posts/:postId/comments</strong>
@@ -590,12 +637,12 @@ Authorization: Bearer &lt;token&gt;
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"content": "test post N2",
-		"userId": 3,
-		"postId": 2
-	}
+ "status": "success",
+ "data": {
+  "content": "test post N2",
+  "userId": 3,
+  "postId": 2
+ }
 }
 ```
 
@@ -609,18 +656,27 @@ Authorization: Bearer &lt;token&gt;
 Authorization: Bearer &lt;token&gt;
 ```
 
+<strong>Example request</strong>
+
+```sh
+{
+  "content": "test comment a comment"
+}
+```
+
 <strong>Example response</strong>
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"content": "test post N2",
-		"userId": 3,
-		"postId": 2
-	}
+ "status": "success",
+ "data": {
+  "content": "test post N2",
+  "userId": 3,
+  "postId": 2
+ }
 }
 ```
+
 </details>
 
 <details><summary><strong>POST posts/:postId/comments</strong>
@@ -631,16 +687,24 @@ Authorization: Bearer &lt;token&gt;
 Authorization: Bearer &lt;token&gt;
 ```
 
+<strong>Example request</strong>
+
+```sh
+{
+  "content": "test comment a comment"
+}
+```
+
 <strong>Example response</strong>
 
 ```sh
 {
-	"status": "success",
-	"data": {
-		"content": "test post N2",
-		"userId": 3,
-		"postId": 2
-	}
+ "status": "success",
+ "data": {
+  "content": "test post N2",
+  "userId": 3,
+  "postId": 2
+ }
 }
 ```
 
@@ -658,11 +722,11 @@ Authorization: Bearer &lt;token&gt;
 
 ```sh
 {
-	"likedPost": {
-		"id": 13,
-		"userId": 3,
-		"postId": 1,
-	}
+ "likedPost": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
 }
 ```
 
@@ -671,13 +735,14 @@ Authorization: Bearer &lt;token&gt;
 
 ```sh
 {
-	"unlikedPost": {
-		"id": 13,
-		"userId": 3,
-		"postId": 1,
-	}
+ "unlikedPost": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
 }
 ```
+
 </details>
 
 <details><summary><strong>POST posts/:postId/comments/:commentId/like</strong>
@@ -692,11 +757,11 @@ Authorization: Bearer &lt;token&gt;
 
 ```sh
 {
-	"likedComment": {
-		"id": 13,
-		"userId": 3,
-		"postId": 1,
-	}
+ "likedComment": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
 }
 ```
 
@@ -705,11 +770,12 @@ Authorization: Bearer &lt;token&gt;
 
 ```sh
 {
-	"unlikedComment": {
-		"id": 13,
-		"userId": 3,
-		"postId": 1,
-	}
+ "unlikedComment": {
+  "id": 13,
+  "userId": 3,
+  "postId": 1,
+ }
 }
 ```
+
 </details>
