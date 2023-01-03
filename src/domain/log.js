@@ -7,7 +7,7 @@ import dbClient from '../utils/dbClient.js'
  */
 
 export async function createLog(body, user) {
-  const { cohort_id: cohortId, lines } = body
+  const { cohortId, sequenceId, lines } = body
   const createdLog = await dbClient.deliveryLog.create({
     data: {
       cohort: {
@@ -15,6 +15,9 @@ export async function createLog(body, user) {
       },
       user: {
         connect: { id: user.id }
+      },
+      sequence: {
+        connect: { id: sequenceId }
       }
     }
   })
@@ -29,13 +32,19 @@ export async function createLog(body, user) {
       }
     })
   })
-  return new Log(createdLog, user, lines)
+
+  const sequence = await dbClient.sequence.findUniqueOrThrow({
+    where: { id: sequenceId }
+  })
+
+  return new Log(createdLog, user, sequence, lines)
 }
 
 export class Log {
-  constructor(log, user, lines) {
+  constructor(log, user, sequence, lines) {
     this.id = log.id
     this.cohortId = log.cohortId
+    this.sequenceName = sequence.name
     this.date = log.date
     this.author = { ...user }
     this.lines = lines
@@ -45,7 +54,8 @@ export class Log {
     return {
       log: {
         id: this.id,
-        cohort_id: this.cohortId,
+        cohortId: this.cohortId,
+        sequenceName: this.sequenceName,
         date: this.date,
         author: {
           id: this.author.id,

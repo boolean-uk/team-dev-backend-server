@@ -30,19 +30,24 @@ model User {
 }
 
 model Profile {
-  id        Int     @id @default(autoincrement())
-  userId    Int     @unique
-  user      User    @relation(fields: [userId], references: [id])
-  firstName String
-  lastName  String
-  bio       String?
-  githubUrl String?
+  id         Int          @id @default(autoincrement())
+  userId     Int          @unique
+  user       User         @relation(fields: [userId], references: [id])
+  firstName  String
+  lastName   String
+  bio        String?
+  githubUrl  String?
+  mobile     Int
 }
 
 model Cohort {
   id           Int           @id @default(autoincrement())
+  cohortName   String?       @unique
+  startDate    DateTime
+  endDate      DateTime
   users        User[]
   deliveryLogs DeliveryLog[]
+  modules      Module[]
 }
 
 model Post {
@@ -102,16 +107,17 @@ model Module {
   id        Int        @id @default(autoincrement())
   name      String
   sequences Sequence[]
+  Cohorts   Cohort[]
 }
 
 model Sequence {
-  id          Int          @id @default(autoincrement())
-  name        String
-  isChallenge Boolean      @default(false)
-  module      Module       @relation(fields: [moduleId], references: [id])
-  moduleId    Int
-  workshops   Workshop[]
-  log         DeliveryLog?
+  id           Int          @id @default(autoincrement())
+  name         String
+  isChallenge  Boolean      @default(false)
+  module       Module       @relation(fields: [moduleId], references: [id])
+  moduleId     Int
+  workshops    Workshop[]
+  deliveryLogs DeliveryLog?
 }
 
 model Workshop {
@@ -129,3 +135,5 @@ model Exercise {
   workshop   Workshop @relation(fields: [workshopId], references: [id])
   workshopId Int
 }
+
+
