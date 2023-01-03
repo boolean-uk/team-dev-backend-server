@@ -478,6 +478,45 @@ Authorization: Bearer &lt;token&gt;
 
 </details>
 
+<summary><strong>PATCH /users/:id/cohort</strong>
+</summary>
+
+<strong>Headers</strong>
+
+```sh
+Authorization: Bearer &lt;token&gt;
+```
+
+<strong>Example body</strong>
+
+```sh
+{
+  "cohortId": 1
+}
+```
+
+<strong>Example response</strong>
+
+```sh
+{
+  "status": "success",
+  "data": {
+    "user": {
+      "id": 1,
+      "cohortId": 1,
+      "role": "STUDENT" OR "TEACHER"
+      "firstName": "My First Name",
+      "lastName": "My Last Name",
+      "email": myemail@email.com,
+      "biography": "My biography",
+      "githubUrl": "https://github.com/MyGitHubUserName"
+    }
+  }
+}
+```
+
+</details>
+
 <details>
 <summary><strong>GET /users/:id</strong>
 </summary>
@@ -555,6 +594,7 @@ Authorization: Bearer &lt;token&gt;
 </details>
 
 <details>
+
 <summary><strong>PATCH /users/:id/profile</strong>
 </summary>
 
@@ -645,29 +685,6 @@ Authorization: Bearer &lt;token&gt;
 Authorization: Bearer &lt;token&gt;
 ```
 
-<strong>Example response</strong>
-
-```sh
-{
- "status": "success",
- "data": {
-  "content": "test post N2",
-  "userId": 3,
-  "postId": 2
- }
-}
-```
-
-</details>
-
-<details><summary><strong>POST posts/:postId/comments/:commentId</strong>
-</summary>
-<strong>Headers</strong>
-
-```sh
-Authorization: Bearer &lt;token&gt;
-```
-
 <strong>Example request</strong>
 
 ```sh
@@ -691,7 +708,7 @@ Authorization: Bearer &lt;token&gt;
 
 </details>
 
-<details><summary><strong>POST posts/:postId/comments</strong>
+<details><summary><strong>POST posts/:postId/comments/:commentId</strong>
 </summary>
 <strong>Headers</strong>
 
