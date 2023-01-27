@@ -14,11 +14,11 @@ export default class User {
     return new User(
       user.id,
       user.cohortId,
-      user.profile.firstName,
-      user.profile.lastName,
+      user.profile?.firstName,
+      user.profile?.lastName,
       user.email,
-      user.profile.bio,
-      user.profile.githubUrl,
+      user.profile?.bio,
+      user.profile?.githubUrl,
       user.password,
       user.role
     )
@@ -26,19 +26,18 @@ export default class User {
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { first_name, last_name, email, biography, github_url, password } =
-      json
+    const { firstName, lastName, email, biography, githubUrl, password } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
     return new User(
       null,
       null,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       email,
       biography,
-      github_url,
+      githubUrl,
       passwordHash
     )
   }
@@ -71,11 +70,11 @@ export default class User {
         id: this.id,
         cohort_id: this.cohortId,
         role: this.role,
-        first_name: this.firstName,
-        last_name: this.lastName,
+        firstName: this.firstName,
+        lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        github_url: this.githubUrl
+        githubUrl: this.githubUrl
       }
     }
   }
@@ -85,21 +84,32 @@ export default class User {
    *  A user instance containing an ID, representing the user data created in the database
    */
   async save() {
-    const createdUser = await dbClient.user.create({
-      data: {
-        email: this.email,
-        password: this.passwordHash,
-        cohortId: this.cohortId,
-        role: this.role,
-        profile: {
-          create: {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            bio: this.bio,
-            githubUrl: this.githubUrl
-          }
+    const data = {
+      email: this.email,
+      password: this.passwordHash,
+      role: this.role
+    }
+
+    if (this.cohortId) {
+      data.cohort = {
+        connectOrCreate: {
+          id: this.cohortId
         }
-      },
+      }
+    }
+
+    if (this.firstName && this.lastName) {
+      data.profile = {
+        create: {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          bio: this.bio,
+          githubUrl: this.githubUrl
+        }
+      }
+    }
+    const createdUser = await dbClient.user.create({
+      data,
       include: {
         profile: true
       }
