@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Team Dev Frontend Server API
+  title: Team Dev Server API (C8 & C9)
   description: |-
   version: 0.2.2
 
 servers:
-  - url: https://team-dev-frontend-server.herokuapp.com/
+  - url: https://team-dev-server-c8-c9.fly.dev/
 tags:
   - name: user
   - name: post
@@ -430,7 +430,7 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
+
     CreatedUser:
       type: object
       properties:

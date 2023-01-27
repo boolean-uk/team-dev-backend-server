@@ -22,4 +22,4 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 
 ## API Spec
 
-[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+Documented [here](https://jubilant-disco-r44mv9y.pages.github.io/)
