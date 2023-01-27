@@ -25,11 +25,11 @@ If you use [Insomnia](https://insomnia.rest/), you can import [this request coll
 Documented [here](https://jubilant-disco-r44mv9y.pages.github.io/)
 
 ### Updating the API spec
-1. update the /docs/openapi.yml file whenever the behaviour of the API changes
+1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
 2. rebuild the html file that represents the user-facing view
 ```sh
 # install the redoc-cli utility library first
-$ npm instal -g redoc-cli
+$ npm install -g redoc-cli
 $ # then, build the html file
 $ redoc-cli build docs/openapi.yml -o ./docs/index.html
 ```
