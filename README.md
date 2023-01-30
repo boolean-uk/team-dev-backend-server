@@ -19,3 +19,6 @@ Once you have complete the above guide, continue to the steps below.
 ## API Spec
 
 [https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+
+## Project Management
+https://trello.com/b/j8BAuvnf/team-dev-c8-c9
