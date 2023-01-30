@@ -2,36 +2,20 @@
 
 ## Setting up
 
-1. Copy `.env.example` and name it `.env`
-2. Create a postgres database and add its URL into the `DATABASE_URL` environment variable, keeping `?schema=prisma` on the end
-    - Postgres db URLs are in the format: `postgres://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DATABASE_NAME]`
-    - Note that prisma doesn't store data in the public schema, so set the  search path to prisma in your db client. For PSQL client
-    - use `\dn` to show available schemas
-    - use SQL to set the search path to the correct schema: `SET search_path to prisma;`
-    - `\dt` will then show available tables (once migrations have been run)
-3. If using a cloud database provider:
-    - Create another database and run `create schema shadow` on it
-    - Add its URL into the `SHADOW_DATABASE_URL` env var, keeping `?schema=shadow` on the end
+### Pre-requisite
+
+[Follow this guide to create your databases](./DB_SETUP.md)
+
+Once you have complete the above guide, continue to the steps below.
+
+1. Copy `.env.example` and name it `.env` (NOTE: Make sure to copy the file, don't remove the original)
+2. Copy the URL of your **PRIMARY** database instance (see image below on how to get this) and place it into the `.env` file's `DATABASE_URL` variable, keeping `?schema=prisma` on the end. E.g. `DATABASE_URL="postgres://uy:ay@ka.db.elephantsql.com/ufy?schema=prisma"`
+![](./assets/db-setup/4.PNG)
+3. Do the same thing for your **SHADOW** database, placing its URL into the `SHADOW_DATABASE_URL` variable, keeping `?schema=shadow` on the end. E.g. `SHADOW_DATABASE_URL="postgres://jk:la@ka.db.elephantsql.com/irk?schema=shadow"`
 4. `npm ci` to install dependencies
-5. `npx prisma migrate reset` to apply migrations to your db
+5. `npx prisma migrate reset` to build the database tables
 6. `npm run dev` to run the app
-
-## Sample Requests
-
-If you use [Insomnia](https://insomnia.rest/), you can import [this request collection .json file](./assets/insomnia_request_collection.json) in the `./assets/` folder to hit the ground running with all of the requests ready to test.
 
 ## API Spec
 
-Documented [here](https://jubilant-disco-r44mv9y.pages.github.io/)
-
-### Updating the API spec
-1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
-2. rebuild the html file that represents the user-facing view
-```sh
-# install the redoc-cli utility library first
-$ npm install -g redoc-cli
-$ # then, build the html file
-$ redoc-cli build docs/openapi.yml -o ./docs/index.html
-```
-3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
-
+[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
