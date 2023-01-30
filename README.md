@@ -35,3 +35,5 @@ $ redoc-cli build docs/openapi.yml -o ./docs/index.html
 ```
 3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
 
+## Project Management
+https://trello.com/b/j8BAuvnf/team-dev-c8-c9
