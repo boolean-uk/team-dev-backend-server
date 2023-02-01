@@ -11,6 +11,7 @@ tags:
   - name: post
   - name: cohort
   - name: log
+  - name: teacher
 paths:
   /users:
     post:
@@ -285,6 +286,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /teachers:
+    get:
+      tags:
+        - teacher
+      summary: Get all users by first name if provided
+      description: ''
+      operationId: getAllUsers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
 
 components:
   securitySchemes:
