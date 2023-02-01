@@ -1,10 +1,20 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
+  constructor(id, userId, user, content, createdAt, updatedAt) {
+    this.id = id
+    this.userId = userId
+    this.user = user
+    this.content = content
+    this.createdAt = createdAt
+    this.updatedAt = updatedAt
+  }
+
   static fromDb(post) {
     return new Post(
       post.id,
       post.userId,
+      post.user,
       post.content,
       post.createdAt,
       post.updatedAt
@@ -15,15 +25,7 @@ export default class Post {
     // eslint-disable-next-line camelcase
     const { content } = json
 
-    return new Post(null, null, content)
-  }
-
-  constructor(id, userId, content, createdAt, updatedAt) {
-    this.id = id
-    this.userId = userId
-    this.content = content
-    this.createdAt = createdAt
-    this.updatedAt = updatedAt
+    return new Post(null, null, null, content, null, null)
   }
 
   toJSON() {
@@ -31,6 +33,7 @@ export default class Post {
       post: {
         id: this.id,
         userId: this.userId,
+        user: this.user,
         content: this.content,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt
@@ -45,19 +48,19 @@ export default class Post {
 
     if (this.userId) {
       data.user = {
-        connectOrCreate: {
+        connect: {
           id: this.userId
         }
       }
     }
-
+    console.log(this)
     const createdPost = await dbClient.post.create({
       data,
       include: {
         user: true
       }
     })
-
+    console.log(createdPost)
     return Post.fromDb(createdPost)
   }
 
