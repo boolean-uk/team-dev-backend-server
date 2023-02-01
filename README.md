@@ -20,5 +20,20 @@ Once you have complete the above guide, continue to the steps below.
 
 [https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
 
+### Updating the API spec
+1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
+2. rebuild the html file that represents the user-facing view
+
+```sh
+# install the redoc-cli utility library first
+$ npm install -g redoc-cli
+
+$ # then, build the html file
+$ redoc-cli build docs/openapi.yml -o ./docs/index.html
+```
+
+3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
+
 ## Project Management
 https://trello.com/b/j8BAuvnf/team-dev-c8-c9
+
