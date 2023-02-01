@@ -24,19 +24,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUser"
+              $ref: '#/components/schemas/CreateUser'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreatedUser"
+                $ref: '#/components/schemas/CreatedUser'
     get:
       tags:
         - user
       summary: Get all users by first name if provided
-      description: ""
+      description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
@@ -47,46 +47,46 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AllUsers"
-        "400":
+                $ref: '#/components/schemas/AllUsers'
+        '400':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "404":
+                $ref: '#/components/schemas/Error'
+        '404':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /login:
     post:
       tags:
         - user
       summary: Localhost Login
-      description: ""
+      description: ''
       operationId: loginUser
       requestBody:
         description: User login information
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/login"
+              $ref: '#/components/schemas/login'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/loginRes"
+                $ref: '#/components/schemas/loginRes'
 
-        "400":
+        '400':
           description: Invalid username/password supplied
 
   /users/{id}:
@@ -94,19 +94,19 @@ paths:
       tags:
         - user
       summary: Get user by user id
-      description: ""
+      description: ''
       operationId: getUserByID
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: "The name that needs to be fetched. Use user1 for testing. "
+          description: 'The name that needs to be fetched. Use user1 for testing. '
           required: true
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
@@ -116,20 +116,20 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: "#/components/schemas/User"
+                    $ref: '#/components/schemas/User'
 
-        "400":
+        '400':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "404":
+                $ref: '#/components/schemas/Error'
+        '404':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     patch:
       tags:
         - user
@@ -141,7 +141,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: "The user id that needs to be updated"
+          description: 'The user id that needs to be updated'
           required: true
           schema:
             type: string
@@ -150,38 +150,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateUser"
+              $ref: '#/components/schemas/UpdateUser'
       responses:
-        "201":
+        '201':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreatedUser"
-        "401":
+                $ref: '#/components/schemas/CreatedUser'
+        '401':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /users/{cohortid}:
     get:
       tags:
         - user
       summary: Get all users by cohort id
-      description: ""
+      description: ''
       operationId: getUserByCohortID
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: "The cohort id of the logged in student. "
+          description: 'The cohort id of the logged in student. '
           required: true
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
@@ -191,20 +191,20 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: "#/components/schemas/User"
+                    $ref: '#/components/schemas/User'
 
-        "400":
+        '400':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "404":
+                $ref: '#/components/schemas/Error'
+        '404':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /posts:
     post:
       tags:
@@ -229,13 +229,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Post"
+                $ref: '#/components/schemas/Post'
         400:
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - post
@@ -245,18 +245,18 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Posts"
-        "401":
+                $ref: '#/components/schemas/Posts'
+        '401':
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -290,13 +290,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Log"
-        "401":
+                $ref: '#/components/schemas/Log'
+        '401':
           description: Unauthorised
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /cohorts:
     post:
       tags:
@@ -319,13 +319,13 @@ paths:
                   data:
                     properties:
                       cohort:
-                        $ref: "#/components/schemas/Cohort"
+                        $ref: '#/components/schemas/Cohort'
         400:
           description: fail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -371,7 +371,7 @@ components:
             users:
               type: array
               items:
-                $ref: "#/components/schemas/User"
+                $ref: '#/components/schemas/User'
 
     User:
       type: object
