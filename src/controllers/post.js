@@ -1,3 +1,4 @@
+import Post from '../domain/posts'
 import { sendDataResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -6,8 +7,14 @@ export const create = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
+  const postToCreate = await Post.fromJson(req.body)
 
-  return sendDataResponse(res, 201, { post: { id: 1, content } })
+  const createdPost = await postToCreate.save()
+
+  return sendDataResponse(res, 201, {
+    status: 'Great success!',
+    data: createdPost
+  })
 }
 
 export const getAll = async (req, res) => {
