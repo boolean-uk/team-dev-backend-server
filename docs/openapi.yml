@@ -35,7 +35,7 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name and/or role if provided
+      summary: Get all users by first name, role and/or cohortId if provided
       description: ''
       operationId: getAllUsers
       security:
@@ -49,6 +49,11 @@ paths:
         - name: role
           in: query
           description: Search all users by role if provided (case-insensitive, either 'student' or 'teacher')
+          schema:
+            type: string
+        - name: cohortId
+          in: query
+          description: Search all users by cohortId if provided
           schema:
             type: string
       responses:
@@ -164,7 +169,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
   /posts:
     post:
       tags:
