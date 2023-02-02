@@ -7,13 +7,11 @@ export const create = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
-  console.log(req.user)
   const postToCreate = await Post.fromJson(req.body)
   postToCreate.userId = req.user.id
   const createdPost = await postToCreate.save()
 
   return sendDataResponse(res, 201, {
-    status: 'Great success!',
     data: createdPost
   })
 }

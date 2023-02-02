@@ -11,6 +11,7 @@ export default class Post {
   }
 
   static fromDb(post) {
+    delete post.user.password
     return new Post(
       post.id,
       post.userId,
@@ -53,14 +54,12 @@ export default class Post {
         }
       }
     }
-    console.log(this)
     const createdPost = await dbClient.post.create({
       data,
       include: {
         user: true
       }
     })
-    console.log(createdPost)
     return Post.fromDb(createdPost)
   }
 
