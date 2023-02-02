@@ -180,9 +180,11 @@ paths:
           application/json:
             schema:
               type: object
+              required: [content]
               properties:
                 content:
                   type: string
+                  pattern: ' Must be at least 1 character'
       responses:
         201:
           description: success
