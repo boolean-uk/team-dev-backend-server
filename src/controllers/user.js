@@ -5,6 +5,10 @@ export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
 
   try {
+    // !userToCreate.email => res, 400, "Email is required"
+    // !userToCreate.password => res, 400, "Password is required"
+
+    // for validating the email use a .match
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
@@ -37,12 +41,19 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { first_name: firstName, last_name: lastName } = req.query
 
   let foundUsers
 
-  if (firstName) {
+  if (firstName && lastName) {
+    const name = firstName + lastName
+    foundUsers = await User.findManyByFullName(name)
+  }
+  if (firstName && !lastName) {
     foundUsers = await User.findManyByFirstName(firstName)
+  }
+  if (lastName && !firstName) {
+    foundUsers = await User.findManyByLastName(lastName)
   } else {
     foundUsers = await User.findAll()
   }
