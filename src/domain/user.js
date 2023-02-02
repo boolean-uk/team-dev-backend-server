@@ -134,17 +134,8 @@ export default class User {
     return User._findMany('lastName', lastName)
   }
 
-  static async findByFullName(name) {
-    const [firstName, lastName] = name.toUpperCase().split(' ')
-    const matches = User._findMany((user) => {
-      return (
-        (user.firstName.toUpperCase() === firstName &&
-          user.lastName.toUpperCase() === lastName) ||
-        user.firstName.toUpperCase() === firstName ||
-        user.lastName.toUpperCase() === lastName
-      )
-    })
-    return matches
+  static async findManyByFullName(firstName, lastName) {
+    return User._findMany('firstName', firstName, 'lastName', lastName)
   }
 
   static async findAll() {
