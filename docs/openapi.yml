@@ -390,6 +390,7 @@ components:
 
     Posts:
       type: object
+      required: [content]
       properties:
         status:
           type: string
