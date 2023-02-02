@@ -32,6 +32,7 @@ export const getAll = async (req, res) => {
     const posts = await Post.findAll()
     return sendDataResponse(res, 200, { posts })
   } catch (error) {
+    console.error('finding all posts', error)
     return sendMessageResponse(res, 401, 'Unable to get posts')
   }
 }
