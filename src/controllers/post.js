@@ -15,7 +15,7 @@ export const create = async (req, res) => {
 
     if (!createdPost) {
       return sendDataResponse(res, 400, {
-        error: 'Please log in before creating a post'
+        error: 'User details not provided for creating a post'
       })
     }
 
