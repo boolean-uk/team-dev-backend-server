@@ -46,6 +46,11 @@ paths:
           description: Search all users by first name if provided (case-sensitive and exact string matches only)
           schema:
             type: string
+        - name: cohortId
+          in: query
+          description: Search all users by cohortId if provided
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -53,14 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: fail
+        '401':
+          description: unauthorised request (invalid token)
           content:
             application/json:
               schema:
