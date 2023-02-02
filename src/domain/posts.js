@@ -54,6 +54,9 @@ export default class Post {
         }
       }
     }
+
+    if (!this.userId) return null
+
     const createdPost = await dbClient.post.create({
       data,
       include: {
@@ -97,9 +100,7 @@ export default class Post {
 
     if (key !== undefined && value !== undefined) {
       query.where = {
-        user: {
-          [key]: value
-        }
+        [key]: value
       }
     }
 

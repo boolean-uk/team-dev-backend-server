@@ -1,19 +1,30 @@
 import Post from '../domain/posts.js'
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
 
   if (!content) {
-    return sendDataResponse(res, 400, { content: 'Must provide content' })
+    return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  const postToCreate = await Post.fromJson(req.body)
-  postToCreate.userId = req.user.id
-  const createdPost = await postToCreate.save()
 
-  return sendDataResponse(res, 201, {
-    data: createdPost
-  })
+  try {
+    const postToCreate = await Post.fromJson(req.body)
+    postToCreate.userId = req.user.id
+    const createdPost = await postToCreate.save()
+
+    if (!createdPost) {
+      return sendDataResponse(res, 400, {
+        error: 'Please log in before creating a post'
+      })
+    }
+
+    return sendDataResponse(res, 201, {
+      post: { ...createdPost }
+    })
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to create new post')
+  }
 }
 
 export const getAll = async (req, res) => {
