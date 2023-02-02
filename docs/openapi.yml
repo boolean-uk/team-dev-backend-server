@@ -48,7 +48,7 @@ paths:
             type: string
         - name: role
           in: query
-          description: Search all users by role if provided (case-insensitive)
+          description: Search all users by role if provided (case-insensitive, either 'student' or 'teacher')
           schema:
             type: string
       responses:
