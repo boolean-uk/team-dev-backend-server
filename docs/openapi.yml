@@ -43,12 +43,12 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name and/or if provided (case-sensitive and exact string matches only)
+          description: Search all users by first name and/or role if provided (case-sensitive and exact string matches only)
           schema:
             type: string
         - name: role
           in: query
-          description: Search all users by role if provided (case-sensitive, either 'STUDENT', or 'TEACHER')
+          description: Search all users by role if provided (case-insensitive)
           schema:
             type: string
       responses:
