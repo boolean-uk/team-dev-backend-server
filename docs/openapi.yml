@@ -35,7 +35,7 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users, query parameters can be combined to perform multiple filtering
       description: ''
       operationId: getAllUsers
       security:
@@ -43,9 +43,14 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by first name *?first_name=Joe*
           schema:
            type: string
+        - name: lastName
+          in: query
+          description: Search all by last name *?last_name=Blogg*
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -54,7 +59,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AllUsers'
         '400':
-          description: fail
+          description: query parameter(s) do not include values
           content:
             application/json:
               schema:
