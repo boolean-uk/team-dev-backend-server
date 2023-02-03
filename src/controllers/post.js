@@ -30,6 +30,13 @@ export const create = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     const posts = await Post.findAll()
+    // posts = posts.map((obj) => {
+    //   obj.author = obj.user
+    //   console.log(obj)
+    //   // delete obj.user
+    //   return obj
+    // })
+    console.log('fetched posts', posts)
     return sendDataResponse(res, 200, { posts })
   } catch (error) {
     console.error('finding all posts', error)

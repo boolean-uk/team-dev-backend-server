@@ -1,21 +1,22 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt) {
+  constructor(id, userId, author, content, createdAt, updatedAt) {
     this.id = id
     this.userId = userId
-    this.user = user
+    this.author = author
     this.content = content
     this.createdAt = createdAt
     this.updatedAt = updatedAt
   }
 
   static fromDb(post) {
-    delete post.user.password
+    delete post.author.password
+    // console.log(post)
     return new Post(
       post.id,
       post.userId,
-      post.user,
+      post.author,
       post.content,
       post.createdAt,
       post.updatedAt
@@ -34,7 +35,7 @@ export default class Post {
       post: {
         id: this.id,
         userId: this.userId,
-        user: this.user,
+        user: this.author,
         content: this.content,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt
@@ -48,7 +49,7 @@ export default class Post {
     }
 
     if (this.userId) {
-      data.user = {
+      data.author = {
         connect: {
           id: this.userId
         }
@@ -60,7 +61,7 @@ export default class Post {
     const createdPost = await dbClient.post.create({
       data,
       include: {
-        user: true
+        author: true
       }
     })
     return Post.fromDb(createdPost)
@@ -80,7 +81,7 @@ export default class Post {
         [key]: value
       },
       include: {
-        user: true
+        author: true
       }
     })
 
@@ -94,7 +95,7 @@ export default class Post {
   static async _findMany(key, value) {
     const query = {
       include: {
-        user: {
+        author: {
           include: {
             profile: true
           }
@@ -109,7 +110,13 @@ export default class Post {
     }
 
     const foundPosts = await dbClient.post.findMany(query)
+    // console.log('found posts:', foundPosts)
 
-    return foundPosts.map((post) => Post.fromDb(post))
+    return foundPosts.map((post) => {
+      console.log('mapping', post)
+      const dbPost = Post.fromDb(post)
+      // console.log(dbPost)
+      return dbPost
+    })
   }
 }
