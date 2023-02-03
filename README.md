@@ -10,7 +10,7 @@ Once you have complete the above guide, continue to the steps below.
 
 1. Copy `.env.example` and name it `.env` (NOTE: Make sure to copy the file, don't remove the original)
 2. Copy the URL of your **PRIMARY** database instance (see image below on how to get this) and place it into the `.env` file's `DATABASE_URL` variable, keeping `?schema=prisma` on the end. E.g. `DATABASE_URL="postgres://uy:ay@ka.db.elephantsql.com/ufy?schema=prisma"`
-![](./assets/db-setup/4.PNG)
+   ![](./assets/db-setup/4.PNG)
 3. Do the same thing for your **SHADOW** database, placing its URL into the `SHADOW_DATABASE_URL` variable, keeping `?schema=shadow` on the end. E.g. `SHADOW_DATABASE_URL="postgres://jk:la@ka.db.elephantsql.com/irk?schema=shadow"`
 4. `npm ci` to install dependencies
 5. `npx prisma migrate reset` to build the database tables and insert some seed data (as defined in [./prisma/seed.js](./prisma/seed.js))
@@ -18,7 +18,23 @@ Once you have complete the above guide, continue to the steps below.
 
 ## API Spec
 
-[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+[https://jubilant-disco-r44mv9y.pages.github.io/](https://jubilant-disco-r44mv9y.pages.github.io/)
+
+### Updating the API spec
+
+1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
+2. rebuild the html file that represents the user-facing view
+
+```sh
+# install the redoc-cli utility library first
+$ npm install -g redoc-cli
+
+$ # then, build the html file
+$ redoc-cli build docs/openapi.yml -o ./docs/index.html
+```
+
+3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
 
 ## Project Management
+
 https://trello.com/b/j8BAuvnf/team-dev-c8-c9

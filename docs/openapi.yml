@@ -35,7 +35,7 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users, include parameters for first name and/or last
+      summary: Get all users by first name if provided
       description: ''
       operationId: getAllUsers
       security:
@@ -43,12 +43,7 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description:  Search all users by first name *?first_name=Joe*
-          schema:
-            type: string
-        - name: lastName
-          in: query
-          description: Search all users by last name *?last_name=Blogg*
+          description: Search all users by first name if provided (case-sensitive and exact string matches only)
           schema:
            type: string
       responses:
@@ -59,7 +54,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AllUsers'
         '400':
-          description: Unknown parameter used
+          description: fail
           content:
             application/json:
               schema:
@@ -135,6 +130,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
     patch:
       tags:
         - user
@@ -184,9 +180,11 @@ paths:
           application/json:
             schema:
               type: object
+              required: [content]
               properties:
                 content:
                   type: string
+                  pattern: ' Must be at least 1 character'
       responses:
         201:
           description: success
@@ -408,6 +406,34 @@ components:
                 properties:
                   id:
                     type: integer
+                  userId:
+                    type: integer
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      cohortId:
+                        type: integer
+                      profile:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          userId:
+                            type: integer
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                          bio:
+                            type: string
+                          githubUrl:
+                            type: string
                   content:
                     type: string
                   createdAt:
@@ -416,25 +442,6 @@ components:
                   updatedAt:
                     type: string
                     format: string
-                  author:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
-                      bio:
-                        type: string
-                      githubUrl:
-                        type: string
-                      profileImageUrl:
-                        type: string
 
     CreatedUser:
       type: object
