@@ -35,7 +35,7 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name, role and/or cohortId if provided
+      summary: Get all users by first name,last name, role and/or cohortId if provided
       description: ''
       operationId: getAllUsers
       security:
@@ -43,7 +43,12 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name and/or role if provided (case-sensitive and exact string matches only)
+          description: Search all users by first name *?first_name=Joe*
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          description: Search all users by last name and/or role *?last_name=Blogg*
           schema:
             type: string
         - name: role
@@ -56,6 +61,7 @@ paths:
           description: Search all users by cohortId if provided
           schema:
             type: string
+
       responses:
         '200':
           description: successful operation
@@ -65,6 +71,18 @@ paths:
                 $ref: '#/components/schemas/AllUsers'
         '401':
           description: unauthorised request (invalid token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: query parameter(s) does not include a value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
           content:
             application/json:
               schema:
