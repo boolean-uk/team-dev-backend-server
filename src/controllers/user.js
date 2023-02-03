@@ -42,7 +42,7 @@ export const getAll = async (req, res) => {
 
   if (!firstName && !lastName) {
     return sendDataResponse(res, 400, {
-      error: 'Misssing value from query parameter'
+      error: 'Missing value from query parameter'
     })
   }
   if (firstName && lastName) {

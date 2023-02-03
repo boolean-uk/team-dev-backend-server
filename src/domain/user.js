@@ -169,7 +169,10 @@ export default class User {
     if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
-          [key]: value
+          [key]: {
+            equals: value,
+            mode: 'insensitive'
+          }
         }
       }
     }
@@ -194,8 +197,14 @@ export default class User {
     if (match) {
       query.where = {
         profile: {
-          [key1]: value1,
-          [key2]: value2
+          [key1]: {
+            equals: value1,
+            mode: 'insensitive'
+          },
+          [key2]: {
+            equals: value2,
+            mode: 'insensitive'
+          }
         }
       }
     }
