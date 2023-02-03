@@ -12,7 +12,6 @@ export default class Post {
 
   static fromDb(post) {
     delete post.user.password
-    // console.log(post)
     return new Post(
       post.id,
       post.userId,
@@ -111,9 +110,6 @@ export default class Post {
 
     const foundPosts = await dbClient.post.findMany(query)
 
-    return foundPosts.map((post) => {
-      const dbPost = Post.fromDb(post)
-      return dbPost
-    })
+    return foundPosts.map((post) => Post.fromDb(post))
   }
 }
