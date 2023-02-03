@@ -27,6 +27,21 @@ export const create = async (req, res) => {
     if (foundNotString) {
       return sendDataResponse(res, 400, 'one or more fields is invalid')
     }
+    // Checking the validation of the email
+    const isValidEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+      req.body.email
+    )
+    if (!isValidEmail) {
+      return sendDataResponse(res, 400, 'not readable email')
+    }
+
+    const isValidPassword =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        req.body.password
+      )
+    if (!isValidPassword) {
+      return sendDataResponse(res, 400, 'not valid password')
+    }
 
     // If optinals present: error if not first or last name
     const checkForOptionals = Object.keys(req.body).find(
