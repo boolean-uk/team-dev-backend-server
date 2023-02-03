@@ -377,7 +377,7 @@ components:
         password:
           type: string
           minLength: 8
-          pattern: '1 lower, 1 upper, 1 number'
+          pattern: '1 lower, 1 upper, 1 number, 1 special character ( {, }, [, ], ,, &, :, *, #, ?, |. -, <. >, =, !, %, @, \ )'
 
     UpdateUser:
       type: object
