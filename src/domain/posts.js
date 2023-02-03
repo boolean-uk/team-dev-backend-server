@@ -94,7 +94,11 @@ export default class Post {
   static async _findMany(key, value) {
     const query = {
       include: {
-        user: true
+        user: {
+          include: {
+            profile: true
+          }
+        }
       }
     }
 
