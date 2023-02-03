@@ -388,7 +388,7 @@ components:
         email:
           type: string
           format: email
-        bio:
+        biography:
           type: string
         githubUrl:
           type: string
@@ -412,7 +412,7 @@ components:
           type: string
         lastName:
           type: string
-        bio:
+        biography:
           type: string
         githubUrl:
           type: string
@@ -491,7 +491,7 @@ components:
                   type: string
                 lastName:
                   type: string
-                bio:
+                biography:
                   type: string
                 githubUrl:
                   type: string
