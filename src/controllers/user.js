@@ -3,13 +3,11 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   // Check for the Required fields
-  if (
-    !req.body.email ||
-    !req.body.password ||
-    req.body.email === '' ||
-    req.body.password === ''
-  ) {
-    return sendDataResponse(res, 400, 'missing email or password')
+  if (!req.body.email || req.body.email === '') {
+    return sendDataResponse(res, 400, { error: 'Email is required' })
+  }
+  if (!req.body.password || req.body.password === '') {
+    return sendDataResponse(res, 400, { error: 'Password is required' })
   }
 
   const userToCreate = await User.fromJson(req.body)
@@ -32,7 +30,7 @@ export const create = async (req, res) => {
       req.body.email
     )
     if (!isValidEmail) {
-      return sendDataResponse(res, 400, 'not readable email')
+      return sendDataResponse(res, 400, { error: 'Email format invalid' })
     }
 
     const isValidPassword =
@@ -40,7 +38,10 @@ export const create = async (req, res) => {
         req.body.password
       )
     if (!isValidPassword) {
-      return sendDataResponse(res, 400, 'not valid password')
+      return sendDataResponse(res, 400, {
+        error:
+          'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
+      })
     }
 
     // If optinals present: error if not first or last name
