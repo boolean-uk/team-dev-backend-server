@@ -361,6 +361,7 @@ components:
 
     CreateUser:
       type: object
+      required: [email, password]
       properties:
         firstName:
           type: string
@@ -368,12 +369,15 @@ components:
           type: string
         email:
           type: string
+          format: email
         bio:
           type: string
         githubUrl:
           type: string
         password:
           type: string
+          minLength: 8
+          pattern: '1 lower, 1 upper, 1 number, 1 special character ( {, }, [, ], &, :, *, #, ?, |. -, <. >, =, !, %, @, \ )'
 
     UpdateUser:
       type: object
