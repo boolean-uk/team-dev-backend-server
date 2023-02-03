@@ -2,14 +2,25 @@ import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
+  if (
+    !req.body.email ||
+    !req.body.password ||
+    req.body.email === '' ||
+    req.body.password === ''
+  ) {
+    return sendDataResponse(res, 400, 'missing email or password')
+  }
   const userToCreate = await User.fromJson(req.body)
-
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
-
     if (existingUser) {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
+    const foundNotString = Object.values(req.body).find(
+      (field) => typeof field !== 'string'
+    )
+    if (foundNotString)
+      return sendDataResponse(res, 400, 'one or more fields is invalid')
 
     const createdUser = await userToCreate.save()
 
