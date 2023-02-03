@@ -2,6 +2,7 @@ import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
+  // Check for the Required fields
   if (
     !req.body.email ||
     !req.body.password ||
@@ -10,17 +11,31 @@ export const create = async (req, res) => {
   ) {
     return sendDataResponse(res, 400, 'missing email or password')
   }
+
   const userToCreate = await User.fromJson(req.body)
   try {
+    // User exists
     const existingUser = await User.findByEmail(userToCreate.email)
     if (existingUser) {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
+
+    // Typeof in the req.body
     const foundNotString = Object.values(req.body).find(
       (field) => typeof field !== 'string'
     )
-    if (foundNotString)
+    if (foundNotString) {
       return sendDataResponse(res, 400, 'one or more fields is invalid')
+    }
+
+    // If optinals present: error if not first or last name
+    const checkForOptionals = Object.keys(req.body).find(
+      (key) => key === 'firstName' || 'lastName' || 'githubUrl' || 'biography'
+    )
+    if (checkForOptionals && (!req.body.firstName || !req.body.lastName)) {
+      console.log('We have optionals BUT not first or last')
+      return sendMessageResponse(res, 400, 'Missing first name or last name')
+    }
 
     const createdUser = await userToCreate.save()
 
