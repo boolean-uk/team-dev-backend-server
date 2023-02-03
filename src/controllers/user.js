@@ -5,10 +5,6 @@ export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
 
   try {
-    // !userToCreate.email => res, 400, "Email is required"
-    // !userToCreate.password => res, 400, "Password is required"
-
-    // for validating the email use a .match
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
@@ -44,6 +40,11 @@ export const getAll = async (req, res) => {
   const { first_name: firstName, last_name: lastName } = req.query
   let foundUsers
 
+  if (!firstName && !lastName) {
+    return sendDataResponse(res, 400, {
+      error: 'Misssing value from query parameter'
+    })
+  }
   if (firstName && lastName) {
     foundUsers = await User.findManyByFullName(firstName, lastName)
   } else if (firstName) {
