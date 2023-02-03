@@ -135,7 +135,7 @@ export default class User {
   }
 
   static async findManyByFullName(firstName, lastName) {
-    return User._findMany('firstName', firstName, 'lastName', lastName)
+    return User._findMany2params('firstName', firstName, 'lastName', lastName)
   }
 
   static async findAll() {
@@ -170,6 +170,32 @@ export default class User {
       query.where = {
         profile: {
           [key]: value
+        }
+      }
+    }
+
+    const foundUsers = await dbClient.user.findMany(query)
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async _findMany2params(key1, value1, key2, value2) {
+    const query = {
+      include: {
+        profile: true
+      }
+    }
+    const match =
+      key1 !== undefined &&
+      value1 !== undefined &&
+      key2 !== undefined &&
+      value2 !== undefined
+
+    if (match) {
+      query.where = {
+        profile: {
+          [key1]: value1,
+          [key2]: value2
         }
       }
     }
