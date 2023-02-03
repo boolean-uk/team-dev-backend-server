@@ -357,7 +357,7 @@ components:
 
     CreateUser:
       type: object
-      required: [email, password:]
+      required: [email, password]
       properties:
         firstName:
           type: string
