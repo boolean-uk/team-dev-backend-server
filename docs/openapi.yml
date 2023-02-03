@@ -410,6 +410,34 @@ components:
                 properties:
                   id:
                     type: integer
+                  userId:
+                    type: integer
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      cohortId:
+                        type: integer
+                      profile:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          userId:
+                            type: integer
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                          bio:
+                            type: string
+                          githubUrl:
+                            type: string
                   content:
                     type: string
                   createdAt:
@@ -418,25 +446,6 @@ components:
                   updatedAt:
                     type: string
                     format: string
-                  author:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
-                      bio:
-                        type: string
-                      githubUrl:
-                        type: string
-                      profileImageUrl:
-                        type: string
 
     CreatedUser:
       type: object

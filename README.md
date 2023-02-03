@@ -18,7 +18,7 @@ Once you have complete the above guide, continue to the steps below.
 
 ## API Spec
 
-[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+[https://jubilant-disco-r44mv9y.pages.github.io/](https://jubilant-disco-r44mv9y.pages.github.io/)
 
 ### Updating the API spec
 
