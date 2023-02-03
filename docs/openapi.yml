@@ -434,7 +434,7 @@ components:
                     type: integer
                   userId:
                     type: integer
-                  user:
+                  author:
                     type: object
                     properties:
                       id:
