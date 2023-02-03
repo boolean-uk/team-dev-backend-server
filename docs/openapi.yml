@@ -61,11 +61,7 @@ paths:
           description: Search all users by cohortId if provided
           schema:
             type: string
-        - name: lastName
-          in: query
-          description: Search all by last name *?last_name=Blogg*
-          schema:
-            type: string
+
       responses:
         '200':
           description: successful operation
