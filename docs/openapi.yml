@@ -310,6 +310,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -337,10 +343,14 @@ components:
       properties:
         id:
           type: integer
-        createdAt:
+        cohortName:
+          type: string
+        course:
+          type: string
+        startDate:
           type: string
           format: string
-        updatedAt:
+        endDate:
           type: string
           format: string
 
