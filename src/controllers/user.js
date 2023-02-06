@@ -78,7 +78,7 @@ export const updateById = async (req, res) => {
 
     const userToUpdate = await User.findById(id)
     if (!userToUpdate) {
-      return sendDataResponse(res, 400, { error: 'This user does not exist' })
+      return sendDataResponse(res, 404, { error: 'This user does not exist' })
     }
 
     const userInstance = await User.fromJson(req.body)
