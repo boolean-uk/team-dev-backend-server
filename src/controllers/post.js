@@ -43,3 +43,28 @@ export const getAll = async (req, res) => {
     return sendMessageResponse(res, 401, 'Unable to get posts')
   }
 }
+
+export const deleteById = async (req, res) => {
+  const id = Number(req.params.id)
+
+  if (!id) return sendDataResponse(res, 404, { error: 'Valid id not given' })
+
+  try {
+    const foundPost = await Post.findById(id)
+    if (!foundPost)
+      return sendDataResponse(res, 404, {
+        error: 'Post with given id not found'
+      })
+
+    if (req.user.role === 'STUDENT' && req.user.id !== foundPost.user.id)
+      return sendMessageResponse(res, 403, 'You are unable to delete this post')
+
+    const deletedPost = await foundPost.delete()
+
+    return sendDataResponse(res, 201, {
+      deletedPost
+    })
+  } catch (error) {
+    return sendMessageResponse(res, 400, `Unable to delete posts: ${error}`)
+  }
+}
