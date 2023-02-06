@@ -290,9 +290,27 @@ paths:
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        description: Create cohort object
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cohortName, course, startDate, endDate]
+              properties:
+                cohortName:
+                  type: string
+                course:
+                  type: string
+                startDate:
+                  type: string
+                  format: string
+                endDate:
+                  type: string
+                  format: string
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
@@ -305,13 +323,13 @@ paths:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
         400:
-          description: fail
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        401:
-          description: Unauthorised
+        403:
+          description: Forbidden
           content:
             application/json:
               schema:
