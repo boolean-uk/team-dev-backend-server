@@ -68,3 +68,32 @@ export const deleteById = async (req, res) => {
     return sendMessageResponse(res, 400, `Unable to delete posts: ${error}`)
   }
 }
+export const updateById = async (req, res) => {
+  const id = Number(req.params.id)
+  const { content } = req.body
+
+  if (!content) {
+    return sendDataResponse(res, 400, { error: 'Content must be provided!' })
+  }
+  if (!id) return sendDataResponse(res, 404, { error: 'Valid id not given' })
+  try {
+    const foundPost = await Post.findById(id)
+
+    if (!foundPost)
+      return sendDataResponse(res, 404, {
+        error: 'Post with given id not found'
+      })
+
+    if (req.user.id !== foundPost.user.id)
+      return sendMessageResponse(
+        res,
+        403,
+        "Unable to edit other people's posts!"
+      )
+    foundPost.content = content
+    const updatedPost = await foundPost.updateById()
+    return sendDataResponse(res, 201, { updatedPost })
+  } catch (error) {
+    return sendMessageResponse(res, 400, `Unable to update posts: ${error}`)
+  }
+}
