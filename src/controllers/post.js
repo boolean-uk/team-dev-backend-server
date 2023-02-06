@@ -92,7 +92,7 @@ export const updateById = async (req, res) => {
       updatedPost
     })
   } catch (error) {
-    return sendMessageResponse(res, 400, `Unable to delete posts: ${error}`)
+    return sendMessageResponse(res, 400, `Unable to update posts: ${error}`)
   }
   
 }
