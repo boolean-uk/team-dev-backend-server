@@ -3,6 +3,14 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const { cohortName, course, startDate, endDate } = req.body
+  if (
+    cohortName === '' ||
+    course === '' ||
+    startDate === '' ||
+    endDate === ''
+  ) {
+    return sendDataResponse(res, 400, { error: 'One or more felds is missing' })
+  }
   try {
     const createdCohort = await createCohort(
       cohortName,
