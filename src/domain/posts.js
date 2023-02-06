@@ -66,6 +66,15 @@ export default class Post {
     return Post.fromDb(createdPost)
   }
 
+  async delete() {
+    const deletedPost = await dbClient.post.delete({
+      where: {
+        id: this.id
+      }
+    })
+    return deletedPost
+  }
+
   static async findById(id) {
     return Post._findByUnique('id', id)
   }
