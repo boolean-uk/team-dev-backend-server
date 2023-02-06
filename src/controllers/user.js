@@ -72,11 +72,6 @@ export const update = async (req, res) => {
   const { cohortId } = req.body
 
   try {
-    const userToUpdate = await User.findById(id)
-    if (!userToUpdate) {
-      return sendDataResponse(res, 400, { error: 'This user does not exist' })
-    }
-
     if (req.user.role === 'STUDENT') {
       if (req.body.cohortId || req.body.role) {
         return sendDataResponse(res, 403, {
@@ -91,7 +86,19 @@ export const update = async (req, res) => {
       return sendDataResponse(res, 404, { id: 'This cohort does not exist' })
     }
 
-    sendDataResponse(res, 201, { user: userToUpdate })
+    const userToUpdate = await User.findById(id)
+    if (!userToUpdate) {
+      return sendDataResponse(res, 400, { error: 'This user does not exist' })
+    }
+
+    const userInstance = await User.fromJson(req.body)
+    userInstance.id = userToUpdate.id
+
+    const updatedUser = await userInstance.updateById()
+
+    console.log(updatedUser)
+
+    sendDataResponse(res, 201, { status: 'success' })
   } catch (error) {
     return sendDataResponse(res, 500, { error: 'Something went wrong' })
   }
