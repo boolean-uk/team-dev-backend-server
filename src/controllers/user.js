@@ -58,16 +58,6 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
-
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
-  }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
-}
-
-export const update = async (req, res) => {
   const id = Number(req.params.id)
   const { cohortId } = req.body
 
@@ -96,10 +86,11 @@ export const update = async (req, res) => {
 
     const updatedUser = await userInstance.updateById()
 
-    console.log(updatedUser)
-
-    sendDataResponse(res, 201, { status: 'success' })
+    sendDataResponse(res, 201, { user: { ...updatedUser } })
   } catch (error) {
-    return sendDataResponse(res, 500, { error: 'Something went wrong' })
+    console.error(error)
+    return sendDataResponse(res, 500, {
+      error: 'Unable to update user, please try again'
+    })
   }
 }

@@ -135,7 +135,7 @@ export default class User {
     return User._findMany()
   }
 
-  static async updateById() {
+  async updateById() {
     const updatedUser = await dbClient.user.update({
       where: {
         id: this.id
