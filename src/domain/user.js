@@ -142,22 +142,22 @@ export default class User {
     return User._findMany()
   }
 
-  static async updateById(id, user) {
+  static async updateById() {
     const updatedUser = await dbClient.user.update({
       where: {
-        id: Number(id)
+        id: Number(this.id)
       },
       data: {
-        email: user.email,
-        password: user.password,
-        role: user.role,
+        email: this.email,
+        password: this.password,
+        role: this.role,
         cohortId: null,
         profile: {
           update: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            bio: user.bio,
-            githubUrl: user.githubUrl
+            firstName: this.firstName,
+            lastName: this.lastName,
+            bio: this.bio,
+            githubUrl: this.githubUrl
           }
         }
       }

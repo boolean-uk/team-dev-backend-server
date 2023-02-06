@@ -1,4 +1,5 @@
 import User from '../domain/user.js'
+import { Cohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -67,12 +68,31 @@ export const updateById = async (req, res) => {
 }
 
 export const update = async (req, res) => {
-  const { id } = req.params
+  const id = Number(req.params.id)
+  const { cohortId } = req.body
 
-  const userToUpdate = await User.fromJson(req.body)
-  console.log(userToUpdate)
-  const updatedUser = await User.updateById(id, userToUpdate)
-  // console.log(updatedUser)
+  try {
+    const userToUpdate = await User.findById(id)
+    if (!userToUpdate) {
+      return sendDataResponse(res, 400, { error: 'This user does not exist' })
+    }
 
-  return sendDataResponse(res, 201, { user: id })
+    if (req.user.role === 'STUDENT') {
+      if (req.body.cohortId || req.body.role) {
+        return sendDataResponse(res, 403, {
+          error: 'A student cannot update cohortId or role'
+        })
+      }
+    }
+
+    const foundCohort = await Cohort.findById(cohortId)
+
+    if (!foundCohort) {
+      return sendDataResponse(res, 404, { id: 'This cohort does not exist' })
+    }
+
+    sendDataResponse(res, 201, { user: userToUpdate })
+  } catch (error) {
+    return sendDataResponse(res, 500, { error: 'Something went wrong' })
+  }
 }
