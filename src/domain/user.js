@@ -126,18 +126,6 @@ export default class User {
     return User._findByUnique('id', id)
   }
 
-  static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
-  }
-
-  static async findManyByLastName(lastName) {
-    return User._findMany('lastName', lastName)
-  }
-
-  static async findManyByFullName(firstName, lastName) {
-    return User._findMany2params('firstName', firstName, 'lastName', lastName)
-  }
-
   static async findAll() {
     return User._findMany()
   }
@@ -182,31 +170,15 @@ export default class User {
     return foundUsers.map((user) => User.fromDb(user))
   }
 
-  static async _findMany2params(key1, value1, key2, value2) {
+  static async findBy(whereClause) {
     const query = {
       include: {
         profile: true
       }
     }
-    const match =
-      key1 !== undefined &&
-      value1 !== undefined &&
-      key2 !== undefined &&
-      value2 !== undefined
 
-    if (match) {
-      query.where = {
-        profile: {
-          [key1]: {
-            equals: value1,
-            mode: 'insensitive'
-          },
-          [key2]: {
-            equals: value2,
-            mode: 'insensitive'
-          }
-        }
-      }
+    if (whereClause !== undefined || whereClause !== {}) {
+      query.where = whereClause
     }
 
     const foundUsers = await dbClient.user.findMany(query)
@@ -214,3 +186,11 @@ export default class User {
     return foundUsers.map((user) => User.fromDb(user))
   }
 }
+
+// {
+//   profile: {
+//     whereClause,
+//     equals: whereClause,
+//     mode: 'insensitive'
+//   }
+// }

@@ -89,24 +89,23 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
   // anyone updating getAll : feel free to clean/refactor this or just add all your code and we (team-1) will be happy to clean it up once all needed queries are added
-  const { first_name: firstName, last_name: lastName } = req.query
-  let foundUsers
+  const { firstName, lastName } = req.query
 
   if (!firstName && !lastName) {
     return sendDataResponse(res, 400, {
       error: 'Missing value from query parameter'
     })
   }
-
-  if (firstName && lastName) {
-    foundUsers = await User.findManyByFullName(firstName, lastName)
-  } else if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
-  } else if (lastName) {
-    foundUsers = await User.findManyByLastName(lastName)
-  } else {
-    foundUsers = await User.findAll()
+  const whereStatement = {}
+  if (firstName || lastName) {
+    if (!whereStatement.profile) {
+      whereStatement.profile = {}
+    }
+    whereStatement.profile.firstName = firstName
+    whereStatement.profile.lastName = lastName
   }
+
+  const foundUsers = await User.findBy(whereStatement)
 
   const formattedUsers = foundUsers.map((user) => {
     return {
