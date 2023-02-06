@@ -65,3 +65,14 @@ export const updateById = async (req, res) => {
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
+
+export const update = async (req, res) => {
+  const { id } = req.params
+
+  const userToUpdate = await User.fromJson(req.body)
+  console.log(userToUpdate)
+  const updatedUser = await User.updateById(id, userToUpdate)
+  // console.log(updatedUser)
+
+  return sendDataResponse(res, 201, { user: id })
+}

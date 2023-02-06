@@ -1,5 +1,11 @@
 import { Router } from 'express'
-import { create, getById, getAll, updateById } from '../controllers/user.js'
+import {
+  create,
+  getById,
+  getAll,
+  updateById,
+  update
+} from '../controllers/user.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -10,6 +16,6 @@ const router = Router()
 router.post('/', create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
-router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
-
+// router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
+router.patch('/:id', validateAuthentication, update)
 export default router
