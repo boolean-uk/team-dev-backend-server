@@ -73,7 +73,7 @@ export const updateById = async (req, res) => {
   const { content } = req.body
 
   if (!content) {
-    return sendDataResponse(res, 404, { error: 'Content must be provided!' })
+    return sendDataResponse(res, 400, { error: 'Content must be provided!' })
   }
   if (!id) return sendDataResponse(res, 404, { error: 'Valid id not given' })
   try {
