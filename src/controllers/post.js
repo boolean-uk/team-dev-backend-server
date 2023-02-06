@@ -92,9 +92,7 @@ export const updateById = async (req, res) => {
       )
     foundPost.content = content
     const updatedPost = await foundPost.updateById()
-    return sendDataResponse(res, 201, {
-      updatedPost
-    })
+    return sendDataResponse(res, 201, { updatedPost })
   } catch (error) {
     return sendMessageResponse(res, 400, `Unable to update posts: ${error}`)
   }
