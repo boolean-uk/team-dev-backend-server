@@ -24,4 +24,22 @@ export class Cohort {
       }
     }
   }
+
+  static async findById(id) {
+    return Cohort._findByUnique('id', id)
+  }
+
+  static async _findByUnique(key, value) {
+    const foundCohort = await dbClient.cohort.findUnique({
+      where: {
+        [key]: value
+      }
+    })
+
+    if (foundCohort) {
+      return foundCohort
+    }
+
+    return null
+  }
 }
