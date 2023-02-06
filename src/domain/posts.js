@@ -120,14 +120,14 @@ export default class Post {
 
     return foundPosts.map((post) => Post.fromDb(post))
   }
+
   async updateById() {
     const updatedPost = await dbClient.post.update({
       where: {
         id: this.id
       },
       data: {
-        content: this.content,
-
+        content: this.content
       },
       include: {
         user: {

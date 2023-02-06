@@ -85,7 +85,11 @@ export const updateById = async (req, res) => {
       })
 
     if (req.user.id !== foundPost.user.id)
-      return sendMessageResponse(res, 403, "Unable to edit other people's posts!")
+      return sendMessageResponse(
+        res,
+        403,
+        "Unable to edit other people's posts!"
+      )
     foundPost.content = content
     const updatedPost = await foundPost.updateById()
     return sendDataResponse(res, 201, {
@@ -94,5 +98,4 @@ export const updateById = async (req, res) => {
   } catch (error) {
     return sendMessageResponse(res, 400, `Unable to update posts: ${error}`)
   }
-  
 }
