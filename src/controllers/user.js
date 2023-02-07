@@ -96,12 +96,13 @@ export const getAll = async (req, res) => {
     })
   }
 
-  const whereConditions = {}
+  const whereConditions = {
+    profile: {}
+  }
   let numConditions = 0
-  // ^keeps track of conditions for and structure when num conditions > 1
 
   if (req.query.firstName) {
-    whereConditions.firstName = {
+    whereConditions.profile.firstName = {
       equals: req.query.firstName,
       mode: 'insensitive'
     }
@@ -109,7 +110,7 @@ export const getAll = async (req, res) => {
   }
 
   if (req.query.lastName) {
-    whereConditions.lastName = {
+    whereConditions.profile.lastName = {
       equals: req.query.lastName,
       mode: 'insensitive'
     }
@@ -129,7 +130,6 @@ export const getAll = async (req, res) => {
     const where = {
       AND: whereConditions
     }
-    // ^ adds the AND before the query when there are more than one queries
 
     const foundUsers = await User.findBy(where)
 
@@ -151,62 +151,3 @@ export const updateById = async (req, res) => {
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
-
-// APPROACH 2:
-
-// let numConditions = 0
-// ^keeps track of amount of conditions, so AND can be added infront of where statement
-
-// const whereConditions = {}
-// ^all conditions pushed onto this to send to domain
-
-// if(req.query.firstName) {
-//   whereConditions.firstName = {
-//     contains: req.query.firstName,
-//     mode: 'insensitive'
-//   }
-
-//   numConditions++
-// ^keeps track of the conditions + itterates
-// }
-
-// if(req.query.lastName) {
-//   whereConditions.lastName = {
-//     equals: req.query.lastName,
-//     mode: 'insensitive'
-//   }
-//   numConditions++
-// }
-
-// if(numConditions === 1) {
-//   const foundUsers = User.findBy(whereConditions)
-// } else {
-//   const where = {
-//     AND: whereConditions
-//   }
-// ^ adds the AND before the query when there are more than one queries
-
-//   const foundUsers = User.findBy(where)
-// }
-
-// APPROACH 1:
-// case sensitive approach
-// const whereStatement = {}
-
-// if (firstName || lastName) {
-//   if (!whereStatement.profile) {
-//     whereStatement.profile = {}
-//   }
-//   whereStatement.profile.firstName = firstName
-//   whereStatement.profile.lastName = lastName
-// }
-
-// const foundUsers = await User.findBy(whereStatement)
-
-//  const formattedUsers = foundUsers.map((user) => {
-//     return {
-//       ...user.toJSON().user
-//     }
-//   })
-
-// return sendDataResponse(res, 200, { users: formattedUsers })
