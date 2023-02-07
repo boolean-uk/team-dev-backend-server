@@ -127,10 +127,6 @@ export default class User {
     return User._findByUnique('id', id)
   }
 
-  static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
-  }
-
   static async findAll() {
     return User._findMany()
   }
@@ -189,9 +185,28 @@ export default class User {
     if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
-          [key]: value
+          [key]: {
+            equals: value,
+            mode: 'insensitive'
+          }
         }
       }
+    }
+
+    const foundUsers = await dbClient.user.findMany(query)
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async findBy(whereClause) {
+    const query = {
+      include: {
+        profile: true
+      }
+    }
+
+    if (whereClause !== undefined || whereClause !== {}) {
+      query.where = whereClause
     }
 
     const foundUsers = await dbClient.user.findMany(query)
