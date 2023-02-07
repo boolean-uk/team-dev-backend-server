@@ -456,6 +456,12 @@ components:
           type: string
         githubUrl:
           type: string
+        specialism:
+          type: string
+        phone:
+          type: string
+        profileImageUrl:
+          type: string
 
     CreateUser:
       type: object
@@ -476,7 +482,12 @@ components:
           type: string
           minLength: 8
           pattern: '1 lower, 1 upper, 1 number, 1 special character ( {, }, [, ], &, :, *, #, ?, |. -, <. >, =, !, %, @, \ )'
-
+        specialism:
+          type: string
+        phone:
+          type: string
+        profileImageUrl:
+          type: string
     UpdateUser:
       type: object
       properties:
@@ -495,6 +506,12 @@ components:
         biography:
           type: string
         githubUrl:
+          type: string
+        specialism:
+          type: string
+        phone:
+          type: string
+        profileImageUrl:
           type: string
 
     Posts:
@@ -539,6 +556,12 @@ components:
                           bio:
                             type: string
                           githubUrl:
+                            type: string
+                          specialism:
+                            type: string
+                          phone:
+                            type: string
+                          profileImageUrl:
                             type: string
                   content:
                     type: string
@@ -641,6 +664,12 @@ components:
                   type: string
                 githubUrl:
                   type: string
+                specialism:
+                  type: string
+                phone:
+                  type: string
+                profileImageUrl:
+                  type: string
     login:
       type: object
       properties:
@@ -675,6 +704,12 @@ components:
                 bio:
                   type: string
                 githubUrl:
+                  type: string
+                specialism:
+                  type: string
+                phone:
+                  type: string
+                profileImageUrl:
                   type: string
     Error:
       type: object
