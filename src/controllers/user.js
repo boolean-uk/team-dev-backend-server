@@ -45,21 +45,17 @@ export const create = async (req, res) => {
       })
     }
 
-    // If optionals present: error if not first or last name
-    let hasOptional = false
-    Object.keys(req.body).forEach((key) => {
-      if (
-        key === 'firstName' ||
-        key === 'lastName' ||
-        key === 'githubUrl' ||
-        key === 'biography' ||
-        key === 'specialism' ||
-        key === 'phone' ||
-        key === 'profileImageUrl'
-      ) {
-        hasOptional = true
-      }
-    })
+    const optionalKeys = [
+      'githubUrl',
+      'biography',
+      'specialism',
+      'phone',
+      'profileImageUrl'
+    ]
+    const hasOptional = Object.keys(req.body).some((key) =>
+      optionalKeys.includes(key)
+    )
+
     if (hasOptional && (!req.body.firstName || !req.body.lastName)) {
       return sendDataResponse(res, 400, {
         error: 'Missing first name or last name'
