@@ -68,6 +68,7 @@ export const deleteById = async (req, res) => {
     return sendMessageResponse(res, 400, `Unable to delete posts: ${error}`)
   }
 }
+
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
   const { content } = req.body
