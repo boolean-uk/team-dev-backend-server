@@ -291,25 +291,11 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        description: Create cohort object
+        description: Create cohort object (Student cannot create cohort object)
         content:
           application/json:
             schema:
-              type: object
-              required: [cohortName, course, startDate, endDate]
-              properties:
-                cohortName:
-                  type: string
-                course:
-                  type: string
-                startDate:
-                  type: string
-                  date: string
-                  format: DD/MM/YYYY
-                endDate:
-                  type: string
-                  date: string
-                  format: DD/MM/YYYY
+              $ref: '#/components/schemas/createCohort'
       responses:
         201:
           description: Success
@@ -323,7 +309,7 @@ paths:
                   data:
                     properties:
                       cohort:
-                        $ref: '#/components/schemas/Cohort'
+                        $ref: '#/components/schemas/createCohort'
         400:
           description: Bad Request
           content:
@@ -331,7 +317,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         403:
-          description: Forbidden
+          description: Forbidden "Students cannot create cohort"
           content:
             application/json:
               schema:
@@ -358,21 +344,21 @@ components:
                 content:
                   type: string
 
-    Cohort:
+    createCohort:
       type: object
+      required: [cohortName, course, startDate, endDate]
       properties:
-        id:
-          type: integer
         cohortName:
           type: string
         course:
           type: string
+          pattern: 'Software Development, Front-End Development, Data Analytics'
         startDate:
-          type: string
-          format: string
+          type: date
+          pattern: YYYY/MM/DD
         endDate:
-          type: string
-          format: string
+          type: date
+          pattern: YYYY/MM/DD
 
     AllUsers:
       type: object
