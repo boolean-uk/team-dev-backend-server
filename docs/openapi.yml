@@ -43,12 +43,12 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name *?first_name=Joe*
+          description: Search all users by first name *?firstName=Joe*
           schema:
             type: string
         - name: lastName
           in: query
-          description: Search all users by last name and/or role *?last_name=Blogg*
+          description: Search all users by last name and/or role *?lastName=Blogg*
           schema:
             type: string
         - name: role
@@ -216,6 +216,86 @@ paths:
                 $ref: '#/components/schemas/Post'
         400:
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - post
+      summary: Delete post
+      description: Teachers can delete any post, students can only delete their own.
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that is to be deleted.'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedPost'
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: A post with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - post
+      summary: Edit posts
+      description: A user can only update their own posts.
+      operationId: updatePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that is to be Updated.'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedPost'
+        400:
+          description: No content has been provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: A post with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
           content:
             application/json:
               schema:
@@ -468,6 +548,72 @@ components:
                   updatedAt:
                     type: string
                     format: string
+
+    DeletedPost:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            deletedPost:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+                userId:
+                  type: integer
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+    UpdatedPost:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            updatedPosts:
+              post:
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  content:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  user:
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      cohortId:
+                        type: integer
+                      profile:
+                        properties:
+                          id:
+                            type: integer
+                          userId:
+                            type: integer
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                          bio:
+                            type: string
+                          githubUrl:
+                            type: string
 
     CreatedUser:
       type: object
