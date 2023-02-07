@@ -37,6 +37,9 @@ model Profile {
   lastName    String
   bio         String?
   githubUrl   String?
+  specialism  String?  @default("")
+  phone       String?  @default("")
+  profileImageUrl String? @default("")
 }
 
 model Cohort {
