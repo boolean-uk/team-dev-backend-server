@@ -304,10 +304,12 @@ paths:
                   type: string
                 startDate:
                   type: string
-                  format: string
+                  date: string
+                  format: DD/MM/YYYY
                 endDate:
                   type: string
-                  format: string
+                  date: string
+                  format: DD/MM/YYYY
       responses:
         201:
           description: Success
