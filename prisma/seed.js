@@ -6,12 +6,7 @@ async function seed() {
   const startDate = new Date('2023 01 23')
   const endDate = new Date('2023 07 23')
 
-  const cohort = await createCohort(
-    'Cohort 1',
-    'Front-end Development',
-    startDate,
-    endDate
-  )
+  const cohort = await createCohort('Cohort 1', startDate, endDate)
 
   const student = await createUser(
     'student@test.com',
@@ -55,11 +50,10 @@ async function createPost(userId, content) {
   return post
 }
 
-async function createCohort(cohortName, course, startDate, endDate) {
+async function createCohort(cohortName, startDate, endDate) {
   const cohort = await prisma.cohort.create({
     data: {
       cohortName,
-      course,
       startDate,
       endDate
     }
