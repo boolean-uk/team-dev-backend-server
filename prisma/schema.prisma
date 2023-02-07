@@ -40,10 +40,10 @@ model Profile {
 
 model Cohort {
   id           Int           @id @default(autoincrement())
-  cohortName   String
+  cohortName   String        @unique
   course       String
-  startDate    String
-  endDate      String
+  startDate    DateTime
+  endDate      DateTime
   users        User[]
   deliveryLogs DeliveryLog[]
 }
