@@ -43,12 +43,12 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name *?first_name=Joe*
+          description: Search all users by first name *?firstName=Joe*
           schema:
             type: string
         - name: lastName
           in: query
-          description: Search all users by last name and/or role *?last_name=Blogg*
+          description: Search all users by last name and/or role *?lastName=Blogg*
           schema:
             type: string
         - name: role

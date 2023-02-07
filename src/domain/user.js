@@ -186,11 +186,3 @@ export default class User {
     return foundUsers.map((user) => User.fromDb(user))
   }
 }
-
-// {
-//   profile: {
-//     whereClause,
-//     equals: whereClause,
-//     mode: 'insensitive'
-//   }
-// }
