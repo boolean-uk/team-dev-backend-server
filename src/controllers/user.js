@@ -92,9 +92,13 @@ export const getAll = async (req, res) => {
   const { firstName, lastName } = req.query
 
   if (!firstName && !lastName) {
-    return sendDataResponse(res, 400, {
-      error: 'Missing value from query parameter'
+    const foundUsers = await User.findAll()
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
     })
+    return sendDataResponse(res, 200, { users: formattedUsers })
   }
 
   const whereConditions = {
