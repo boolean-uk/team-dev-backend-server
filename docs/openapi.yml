@@ -231,10 +231,10 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'The post id that needs to be deleted. '
+          description: 'The id of the post that is to be deleted.'
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         201:
           description: success
@@ -249,13 +249,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         404:
-          description: No valid post id provided
+          description: A post with this Id does not exist.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         403:
-          description: A student tries to delete someone else's post
+          description: Invalid permissions
           content:
             application/json:
               schema:
