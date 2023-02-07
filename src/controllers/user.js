@@ -89,23 +89,62 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { firstName, lastName } = req.query
 
-  let foundUsers
-
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
-  } else {
-    foundUsers = await User.findAll()
+  if (!firstName && !lastName) {
+    const foundUsers = await User.findAll()
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
   }
 
-  const formattedUsers = foundUsers.map((user) => {
-    return {
-      ...user.toJSON().user
-    }
-  })
+  const whereConditions = {
+    profile: {}
+  }
+  let numConditions = 0
 
-  return sendDataResponse(res, 200, { users: formattedUsers })
+  if (req.query.firstName) {
+    whereConditions.profile.firstName = {
+      equals: req.query.firstName,
+      mode: 'insensitive'
+    }
+    numConditions++
+  }
+
+  if (req.query.lastName) {
+    whereConditions.profile.lastName = {
+      equals: req.query.lastName,
+      mode: 'insensitive'
+    }
+    numConditions++
+  }
+
+  if (numConditions === 1) {
+    const foundUsers = await User.findBy(whereConditions)
+
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
+  } else {
+    const where = {
+      AND: whereConditions
+    }
+
+    const foundUsers = await User.findBy(where)
+
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
+  }
 }
 
 export const updateById = async (req, res) => {
