@@ -23,7 +23,6 @@ export default class Post {
   }
 
   static async fromJson(json) {
-    // eslint-disable-next-line camelcase
     const { content } = json
 
     return new Post(null, null, null, content, null, null)
@@ -64,6 +63,15 @@ export default class Post {
       }
     })
     return Post.fromDb(createdPost)
+  }
+
+  async delete() {
+    const deletedPost = await dbClient.post.delete({
+      where: {
+        id: this.id
+      }
+    })
+    return deletedPost
   }
 
   static async findById(id) {
@@ -111,5 +119,25 @@ export default class Post {
     const foundPosts = await dbClient.post.findMany(query)
 
     return foundPosts.map((post) => Post.fromDb(post))
+  }
+
+  async updateById() {
+    const updatedPost = await dbClient.post.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        content: this.content
+      },
+      include: {
+        user: {
+          include: {
+            profile: true
+          }
+        }
+      }
+    })
+
+    return Post.fromDb(updatedPost)
   }
 }

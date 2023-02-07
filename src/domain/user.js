@@ -26,17 +26,18 @@ export default class User {
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
+    const { firstName, lastName, email, bio, githubUrl, password, cohortId } =
+      json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
     return new User(
       null,
-      null,
+      cohortId,
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
       passwordHash
     )
@@ -128,6 +129,33 @@ export default class User {
 
   static async findAll() {
     return User._findMany()
+  }
+
+  async updateById() {
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        email: this.email,
+        password: this.password,
+        role: this.role,
+        cohortId: this.cohortId,
+        profile: {
+          update: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            bio: this.bio,
+            githubUrl: this.githubUrl
+          }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return User.fromDb(updatedUser)
   }
 
   static async _findByUnique(key, value) {

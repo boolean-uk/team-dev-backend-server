@@ -1,4 +1,5 @@
 import User from '../domain/user.js'
+import { Cohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -143,11 +144,40 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const id = Number(req.params.id)
+  const { cohortId } = req.body
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  try {
+    if (req.user.role === 'STUDENT') {
+      if (req.body.cohortId || req.body.role) {
+        return sendDataResponse(res, 403, {
+          error: 'A student cannot update cohortId or role'
+        })
+      }
+    }
+
+    const foundCohort = await Cohort.findById(cohortId)
+
+    if (!foundCohort) {
+      return sendDataResponse(res, 404, { id: 'This cohort does not exist' })
+    }
+
+    const userToUpdate = await User.findById(id)
+    if (!userToUpdate) {
+      return sendDataResponse(res, 404, { error: 'This user does not exist' })
+    }
+
+    const userInstance = await User.fromJson(req.body)
+    userInstance.id = userToUpdate.id
+
+    const updatedUser = await userInstance.updateById()
+    delete updatedUser.passwordHash
+
+    sendDataResponse(res, 201, { user: { ...updatedUser } })
+  } catch (error) {
+    console.error(error)
+    return sendDataResponse(res, 500, {
+      error: 'Unable to update user, please try again'
+    })
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
