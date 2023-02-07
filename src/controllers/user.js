@@ -136,6 +136,7 @@ export const updateById = async (req, res) => {
     userInstance.id = userToUpdate.id
 
     const updatedUser = await userInstance.updateById()
+    delete updatedUser.passwordHash
 
     sendDataResponse(res, 201, { user: { ...updatedUser } })
   } catch (error) {
