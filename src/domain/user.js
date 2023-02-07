@@ -20,14 +20,26 @@ export default class User {
       user.profile?.bio,
       user.profile?.githubUrl,
       user.password,
+      user.profile?.specialism,
+      user.profile?.phone,
+      user.profile?.profileImageUrl,
       user.role
     )
   }
 
   static async fromJson(json) {
-    // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, bio, githubUrl, password, cohortId } =
-      json
+    const {
+      firstName,
+      lastName,
+      email,
+      bio,
+      githubUrl,
+      password,
+      cohortId,
+      specialism,
+      phone,
+      profileImageUrl
+    } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
@@ -39,7 +51,10 @@ export default class User {
       email,
       bio,
       githubUrl,
-      passwordHash
+      passwordHash,
+      specialism,
+      phone,
+      profileImageUrl
     )
   }
 
@@ -52,6 +67,9 @@ export default class User {
     bio,
     githubUrl,
     passwordHash = null,
+    specialism,
+    phone,
+    profileImageUrl,
     role = 'STUDENT'
   ) {
     this.id = id
@@ -62,6 +80,9 @@ export default class User {
     this.bio = bio
     this.githubUrl = githubUrl
     this.passwordHash = passwordHash
+    this.specialism = specialism
+    this.phone = phone
+    this.profileImageUrl = profileImageUrl
     this.role = role
   }
 
@@ -70,12 +91,15 @@ export default class User {
       user: {
         id: this.id,
         cohort_id: this.cohortId,
-        role: this.role,
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        specialism: this.specialism,
+        phone: this.phone,
+        profileImageUrl: this.profileImageUrl,
+        role: this.role
       }
     }
   }
@@ -105,7 +129,10 @@ export default class User {
           firstName: this.firstName,
           lastName: this.lastName,
           bio: this.bio,
-          githubUrl: this.githubUrl
+          githubUrl: this.githubUrl,
+          specialism: this.specialism,
+          phone: this.phone,
+          profileImageUrl: this.profileImageUrl
         }
       }
     }
@@ -115,7 +142,6 @@ export default class User {
         profile: true
       }
     })
-
     return User.fromDb(createdUser)
   }
 
@@ -146,7 +172,10 @@ export default class User {
             firstName: this.firstName,
             lastName: this.lastName,
             bio: this.bio,
-            githubUrl: this.githubUrl
+            githubUrl: this.githubUrl,
+            specialism: this.specialism,
+            phone: this.phone,
+            profileImageUrl: this.profileImageUrl
           }
         }
       },

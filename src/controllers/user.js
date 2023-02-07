@@ -52,7 +52,10 @@ export const create = async (req, res) => {
         key === 'firstName' ||
         key === 'lastName' ||
         key === 'githubUrl' ||
-        key === 'biography'
+        key === 'biography' ||
+        key === 'specialism' ||
+        key === 'phone' ||
+        key === 'profileImageUrl'
       ) {
         hasOptional = true
       }
@@ -88,7 +91,6 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
   const { firstName, lastName } = req.query
 
   if (!firstName && !lastName) {
@@ -181,7 +183,7 @@ export const updateById = async (req, res) => {
   } catch (error) {
     console.error(error)
     return sendDataResponse(res, 500, {
-      error: 'Unable to update user, please try again'
+      error: `Unable to update user, please try again: ${error}`
     })
   }
 }
