@@ -260,46 +260,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      patch:
-        tags:
-          - post
-        summary: Edit posts
-        description: A user can only update their own posts.
-        operationId: updatePost
-        security:
-          - bearerAuth: []
-        parameters:
-          - name: id
-            in: path
-            description: 'The id of the post that is to be Updated.'
-            required: true
-            schema:
-              type: integer
-        responses:
-          201:
-            description: success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UpdatedPost'
-          400:
-            description: No content has been provided.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          404:
-            description: A post with this Id does not exist.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          403:
-            description: Invalid permissions
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - post
+      summary: Edit posts
+      description: A user can only update their own posts.
+      operationId: updatePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that is to be Updated.'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedPost'
+        400:
+          description: No content has been provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: A post with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - post
