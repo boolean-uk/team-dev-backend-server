@@ -346,13 +346,10 @@ components:
 
     createCohort:
       type: object
-      required: [cohortName, course, startDate, endDate]
+      required: [cohortName, startDate, endDate]
       properties:
         cohortName:
           type: string
-        course:
-          type: string
-          pattern: 'Software Development, Front-End Development, Data Analytics'
         startDate:
           type: date
           pattern: YYYY/MM/DD
