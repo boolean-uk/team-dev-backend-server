@@ -13,12 +13,6 @@ export const create = async (req, res) => {
     commentToCreate.userId = req.user.id
     const createdComment = await commentToCreate.save()
 
-    if (!createdComment) {
-      return sendDataResponse(res, 400, {
-        error: 'User details not provided for creating a comment'
-      })
-    }
-
     return sendDataResponse(res, 201, {
       comment: { ...createdComment }
     })
