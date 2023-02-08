@@ -44,9 +44,9 @@ model Profile {
 
 model Cohort {
   id           Int           @id @default(autoincrement())
-  cohortName   String        @unique @default("")
-  startDate    DateTime      @default(now())
-  endDate      DateTime      @default(now())
+  cohortName   String        @unique
+  startDate    DateTime
+  endDate      DateTime
   users        User[]
   deliveryLogs DeliveryLog[]
 }
