@@ -395,6 +395,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      description: get all cohorts
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK (successful operation)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCohorts'
+        401:
+          description: Unauthorised(only a teacher is authorised to get all cohorts )
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts/{cohortId}:
     delete:
       tags:
@@ -490,6 +512,31 @@ components:
                   type: string
                   format: date
                   pattern: YYYY/MM/DD
+    AllCohorts:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            cohorts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  cohortName:
+                    type: string
+                  startDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
+                  endDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
     DeletedCohort:
       type: object
       properties:
