@@ -399,7 +399,7 @@ paths:
       tags:
         - cohort
       summary: Get all cohorts
-      description: get all cohorts
+      description: This can only be done by the logged in user with role TEACHER.
       operationId: getCohorts
       security:
         - bearerAuth: []
