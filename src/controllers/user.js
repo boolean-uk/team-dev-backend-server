@@ -157,11 +157,19 @@ export const updateById = async (req, res) => {
         })
       }
     }
+    if (req.user.role === 'STUDENT' && req.user.id !== id)
+      return sendMessageResponse(
+        res,
+        403,
+        "You do not have the permission to edit this user's profile"
+      )
+    let foundCohort
 
-    const foundCohort = await Cohort.findById(cohortId)
-
-    if (!foundCohort) {
-      return sendDataResponse(res, 404, { id: 'This cohort does not exist' })
+    if (cohortId) {
+      foundCohort = await Cohort.findById(cohortId)
+      if (!foundCohort) {
+        return sendDataResponse(res, 404, { id: 'This cohort does not exist' })
+      }
     }
 
     const userToUpdate = await User.findById(id)
