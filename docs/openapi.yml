@@ -386,6 +386,7 @@ paths:
                 properties:
                   status:
                     type: string
+                    example: success
                   data:
                     properties:
                       cohort:
