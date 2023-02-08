@@ -389,7 +389,7 @@ paths:
                   data:
                     properties:
                       cohort:
-                        $ref: '#/components/schemas/createCohort'
+                        $ref: '#/components/schemas/createdCohort'
         400:
           description: Bad Request
           content:
@@ -428,6 +428,22 @@ components:
       type: object
       required: [cohortName, startDate, endDate]
       properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+    createdCohort:
+      type: object
+      required: [cohortName, startDate, endDate]
+      properties:
+        id:
+          type: integer
         cohortName:
           type: string
         startDate:
