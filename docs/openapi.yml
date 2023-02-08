@@ -382,17 +382,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: success
-                  data:
-                    properties:
-                      cohort:
-                        $ref: '#/components/schemas/createdCohort'
+                $ref: '#/components/schemas/createdCohort'
         400:
-          description: fail
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot create cohort)
           content:
             application/json:
               schema:
@@ -467,17 +465,31 @@ components:
           type: string
           format: date
           pattern: YYYY/MM/DD
+
     createdCohort:
       type: object
-      required: [cohortName, startDate, endDate]
       properties:
-        id:
-          type: integer
-        cohortName:
+        status:
           type: string
-        startDate:
-          type: string
-          format: string
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              required: [cohortName, startDate, endDate]
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
     DeletedCohort:
       type: object
       properties:
