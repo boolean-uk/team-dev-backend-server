@@ -1,4 +1,3 @@
-import { prisma } from '@prisma/client'
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
@@ -142,7 +141,7 @@ export default class Post {
     return Post.fromDb(updatedPost)
   }
   async createLike() {
-    const like = await prisma.post.update({
+    const like = await dbClient.post.update({
       where: {
         id: this.id
       }
