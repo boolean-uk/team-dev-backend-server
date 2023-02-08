@@ -161,7 +161,7 @@ export const updateById = async (req, res) => {
       return sendMessageResponse(
         res,
         403,
-        "Unable to edit other people's profile!"
+        "You do not have the permission to edit this user's profile"
       )
     let foundCohort
 
