@@ -45,18 +45,17 @@ export const create = async (req, res) => {
       })
     }
 
-    // If optionals present: error if not first or last name
-    let hasOptional = false
-    Object.keys(req.body).forEach((key) => {
-      if (
-        key === 'firstName' ||
-        key === 'lastName' ||
-        key === 'githubUrl' ||
-        key === 'biography'
-      ) {
-        hasOptional = true
-      }
-    })
+    const optionalKeys = [
+      'githubUrl',
+      'biography',
+      'specialism',
+      'phone',
+      'profileImageUrl'
+    ]
+    const hasOptional = Object.keys(req.body).some((key) =>
+      optionalKeys.includes(key)
+    )
+
     if (hasOptional && (!req.body.firstName || !req.body.lastName)) {
       return sendDataResponse(res, 400, {
         error: 'Missing first name or last name'
@@ -88,7 +87,6 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
   const { firstName, lastName } = req.query
 
   if (!firstName && !lastName) {
@@ -181,7 +179,7 @@ export const updateById = async (req, res) => {
   } catch (error) {
     console.error(error)
     return sendDataResponse(res, 500, {
-      error: 'Unable to update user, please try again'
+      error: `Unable to update user, please try again: ${error}`
     })
   }
 }
