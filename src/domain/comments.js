@@ -52,20 +52,26 @@ export default class Comment {
       content: this.content
     }
 
-    if (this.userId) {
+    if (this.userId && this.postId) {
       data.user = {
         connect: {
           id: this.userId
         }
       }
+      data.post = {
+        connect: {
+          id: this.postId
+        }
+      }
     }
 
-    if (!this.userId) return null
+    if (!this.userId || !this.postId) return null
 
     const createdComment = await dbClient.comment.create({
       data,
       include: {
-        user: true
+        user: true,
+        post: true
       }
     })
     return Comment.fromDb(createdComment)
@@ -94,7 +100,8 @@ export default class Comment {
         [key]: value
       },
       include: {
-        user: true
+        user: true,
+        post: true
       }
     })
 
@@ -112,7 +119,8 @@ export default class Comment {
           include: {
             profile: true
           }
-        }
+        },
+        post: true
       }
     }
 
@@ -122,9 +130,9 @@ export default class Comment {
       }
     }
 
-    const foundPosts = await dbClient.comment.findMany(query)
+    const foundComments = await dbClient.comment.findMany(query)
 
-    return foundPosts.map((post) => Comment.fromDb(post))
+    return foundComments.map((post) => Comment.fromDb(post))
   }
 
   async updateById() {
@@ -140,7 +148,8 @@ export default class Comment {
           include: {
             profile: true
           }
-        }
+        },
+        post: true
       }
     })
 
