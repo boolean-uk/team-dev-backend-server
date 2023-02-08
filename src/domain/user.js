@@ -28,7 +28,6 @@ export default class User {
   }
 
   static async fromJson(json) {
-
     const {
       firstName,
       lastName,
@@ -42,15 +41,10 @@ export default class User {
       profileImageUrl
     } = json
 
-    // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
-
-
     const passwordHash = await bcrypt.hash(password, 8)
 
     return new User(
       null,
-
       cohortId,
       firstName,
       lastName,
@@ -61,15 +55,6 @@ export default class User {
       specialism,
       phone,
       profileImageUrl
-
-      null,
-      firstName,
-      lastName,
-      email,
-      biography,
-      githubUrl,
-      passwordHash
-
     )
   }
 
@@ -106,23 +91,15 @@ export default class User {
       user: {
         id: this.id,
         cohort_id: this.cohortId,
-
-
-        role: this.role,
-
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-
         githubUrl: this.githubUrl,
         specialism: this.specialism,
         phone: this.phone,
         profileImageUrl: this.profileImageUrl,
         role: this.role
-
-        githubUrl: this.githubUrl
-
       }
     }
   }
@@ -152,14 +129,10 @@ export default class User {
           firstName: this.firstName,
           lastName: this.lastName,
           bio: this.bio,
-
           githubUrl: this.githubUrl,
           specialism: this.specialism,
           phone: this.phone,
           profileImageUrl: this.profileImageUrl
-
-          githubUrl: this.githubUrl
-
         }
       }
     }
