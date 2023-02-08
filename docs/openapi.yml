@@ -390,7 +390,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /cohorts/{cohortId}:
+    delete:
+      tags:
+        - cohort
+      summary: Delete cohort by id
+      description: Only Teachers can Delete cohorts.
+      operationId: deleteCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the cohort that is to be deleted.'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedCohort'
+        404:
+          description: A cohort with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
@@ -423,6 +457,28 @@ components:
         updatedAt:
           type: string
           format: string
+    DeletedCohort:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            deletedCohort:
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD 
 
     AllUsers:
       type: object
