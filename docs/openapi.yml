@@ -431,10 +431,12 @@ components:
         cohortName:
           type: string
         startDate:
-          type: date
+          type: string
+          format: date
           pattern: YYYY/MM/DD
         endDate:
-          type: date
+          type: string
+          format: date
           pattern: YYYY/MM/DD
 
     AllUsers:
