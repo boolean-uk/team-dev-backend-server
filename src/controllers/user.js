@@ -45,18 +45,17 @@ export const create = async (req, res) => {
       })
     }
 
-    // If optionals present: error if not first or last name
-    let hasOptional = false
-    Object.keys(req.body).forEach((key) => {
-      if (
-        key === 'firstName' ||
-        key === 'lastName' ||
-        key === 'githubUrl' ||
-        key === 'biography'
-      ) {
-        hasOptional = true
-      }
-    })
+    const optionalKeys = [
+      'githubUrl',
+      'biography',
+      'specialism',
+      'phone',
+      'profileImageUrl'
+    ]
+    const hasOptional = Object.keys(req.body).some((key) =>
+      optionalKeys.includes(key)
+    )
+
     if (hasOptional && (!req.body.firstName || !req.body.lastName)) {
       return sendDataResponse(res, 400, {
         error: 'Missing first name or last name'
@@ -88,29 +87,68 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { firstName, lastName } = req.query
 
-  let foundUsers
-
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
-  } else {
-    foundUsers = await User.findAll()
+  if (!firstName && !lastName) {
+    const foundUsers = await User.findAll()
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
   }
 
-  const formattedUsers = foundUsers.map((user) => {
-    return {
-      ...user.toJSON().user
-    }
-  })
+  const whereConditions = {
+    profile: {}
+  }
+  let numConditions = 0
 
-  return sendDataResponse(res, 200, { users: formattedUsers })
+  if (req.query.firstName) {
+    whereConditions.profile.firstName = {
+      equals: req.query.firstName,
+      mode: 'insensitive'
+    }
+    numConditions++
+  }
+
+  if (req.query.lastName) {
+    whereConditions.profile.lastName = {
+      equals: req.query.lastName,
+      mode: 'insensitive'
+    }
+    numConditions++
+  }
+
+  if (numConditions === 1) {
+    const foundUsers = await User.findBy(whereConditions)
+
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
+  } else {
+    const where = {
+      AND: whereConditions
+    }
+
+    const foundUsers = await User.findBy(where)
+
+    const formattedUsers = foundUsers.map((user) => {
+      return {
+        ...user.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: formattedUsers })
+  }
 }
 
 export const updateById = async (req, res) => {
   const id = Number(req.params.id)
   const { cohortId } = req.body
+
   try {
     if (req.user.role === 'STUDENT') {
       if (req.body.cohortId || req.body.role) {
@@ -135,12 +173,13 @@ export const updateById = async (req, res) => {
     userInstance.id = userToUpdate.id
 
     const updatedUser = await userInstance.updateById()
+    delete updatedUser.passwordHash
 
     sendDataResponse(res, 201, { user: { ...updatedUser } })
   } catch (error) {
     console.error(error)
     return sendDataResponse(res, 500, {
-      error: 'Unable to update user, please try again'
+      error: `Unable to update user, please try again: ${error}`
     })
   }
 }
