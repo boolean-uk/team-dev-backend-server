@@ -375,14 +375,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createCohort'
+              $ref: '#/components/schemas/CreateCohort'
       responses:
         201:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createdCohort'
+                $ref: '#/components/schemas/CreatedCohort'
         400:
           description: Bad Request
           content:
@@ -451,7 +451,7 @@ components:
                 content:
                   type: string
 
-    createCohort:
+    CreateCohort:
       type: object
       required: [cohortName, startDate, endDate]
       properties:
@@ -466,7 +466,7 @@ components:
           format: date
           pattern: YYYY/MM/DD
 
-    createdCohort:
+    CreatedCohort:
       type: object
       properties:
         status:
