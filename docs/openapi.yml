@@ -321,6 +321,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /posts/:id/likes:
+    post:
+      tags:
+        - post
+      summary: Liking a single post
+      description: This can only be liked once by a logged in user.
+      operationId: createLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that is to be liked'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -737,20 +767,66 @@ components:
           example: success
         data:
           properties:
-            updatedPosts:
-              post:
-                properties:
-                  id:
-                    type: integer
-                  userId:
-                    type: integer
-                  content:
-                    type: string
-                  createdAt:
-                    type: string
-                  updatedAt:
-                    type: string
-                  user:
+            updatedPost:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+                user:
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    role:
+                      type: string
+                    cohortId:
+                      type: integer
+                    profile:
+                      properties:
+                        id:
+                          type: integer
+                        userId:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        bio:
+                          type: string
+                        githubUrl:
+                          type: string
+    LikedPost:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+                likes:
+                  type: array
+                  items:
+                    type: object
                     properties:
                       id:
                         type: integer
@@ -760,20 +836,6 @@ components:
                         type: string
                       cohortId:
                         type: integer
-                      profile:
-                        properties:
-                          id:
-                            type: integer
-                          userId:
-                            type: integer
-                          firstName:
-                            type: string
-                          lastName:
-                            type: string
-                          bio:
-                            type: string
-                          githubUrl:
-                            type: string
 
     CreatedUser:
       type: object

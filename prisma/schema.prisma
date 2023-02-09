@@ -28,7 +28,7 @@ model User {
   comments     Comment[]     @relation("userComments")
   deliveryLogs DeliveryLog[]
   likedPosts   Post[]
-  likedComments Comment[]
+  likedComments Comment[] 
 }
 
 model Profile {
