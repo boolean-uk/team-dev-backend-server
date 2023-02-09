@@ -39,6 +39,15 @@ export class Cohort {
     return Cohort._findByUnique('id', id)
   }
 
+  async deleteCohortById() {
+    const deletedCohort = await dbClient.cohort.delete({
+      where: {
+        id: this.id
+      }
+    })
+    return deletedCohort
+  }
+
   static async _findByUnique(key, value) {
     const foundCohort = await dbClient.cohort.findUnique({
       where: {

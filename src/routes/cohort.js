@@ -8,5 +8,10 @@ import {
 const router = Router()
 
 router.post('/', validateAuthentication, validateTeacherRole, create)
-
+router.delete(
+  '/users/?cohortId:{cohortId}',
+  validateAuthentication,
+  validateTeacherRole,
+  create
+)
 export default router
