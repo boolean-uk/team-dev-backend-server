@@ -39,7 +39,6 @@ export const getAllComments = async (req, res) => {
     return sendDataResponse(res, 404, {
       error: 'Post with given id not found'
     })
-  console.log('found post', foundPost)
 
   if (!foundPost.comments) {
     return sendDataResponse(res, 404, { error: 'This post has no comments' })
