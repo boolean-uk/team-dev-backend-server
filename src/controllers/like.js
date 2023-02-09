@@ -14,6 +14,17 @@ export const createLike = async (req, res) => {
         error: 'Post with given id not found'
       })
 
+    let isLiked = false
+    foundPost.likes.forEach((like) => {
+      if (req.user.id === like.id) {
+        isLiked = true
+      }
+    })
+
+    if (isLiked) {
+      return sendMessageResponse(res, 403, 'You already liked this post')
+    }
+
     const likedPost = await foundPost.createLike(req.user.id)
 
     sendDataResponse(res, 200, { post: likedPost })
