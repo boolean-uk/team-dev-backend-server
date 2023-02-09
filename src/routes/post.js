@@ -9,4 +9,6 @@ router.get('/', validateAuthentication, getAll)
 router.delete('/:id', validateAuthentication, deleteById)
 router.patch('/:id', validateAuthentication, updateById)
 
+router.get('/:id/comments', validateAuthentication, getAll)
+
 export default router
