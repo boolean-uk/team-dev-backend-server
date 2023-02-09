@@ -14,7 +14,10 @@ export const createLike = async (req, res) => {
         error: 'Post with given id not found'
       })
 
+    const likedPost = await foundPost.createLike(req.user.id)
+
+    sendDataResponse(res, 200, { post: likedPost })
   } catch (error) {
-    
+    console.error(error)
   }
 }

@@ -1,7 +1,7 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt) {
+  constructor(id, userId, user, content, createdAt, updatedAt, likes) {
     this.id = id
     this.userId = userId
     this.user = user
@@ -140,11 +140,21 @@ export default class Post {
 
     return Post.fromDb(updatedPost)
   }
-  async createLike() {
-    const like = await dbClient.post.update({
+
+  async createLike(userId) {
+    const likedPost = await dbClient.post.update({
       where: {
         id: this.id
+      },
+      data: {
+        likes: {
+          connect: [{ id: userId }]
+        }
       }
     })
+
+    // console.log(likedPost)
+
+    return likedPost
   }
 }
