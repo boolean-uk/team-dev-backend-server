@@ -1,33 +1,35 @@
 import dbClient from '../utils/dbClient.js'
 
-export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt, likes) {
+export default class Comment {
+  constructor(id, userId, user, postId, post, content, createdAt, updatedAt) {
     this.id = id
     this.userId = userId
     this.user = user
+    this.postId = postId
+    this.post = post
     this.content = content
     this.createdAt = createdAt
     this.updatedAt = updatedAt
-    this.likes = likes
   }
 
-  static fromDb(post) {
-    delete post.user.password
-    return new Post(
-      post.id,
-      post.userId,
-      post.user,
-      post.content,
-      post.createdAt,
-      post.updatedAt,
-      post.likes
+  static fromDb(comment) {
+    delete comment.user.password
+    return new Comment(
+      comment.id,
+      comment.userId,
+      comment.user,
+      comment.postId,
+      comment.post,
+      comment.content,
+      comment.createdAt,
+      comment.updatedAt
     )
   }
 
   static async fromJson(json) {
     const { content } = json
 
-    return new Post(null, null, null, content, null, null, [])
+    return new Comment(null, null, null, content, null, null)
   }
 
   toJSON() {
@@ -36,10 +38,11 @@ export default class Post {
         id: this.id,
         userId: this.userId,
         user: this.user,
+        postId: this.postId,
+        post: this.post,
         content: this.content,
         createdAt: this.createdAt,
-        updatedAt: this.updatedAt,
-        likes: this.likes
+        updatedAt: this.updatedAt
       }
     }
   }
@@ -49,55 +52,61 @@ export default class Post {
       content: this.content
     }
 
-    if (this.userId) {
+    if (this.userId && this.postId) {
       data.user = {
         connect: {
           id: this.userId
         }
       }
+      data.post = {
+        connect: {
+          id: this.postId
+        }
+      }
     }
 
-    if (!this.userId) return null
+    if (!this.userId || !this.postId) return null
 
-    const createdPost = await dbClient.post.create({
+    const createdComment = await dbClient.comment.create({
       data,
       include: {
-        user: true
+        user: true,
+        post: true
       }
     })
-    return Post.fromDb(createdPost)
+    return Comment.fromDb(createdComment)
   }
 
   async delete() {
-    const deletedPost = await dbClient.post.delete({
+    const deletedComment = await dbClient.post.delete({
       where: {
         id: this.id
       }
     })
-    return deletedPost
+    return deletedComment
   }
 
   static async findById(id) {
-    return Post._findByUnique('id', id)
+    return Comment._findByUnique('id', id)
   }
 
   static async findAll() {
-    return Post._findMany()
+    return Comment._findMany()
   }
 
   static async _findByUnique(key, value) {
-    const foundPost = await dbClient.post.findUnique({
+    const foundComment = await dbClient.comment.findUnique({
       where: {
         [key]: value
       },
       include: {
         user: true,
-        likes: true
+        post: true
       }
     })
 
-    if (foundPost) {
-      return Post.fromDb(foundPost)
+    if (foundComment) {
+      return Comment.fromDb(foundComment)
     }
 
     return null
@@ -110,7 +119,8 @@ export default class Post {
           include: {
             profile: true
           }
-        }
+        },
+        post: true
       }
     }
 
@@ -120,13 +130,13 @@ export default class Post {
       }
     }
 
-    const foundPosts = await dbClient.post.findMany(query)
+    const foundComments = await dbClient.comment.findMany(query)
 
-    return foundPosts.map((post) => Post.fromDb(post))
+    return foundComments.map((post) => Comment.fromDb(post))
   }
 
   async updateById() {
-    const updatedPost = await dbClient.post.update({
+    const updatedComment = await dbClient.comment.update({
       where: {
         id: this.id
       },
@@ -138,32 +148,11 @@ export default class Post {
           include: {
             profile: true
           }
-        }
+        },
+        post: true
       }
     })
 
-    return Post.fromDb(updatedPost)
-  }
-
-  async createLike(userId) {
-    const likedPost = await dbClient.post.update({
-      where: {
-        id: this.id
-      },
-      data: {
-        likes: {
-          connect: [{ id: userId }]
-        }
-      },
-      include: {
-        likes: true
-      }
-    })
-
-    likedPost.likes.forEach((like) => {
-      delete like.password
-    })
-
-    return likedPost
+    return Comment.fromDb(updatedComment)
   }
 }

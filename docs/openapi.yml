@@ -370,27 +370,88 @@ paths:
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        description: Create cohort object (Student cannot create cohort object)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCohort'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedCohort'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot create cohort)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK (successful operation)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCohorts'
+        401:
+          description: Unauthorised(only a teacher is authorised to get all cohorts )
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cohorts/{cohortId}:
+    delete:
+      tags:
+        - cohort
+      summary: Delete cohort by id
+      description: Only Teachers can Delete cohorts.
+      operationId: deleteCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the cohort that is to be deleted.'
+          required: true
+          schema:
+            type: integer
       responses:
         201:
           description: success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    properties:
-                      cohort:
-                        $ref: '#/components/schemas/Cohort'
-        400:
-          description: fail
+                $ref: '#/components/schemas/DeletedCohort'
+        404:
+          description: A cohort with this Id does not exist.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
@@ -412,17 +473,93 @@ components:
                 content:
                   type: string
 
-    Cohort:
+    CreateCohort:
+      type: object
+      required: [cohortName, startDate, endDate]
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+
+    CreatedCohort:
       type: object
       properties:
-        id:
-          type: integer
-        createdAt:
+        status:
           type: string
-          format: string
-        updatedAt:
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              required: [cohortName, startDate, endDate]
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+    AllCohorts:
+      type: object
+      properties:
+        status:
           type: string
-          format: string
+          example: success
+        data:
+          type: object
+          properties:
+            cohorts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  cohortName:
+                    type: string
+                  startDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
+                  endDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
+    DeletedCohort:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            deletedCohort:
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD
 
     AllUsers:
       type: object

@@ -35,6 +35,15 @@ export class Cohort {
     }
   }
 
+  static fromDb(cohort) {
+    return new Cohort(
+      cohort.id,
+      cohort.cohortName,
+      cohort.startDate,
+      cohort.endDate
+    )
+  }
+
   static async findById(id) {
     return Cohort._findByUnique('id', id)
   }
@@ -60,5 +69,15 @@ export class Cohort {
     }
 
     return null
+  }
+
+  static async findAll() {
+    return Cohort._findMany()
+  }
+
+  static async _findMany() {
+    const foundCohorts = await dbClient.cohort.findMany()
+
+    return foundCohorts.map((cohort) => Cohort.fromDb(cohort))
   }
 }
