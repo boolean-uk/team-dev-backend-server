@@ -104,6 +104,7 @@ export default class Post {
       },
       include: {
         user: true,
+        comments: true,
         likes: true
       }
     })
