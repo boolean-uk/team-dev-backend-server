@@ -21,7 +21,6 @@ export const create = async (req, res) => {
   // format dates for acceptance by Prisma
   const startDateFormatted = new Date(startDate)
   const endDateFormatted = new Date(endDate)
-  console.log(10)
 
   // check for unique cohort name
   const foundCohortName = await Cohort.findByName(cohortName)
