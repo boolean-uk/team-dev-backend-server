@@ -351,6 +351,81 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - post
+      summary: Get all likes for a post
+      description: get all likes
+      operationId: getPostLikes
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that we want to get the likes from'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/:id/likes/:id:
+    delete:
+      tags:
+        - post
+      summary: Delete a single like
+      description: A logged in user can delete their like
+      operationId: deleteLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post that we want to delete the like from'
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: 'The id of the users like that we want to delete'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: 'The user has not liked this post yet'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /logs:
     post:
       tags:
@@ -738,6 +813,19 @@ components:
                   updatedAt:
                     type: string
                     format: string
+                  likes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        cohortId:
+                          type: integer
 
     DeletedPost:
       type: object
