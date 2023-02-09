@@ -1,7 +1,7 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt, likes) {
+  constructor(id, userId, user, content, createdAt, updatedAt) {
     this.id = id
     this.userId = userId
     this.user = user
