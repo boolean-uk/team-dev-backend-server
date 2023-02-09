@@ -22,7 +22,7 @@ export const createLike = async (req, res) => {
     })
 
     if (isLiked) {
-      return sendMessageResponse(res, 403, 'You already liked this post')
+      return sendMessageResponse(res, 400, 'You already liked this post')
     }
 
     const likedPost = await foundPost.createLike(req.user.id)

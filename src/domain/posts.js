@@ -27,7 +27,7 @@ export default class Post {
   static async fromJson(json) {
     const { content } = json
 
-    return new Post(null, null, null, content, null, null, null)
+    return new Post(null, null, null, content, null, null, [])
   }
 
   toJSON() {
