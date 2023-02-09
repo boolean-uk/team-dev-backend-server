@@ -48,6 +48,10 @@ export class Cohort {
     return Cohort._findByUnique('id', id)
   }
 
+  static async findByName(cohortName) {
+    return Cohort._findByUnique('cohortName', cohortName)
+  }
+
   static async _findByUnique(key, value) {
     const foundCohort = await dbClient.cohort.findUnique({
       where: {
