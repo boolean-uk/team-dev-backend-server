@@ -17,7 +17,7 @@ export const create = async (req, res) => {
       comment: { ...createdComment }
     })
   } catch (error) {
-    console.log('this is the error', error)
+    console.error('error creating comment', error)
     return sendMessageResponse(res, 500, 'Unable to create new comment')
   }
 }
