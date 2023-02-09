@@ -321,6 +321,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /posts/:id/likes:
+    post:
+      tags:
+        - post
+      summary: Liking a single post
+      description: This can only be liked once by a logged in user.
+      operationId: createLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that is to be liked'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -370,26 +400,53 @@ paths:
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        description: Create cohort object (Student cannot create cohort object)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCohort'
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    properties:
-                      cohort:
-                        $ref: '#/components/schemas/Cohort'
+                $ref: '#/components/schemas/CreatedCohort'
         400:
-          description: fail
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot create cohort)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK (successful operation)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCohorts'
+        401:
+          description: Unauthorised(only a teacher is authorised to get all cohorts )
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts/{cohortId}:
     delete:
       tags:
@@ -446,17 +503,71 @@ components:
                 content:
                   type: string
 
-    Cohort:
+    CreateCohort:
+      type: object
+      required: [cohortName, startDate, endDate]
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+
+    CreatedCohort:
       type: object
       properties:
-        id:
-          type: integer
-        createdAt:
+        status:
           type: string
-          format: string
-        updatedAt:
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              required: [cohortName, startDate, endDate]
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+    AllCohorts:
+      type: object
+      properties:
+        status:
           type: string
-          format: string
+          example: success
+        data:
+          type: object
+          properties:
+            cohorts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  cohortName:
+                    type: string
+                  startDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
+                  endDate:
+                    type: string
+                    format: date
+                    pattern: YYYY-MM-DD
     DeletedCohort:
       type: object
       properties:
@@ -478,7 +589,7 @@ components:
                 endDate:
                   type: string
                   format: date
-                  pattern: YYYY-MM-DD 
+                  pattern: YYYY-MM-DD
 
     AllUsers:
       type: object
@@ -656,20 +767,66 @@ components:
           example: success
         data:
           properties:
-            updatedPosts:
-              post:
-                properties:
-                  id:
-                    type: integer
-                  userId:
-                    type: integer
-                  content:
-                    type: string
-                  createdAt:
-                    type: string
-                  updatedAt:
-                    type: string
-                  user:
+            updatedPost:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+                user:
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    role:
+                      type: string
+                    cohortId:
+                      type: integer
+                    profile:
+                      properties:
+                        id:
+                          type: integer
+                        userId:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        bio:
+                          type: string
+                        githubUrl:
+                          type: string
+    LikedPost:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+                likes:
+                  type: array
+                  items:
+                    type: object
                     properties:
                       id:
                         type: integer
@@ -679,20 +836,6 @@ components:
                         type: string
                       cohortId:
                         type: integer
-                      profile:
-                        properties:
-                          id:
-                            type: integer
-                          userId:
-                            type: integer
-                          firstName:
-                            type: string
-                          lastName:
-                            type: string
-                          bio:
-                            type: string
-                          githubUrl:
-                            type: string
 
     CreatedUser:
       type: object
