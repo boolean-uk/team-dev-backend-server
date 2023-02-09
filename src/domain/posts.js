@@ -88,7 +88,8 @@ export default class Post {
         [key]: value
       },
       include: {
-        user: true
+        user: true,
+        likes: true
       }
     })
 
@@ -150,10 +151,15 @@ export default class Post {
         likes: {
           connect: [{ id: userId }]
         }
+      },
+      include: {
+        likes: true
       }
     })
 
-    // console.log(likedPost)
+    likedPost.likes.forEach((like) => {
+      delete like.password
+    })
 
     return likedPost
   }

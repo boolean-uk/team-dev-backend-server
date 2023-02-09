@@ -18,6 +18,6 @@ export const createLike = async (req, res) => {
 
     sendDataResponse(res, 200, { post: likedPost })
   } catch (error) {
-    console.error(error)
+    sendMessageResponse(res, 400, `Unable to like post: ${error}`)
   }
 }
