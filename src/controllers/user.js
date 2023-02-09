@@ -87,9 +87,12 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const { firstName, lastName } = req.query
+  const { firstName, lastName, role } = req.query
+  // No queries? false. Queries? object
+  const queries = Object.keys(req.query).length === 0 ? false : req.query
 
-  if (!firstName && !lastName) {
+  // No queries - Return all users
+  if (!queries) {
     const foundUsers = await User.findAll()
     const formattedUsers = foundUsers.map((user) => {
       return {
@@ -99,23 +102,32 @@ export const getAll = async (req, res) => {
     return sendDataResponse(res, 200, { users: formattedUsers })
   }
 
+  // Where of Db.user
   const whereConditions = {
     profile: {}
   }
   let numConditions = 0
 
-  if (req.query.firstName) {
+  if (firstName) {
     whereConditions.profile.firstName = {
-      equals: req.query.firstName,
+      equals: firstName,
       mode: 'insensitive'
     }
     numConditions++
   }
 
-  if (req.query.lastName) {
+  if (lastName) {
     whereConditions.profile.lastName = {
-      equals: req.query.lastName,
+      equals: lastName,
       mode: 'insensitive'
+    }
+    numConditions++
+  }
+
+  if (role) {
+    // Role belongs directly to the user, so we just access the key .role instead of user.role
+    whereConditions.role = {
+      equals: role.toUpperCase()
     }
     numConditions++
   }
