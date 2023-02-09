@@ -29,7 +29,7 @@ export default class Comment {
   static async fromJson(json) {
     const { content } = json
 
-    return new Comment(null, null, null, content, null, null)
+    return new Comment(null, null, null, null, null, content, null, null)
   }
 
   toJSON() {
@@ -78,7 +78,7 @@ export default class Comment {
   }
 
   async delete() {
-    const deletedComment = await dbClient.post.delete({
+    const deletedComment = await dbClient.comment.delete({
       where: {
         id: this.id
       }

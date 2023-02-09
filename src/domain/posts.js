@@ -1,11 +1,12 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt) {
+  constructor(id, userId, user, content, comments, createdAt, updatedAt) {
     this.id = id
     this.userId = userId
     this.user = user
     this.content = content
+    this.comments = comments
     this.createdAt = createdAt
     this.updatedAt = updatedAt
   }
@@ -17,6 +18,7 @@ export default class Post {
       post.userId,
       post.user,
       post.content,
+      post.comments,
       post.createdAt,
       post.updatedAt
     )
@@ -25,7 +27,7 @@ export default class Post {
   static async fromJson(json) {
     const { content } = json
 
-    return new Post(null, null, null, content, null, null)
+    return new Post(null, null, null, content, null, null, null)
   }
 
   toJSON() {
@@ -35,6 +37,7 @@ export default class Post {
         userId: this.userId,
         user: this.user,
         content: this.content,
+        comments: this.comments,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt
       }
@@ -88,7 +91,8 @@ export default class Post {
         [key]: value
       },
       include: {
-        user: true
+        user: true,
+        comments: true
       }
     })
 
