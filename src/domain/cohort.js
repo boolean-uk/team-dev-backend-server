@@ -48,7 +48,6 @@ export class Cohort {
     return Cohort._findByUnique('id', id)
   }
 
-
   static async delete(id) {
     const deletedCohort = await dbClient.cohort.delete({
       where: {
@@ -56,7 +55,8 @@ export class Cohort {
       }
     })
     return deletedCohort
-    
+  }
+
   static async findByName(cohortName) {
     return Cohort._findByUnique('cohortName', cohortName)
   }
