@@ -370,22 +370,27 @@ paths:
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        description: Create cohort object (Student cannot create cohort object)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCohort'
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    properties:
-                      cohort:
-                        $ref: '#/components/schemas/Cohort'
+                $ref: '#/components/schemas/CreatedCohort'
         400:
-          description: fail
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot create cohort)
           content:
             application/json:
               schema:
@@ -446,17 +451,45 @@ components:
                 content:
                   type: string
 
-    Cohort:
+    CreateCohort:
+      type: object
+      required: [cohortName, startDate, endDate]
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+
+    CreatedCohort:
       type: object
       properties:
-        id:
-          type: integer
-        createdAt:
+        status:
           type: string
-          format: string
-        updatedAt:
-          type: string
-          format: string
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              required: [cohortName, startDate, endDate]
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
     DeletedCohort:
       type: object
       properties:
@@ -478,7 +511,7 @@ components:
                 endDate:
                   type: string
                   format: date
-                  pattern: YYYY-MM-DD 
+                  pattern: YYYY-MM-DD
 
     AllUsers:
       type: object
