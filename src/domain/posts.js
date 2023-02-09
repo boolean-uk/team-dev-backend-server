@@ -1,11 +1,21 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, createdAt, updatedAt, likes) {
+  constructor(
+    id,
+    userId,
+    user,
+    content,
+    comments,
+    createdAt,
+    updatedAt,
+    likes
+  ) {
     this.id = id
     this.userId = userId
     this.user = user
     this.content = content
+    this.comments = comments
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.likes = likes
@@ -18,6 +28,7 @@ export default class Post {
       post.userId,
       post.user,
       post.content,
+      post.comments,
       post.createdAt,
       post.updatedAt,
       post.likes
@@ -37,6 +48,7 @@ export default class Post {
         userId: this.userId,
         user: this.user,
         content: this.content,
+        comments: this.comments,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt,
         likes: this.likes
@@ -92,6 +104,7 @@ export default class Post {
       },
       include: {
         user: true,
+        comments: true,
         likes: true
       }
     })
