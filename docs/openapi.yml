@@ -785,6 +785,19 @@ components:
                   updatedAt:
                     type: string
                     format: string
+                  likes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        cohortId:
+                          type: integer
 
     DeletedPost:
       type: object
