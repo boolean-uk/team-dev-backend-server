@@ -20,23 +20,26 @@ export const create = async (req, res) => {
 export const deleteCohortById = async (req, res) => {
   const id = Number(req.params.id)
 
-  if (!id)
+  if (!id) {
     return sendDataResponse(res, 404, { error: 'Cohort id does not exist' })
-
+  }
   try {
     const foundCohortById = await Cohort.findById(id)
-    if (!foundCohortById)
+    if (!foundCohortById) {
       return sendDataResponse(res, 404, {
         error: 'Cohort with given id not found'
       })
-
-    if (req.user.role === 'STUDENT' && req.user.id !== foundCohortById.user.id)
+    }
+    if (
+      req.user.role === 'STUDENT' &&
+      req.user.id !== foundCohortById.user.id
+    ) {
       return sendMessageResponse(
         res,
         403,
         'You are unable to delete this cohort'
       )
-
+    }
     const deletedCohort = await Cohort.delete(id)
 
     return sendDataResponse(res, 201, {
