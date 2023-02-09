@@ -1,4 +1,4 @@
-import Comment from '../domain/commentss.js'
+import Comment from '../domain/comments.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -17,6 +17,7 @@ export const create = async (req, res) => {
       comment: { ...createdComment }
     })
   } catch (error) {
+    console.log('this is the error', error)
     return sendMessageResponse(res, 500, 'Unable to create new comment')
   }
 }
