@@ -1,7 +1,16 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id, userId, user, content, comments, createdAt, updatedAt) {
+  constructor(
+    id,
+    userId,
+    user,
+    content,
+    comments,
+    createdAt,
+    updatedAt,
+    likes
+  ) {
     this.id = id
     this.userId = userId
     this.user = user
@@ -9,6 +18,7 @@ export default class Post {
     this.comments = comments
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.likes = likes
   }
 
   static fromDb(post) {
@@ -20,14 +30,15 @@ export default class Post {
       post.content,
       post.comments,
       post.createdAt,
-      post.updatedAt
+      post.updatedAt,
+      post.likes
     )
   }
 
   static async fromJson(json) {
     const { content } = json
 
-    return new Post(null, null, null, content, null, null, null)
+    return new Post(null, null, null, content, null, null, [])
   }
 
   toJSON() {
@@ -39,7 +50,8 @@ export default class Post {
         content: this.content,
         comments: this.comments,
         createdAt: this.createdAt,
-        updatedAt: this.updatedAt
+        updatedAt: this.updatedAt,
+        likes: this.likes
       }
     }
   }
@@ -92,7 +104,7 @@ export default class Post {
       },
       include: {
         user: true,
-        comments: true
+        likes: true
       }
     })
 
@@ -143,5 +155,27 @@ export default class Post {
     })
 
     return Post.fromDb(updatedPost)
+  }
+
+  async createLike(userId) {
+    const likedPost = await dbClient.post.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        likes: {
+          connect: [{ id: userId }]
+        }
+      },
+      include: {
+        likes: true
+      }
+    })
+
+    likedPost.likes.forEach((like) => {
+      delete like.password
+    })
+
+    return likedPost
   }
 }
