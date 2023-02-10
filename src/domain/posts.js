@@ -180,4 +180,17 @@ export default class Post {
 
     return likedPost
   }
+
+  async deleteLike(userId) {
+    await dbClient.post.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        likes: {
+          disconnect: [{ id: userId }]
+        }
+      }
+    })
+  }
 }
