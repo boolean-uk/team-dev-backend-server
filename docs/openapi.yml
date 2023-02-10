@@ -379,7 +379,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /posts/:id/comments:
+    get:
+      tags:
+        - post
+      summary: Get all comments for a post
+      description: get all comments
+      operationId: getPostComments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the post that we want to get the comments from'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllComments'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts/:id/likes/:id:
     delete:
       tags:
@@ -678,7 +706,29 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
-
+    AllComments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        postId:
+          type: integer
+        content:
+          type: string
     User:
       type: object
       properties:
@@ -891,6 +941,7 @@ components:
                           type: string
                         githubUrl:
                           type: string
+
     LikedPost:
       type: object
       properties:
