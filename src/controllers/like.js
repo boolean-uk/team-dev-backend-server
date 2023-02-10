@@ -93,8 +93,8 @@ export const getAllLikes = async (req, res) => {
         error: 'Post with given id not found'
       })
     }
-    const post = await Post.findById(id)
-    sendDataResponse(res, 200, { post })
+
+    sendDataResponse(res, 200, { post: foundPost })
   } catch (error) {
     sendMessageResponse(res, 400, `Unable to get likes ${error}`)
   }
