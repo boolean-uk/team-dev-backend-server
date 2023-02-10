@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { create, getAll, deleteCohortById } from '../controllers/cohort.js'
+import {
+  create,
+  getAll,
+  deleteCohortById,
+  getById
+} from '../controllers/cohort.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -9,6 +14,8 @@ const router = Router()
 
 router.post('/', validateAuthentication, validateTeacherRole, create)
 router.get('/', validateAuthentication, validateTeacherRole, getAll)
+router.get('/:id', validateAuthentication, validateTeacherRole, getById)
+
 router.delete(
   '/:id',
   validateAuthentication,

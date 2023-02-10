@@ -17,18 +17,18 @@ enum Role {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
-  role         Role          @default(STUDENT)
-  profile      Profile?
-  cohortId     Int?
-  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
-  posts        Post[]        @relation("userPosts")
-  comments     Comment[]     @relation("userComments")
-  deliveryLogs DeliveryLog[]
-  likedPosts   Post[]
-  likedComments Comment[] 
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  role          Role          @default(STUDENT)
+  profile       Profile?
+  cohortId      Int?
+  cohort        Cohort?       @relation(fields: [cohortId], references: [id])
+  posts         Post[]        @relation("userPosts")
+  comments      Comment[]     @relation("userComments")
+  deliveryLogs  DeliveryLog[]
+  likedPosts    Post[]
+  likedComments Comment[]
 }
 
 model Profile {
@@ -67,6 +67,7 @@ model Post {
 model DeliveryLog {
   id       Int               @id @default(autoincrement())
   date     DateTime
+  title    String            @unique
   userId   Int
   user     User              @relation(fields: [userId], references: [id])
   cohortId Int

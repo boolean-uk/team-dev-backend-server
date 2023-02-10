@@ -80,3 +80,14 @@ export const getAll = async (req, res) => {
   const cohorts = await Cohort.findAll()
   return sendDataResponse(res, 200, { cohorts: cohorts })
 }
+
+export const getById = async (req, res) => {
+  const id = Number(req.params.id)
+  const cohort = await Cohort.findById(id)
+  if (!cohort) {
+    return sendDataResponse(res, 404, {
+      error: 'Cohort with given id not found'
+    })
+  }
+  return sendDataResponse(res, 200, { cohort })
+}
