@@ -72,8 +72,6 @@ export const deleteLike = async (req, res) => {
 
     await foundPost.deleteLike(userId)
 
-    console.log(foundPost)
-
     res.status(200).json({ status: 'success' })
   } catch (error) {}
 }
