@@ -384,8 +384,8 @@ paths:
     delete:
       tags:
         - post
-      summary: Delete a single like
-      description: A logged in user can delete their like
+      summary: Delete a single like on a post
+      description: A logged in user can delete their like on a post
       operationId: deleteLike
       security:
         - bearerAuth: []
@@ -421,6 +421,105 @@ paths:
                 $ref: '#/components/schemas/Error'
         404:
           description: 'The user has not liked this post yet'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/:postId/comments/:commentId/likes:
+    post:
+      tags:
+        - comment
+      summary: Liking a single comment
+      description: This can only be liked once by a logged in user
+      operationId: createLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post that the comment is on'
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          description: 'The id of the comment that the user will be liking'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedComment'
+        400:
+          description: fail - 'User has already liked this comment'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: fail - 'Post with given id not found'/'Comment with given id not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/:postId/comments/:commentId/likes/:userId:
+    delete:
+      tags:
+        - comment
+      summary: Delete a single like on a comment
+      description: A logged in user can delete their like on a comment
+      operationId: deleteLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post that the comment is attached to'
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          description: 'The id of the comment that we want to delete the like from'
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: "The id of the user's like that we want to delete"
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+        400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: fail - 'User cannot delete someone else's like'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: fail - 'User has not liked this comment'/'User/Post/Comment with given id not found'
           content:
             application/json:
               schema:
@@ -900,6 +999,40 @@ components:
         data:
           properties:
             post:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+                likes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      cohortId:
+                        type: integer
+
+    LikedComment:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            comment:
               properties:
                 id:
                   type: integer
