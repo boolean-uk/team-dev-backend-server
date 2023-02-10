@@ -81,3 +81,21 @@ export const deleteLike = async (req, res) => {
     sendMessageResponse(res, 400, `Unable to delete like on post: ${error}`)
   }
 }
+
+export const getAllLikes = async (req, res) => {
+  const id = Number(req.params.id)
+
+  try {
+    const foundPost = await Post.findById(id)
+
+    if (!foundPost) {
+      return sendDataResponse(res, 404, {
+        error: 'Post with given id not found'
+      })
+    }
+
+    sendDataResponse(res, 200, { post: foundPost })
+  } catch (error) {
+    sendMessageResponse(res, 400, `Unable to get likes ${error}`)
+  }
+}
