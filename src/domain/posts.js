@@ -182,7 +182,7 @@ export default class Post {
   }
 
   async deleteLike(userId) {
-    const unlikedPost = await dbClient.post.update({
+    await dbClient.post.update({
       where: {
         id: this.id
       },
@@ -190,16 +190,7 @@ export default class Post {
         likes: {
           disconnect: [{ id: userId }]
         }
-      },
-      include: {
-        likes: true
       }
     })
-
-    unlikedPost.likes.forEach((like) => {
-      delete like.password
-    })
-
-    return unlikedPost
   }
 }
