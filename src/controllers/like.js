@@ -10,10 +10,11 @@ export const createLike = async (req, res) => {
   try {
     const foundPost = await Post.findById(id)
 
-    if (!foundPost)
+    if (!foundPost) {
       return sendDataResponse(res, 404, {
         error: 'Post with given id not found'
       })
+    }
 
     let isLiked = false
     foundPost.likes.forEach((like) => {
@@ -41,17 +42,19 @@ export const deleteLike = async (req, res) => {
   try {
     const foundPost = await Post.findById(postId)
 
-    if (!foundPost)
+    if (!foundPost) {
       return sendDataResponse(res, 404, {
         error: 'Post with given id not found'
       })
+    }
 
     const foundUser = await User.findById(userId)
 
-    if (!foundUser)
+    if (!foundUser) {
       return sendDataResponse(res, 404, {
         error: 'User with given id not found'
       })
+    }
 
     if (req.user.id !== userId) {
       return sendDataResponse(res, 404, {
