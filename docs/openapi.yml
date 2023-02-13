@@ -16,7 +16,7 @@ paths:
     post:
       tags:
         - user
-      summary: Create user
+      summary: Createuser
       description: Create new user
       operationId: createUser
       requestBody:
