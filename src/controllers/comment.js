@@ -56,12 +56,13 @@ export const deleteCommentById = async (req, res) => {
     const postExists = await Post.findById(postId)
     const commentExists = await Comment.findById(commentId)
 
-    if (!postExists || !commentExists)
+    if (!postExists)
       return sendDataResponse(res, 404, {
-        error: 'Post or Comment does not exist'
+        error: 'Post does not exist'
       })
-
-    if (req.user.role !== 'TEACHER' || req.user.id !== commentExists.user.id)
+    if (commentId !== postExists.comments.commentId)
+      return sendDataResponse(res, 404, { error: 'Comment does not exist' })
+    if (req.user.role === 'TEACHER' || req.user.id === commentExists.user.id)
       return sendMessageResponse(
         res,
         403,
