@@ -154,18 +154,18 @@ export const deleteCommentLike = async (req, res) => {
     const foundComment = await Comment.findById(commentId)
 
     if (!foundComment) {
-      return sendDataResponse(res, 400, {
+      return sendDataResponse(res, 404, {
         error: 'Comment with given id, not found!'
       })
     }
     const foundUser = await User.findById(userId)
     if (!foundUser) {
-      return sendDataResponse(res, 400, {
+      return sendDataResponse(res, 404, {
         error: 'User with given Id not found.'
       })
     }
     if (req.user.id !== userId) {
-      return sendDataResponse(res, 400, {
+      return sendDataResponse(res, 404, {
         error: "You cannot delete someone else's like"
       })
     }
