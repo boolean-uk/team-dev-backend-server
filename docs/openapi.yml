@@ -593,6 +593,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /logs/{logId}:
+    get:
+      tags:
+        - log
+      summary: Get log by id
+      description: Only teachers can Get logs
+      operation: getLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the log to be found'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        404:
+          description: A log with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
