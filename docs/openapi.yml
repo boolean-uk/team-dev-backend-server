@@ -453,6 +453,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/:postId/comments/:commentId:
+    delete:
+      tags:
+        - post
+      summary: Delete a single comment on a post
+      description: A logged in user can delete their comment on a post
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post that you want to delete the comment from'
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          description: 'The id of the comment that you want to delete'
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedComment'
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: 'Comment ID not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /posts/:postId/comments/:commentId/likes:
     post:
@@ -704,7 +746,6 @@ components:
                   type: integer
                 content:
                   type: string
-
     CreateCohort:
       type: object
       required: [cohortName, startDate, endDate]
@@ -828,6 +869,27 @@ components:
           type: integer
         content:
           type: string
+    DeletedComment:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            deletedCohort:
+              type: object
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                postId:
+                  type: integer
+                content:
+                  type: string
+
     User:
       type: object
       properties:
