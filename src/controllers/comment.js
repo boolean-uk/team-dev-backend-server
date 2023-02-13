@@ -51,8 +51,17 @@ export const getAllComments = async (req, res) => {
 export const updateComment = async (req, res) => {
   const postId = Number(req.params.postId)
   const commentId = Number(req.params.commentId)
+  const { content } = req.body
 
   console.log('2 id:', postId, commentId)
+
+  if (!content) {
+    return sendDataResponse(res, 400, { error: 'Must provide content' })
+  }
+  if (!postId)
+    return sendDataResponse(res, 404, { error: 'Valid id not given' })
+  if (!commentId)
+    return sendDataResponse(res, 404, { error: 'Valid id not given' })
 
   try {
     const foundPost = await Post.findById(postId)
@@ -66,15 +75,13 @@ export const updateComment = async (req, res) => {
     if (!foundPost.comments) {
       return sendDataResponse(res, 404, { error: 'This post has no comments' })
     }
-    const foundComments = foundPost.comments
-    console.log('foundcomments', foundComments)
-    const foundComment = await foundComments.findById(commentId)
-    console.log('foundcomment???', foundComment)
-    if (!foundComment) {
-      return sendDataResponse(res, 404, {
-        error: 'Comment with given id not found'
-      })
-    }
+
+    const foundComment = await Comment.findById(commentId)
+    console.log('this', foundComment)
+
+    foundComment.content = content
+    const updatedComment = await foundComment.updateById()
+    return sendDataResponse(res, 201, { updatedComment })
   } catch (error) {
     console.error(error)
     sendMessageResponse(res, 400, `Unable to update comment: ${error}`)
