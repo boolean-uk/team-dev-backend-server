@@ -142,11 +142,14 @@ export const createCommentLike = async (req, res) => {
 export const deleteCommentLike = async (req, res) => {
   const commentId = Number(req.params.commentId)
   const userId = Number(req.params.userId)
-  if (!commentId)
+  if (!commentId) {
     return sendDataResponse(res, 400, { error: 'Valid Id must be given' })
+  }
 
-  if (!userId)
+  if (!userId) {
     return sendDataResponse(res, 400, { error: 'Valid id must be given' })
+  }
+
   try {
     const foundComment = await Comment.findById(commentId)
 
