@@ -58,11 +58,12 @@ export const updateComment = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  if (!postId)
+  if (!postId) {
     return sendDataResponse(res, 404, { error: 'Valid id not given' })
-  if (!commentId)
+  }
+  if (!commentId) {
     return sendDataResponse(res, 404, { error: 'Valid id not given' })
-
+  }
   try {
     const foundPost = await Post.findById(postId)
 
@@ -77,7 +78,6 @@ export const updateComment = async (req, res) => {
     }
 
     const foundComment = await Comment.findById(commentId)
-    console.log('this', foundComment)
 
     foundComment.content = content
     const updatedComment = await foundComment.updateById()
