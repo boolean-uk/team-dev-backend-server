@@ -29,7 +29,7 @@ router.post(
   createCommentLike
 )
 router.delete(
-  '/:postId/comments/:commentId/likes',
+  '/:postId/comments/:commentId/likes/:userId',
   validateAuthentication,
   deleteCommentLike
 )
