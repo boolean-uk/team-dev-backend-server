@@ -63,13 +63,12 @@ export const updateComment = async (req, res) => {
     return sendDataResponse(res, 400, { error: 'Valid id not given' })
   }
   try {
-    const foundPost = await Post.findById(postId)
-
-    if (!foundPost.comments) {
-      return sendDataResponse(res, 404, { error: 'This post has no comments' })
-    }
-
     const foundComment = await Comment.findById(commentId)
+    if (!foundComment) {
+      return sendDataResponse(res, 404, {
+        error: 'Comment with given id not found'
+      })
+    }
 
     foundComment.content = content
     const updatedComment = await foundComment.updateById()
