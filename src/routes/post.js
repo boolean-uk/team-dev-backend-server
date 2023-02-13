@@ -1,6 +1,10 @@
 import { Router } from 'express'
 import { create, getAll, deleteById, updateById } from '../controllers/post.js'
-import { getAllComments, createComment } from '../controllers/comment.js'
+import {
+  getAllComments,
+  createComment,
+  updateComment
+} from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
 import {
   createLike,
@@ -21,6 +25,11 @@ router.delete('/:postId/likes/:userId', validateAuthentication, deleteLike)
 
 router.post('/:id/comments', validateAuthentication, createComment)
 router.get('/:id/comments', validateAuthentication, getAllComments)
+router.patch(
+  '/:postId/comments/:commentId',
+  validateAuthentication,
+  updateComment
+)
 
 router.post(
   '/:postId/comments/:commentId/likes',
