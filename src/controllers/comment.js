@@ -47,3 +47,33 @@ export const getAllComments = async (req, res) => {
 
   return sendDataResponse(res, 200, { comments: comments })
 }
+
+export const deleteCommentById = async (req, res) => {
+  const postId = Number(req.params.postId)
+  const commentId = Number(req.params.commentId)
+
+  try {
+    const postExists = await Post.findById(postId)
+    const commentExists = await Comment.findById(commentId)
+
+    if (!postExists || !commentExists)
+      return sendDataResponse(res, 404, {
+        error: 'Post or Comment does not exist'
+      })
+
+    if (req.user.role !== 'TEACHER' || req.user.id !== commentExists.user.id)
+      return sendMessageResponse(
+        res,
+        403,
+        'You are unble to delete this comment'
+      )
+
+    const deletedComment = await commentExists.delete()
+
+    return sendDataResponse(res, 201, {
+      deletedComment
+    })
+  } catch (error) {
+    return sendMessageResponse(res, 400, `Unable to delete comment: ${error}`)
+  }
+}
