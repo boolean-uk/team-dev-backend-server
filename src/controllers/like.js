@@ -108,33 +108,30 @@ export const createCommentLike = async (req, res) => {
     const foundPost = await Post.findById(postId)
 
     if (!foundPost) {
-
       return sendDataResponse(res, 404, {
         error: 'Post with given id not found'
       })
     }
-     const foundComment = await Comment.findById(commentId)
+    const foundComment = await Comment.findById(commentId)
 
-     if (!foundComment) {
-       return sendDataResponse(res, 404, {
-         error: 'Comment with given id, not found!'
-       })
-     }
-     let isLiked = false
-     foundComment.likes.forEach((like) => {
-       if (req.user.id === like.id) {
-         isLiked = true
-       }
-     })
+    if (!foundComment) {
+      return sendDataResponse(res, 404, {
+        error: 'Comment with given id, not found!'
+      })
+    }
+    let isLiked = false
+    foundComment.likes.forEach((like) => {
+      if (req.user.id === like.id) {
+        isLiked = true
+      }
+    })
 
-     if (isLiked) {
-       return sendMessageResponse(res, 400, 'You already liked this comment')
-     }
+    if (isLiked) {
+      return sendMessageResponse(res, 400, 'You already liked this comment')
+    }
     const likedComment = await foundComment.createCommentLike(req.user.id)
-   
+
     sendDataResponse(res, 200, { comment: likedComment })
-
-
   } catch (error) {
     sendMessageResponse(res, 400, `Unable to like comment ${error}`)
   }

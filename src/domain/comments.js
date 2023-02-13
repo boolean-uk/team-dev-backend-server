@@ -24,7 +24,6 @@ export default class Comment {
   }
 
   static fromDb(comment) {
-    delete comment.user.password
     return new Comment(
       comment.id,
       comment.userId,
@@ -41,7 +40,7 @@ export default class Comment {
   static async fromJson(json) {
     const { content } = json
 
-    return new Comment(null, null, null, null, null, content, null, null, null)
+    return new Comment(null, null, null, null, null, content, null, null, [])
   }
 
   toJSON() {
