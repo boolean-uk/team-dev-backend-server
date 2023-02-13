@@ -25,7 +25,11 @@ router.delete('/:postId/likes/:userId', validateAuthentication, deleteLike)
 
 router.post('/:id/comments', validateAuthentication, createComment)
 router.get('/:id/comments', validateAuthentication, getAllComments)
-
+router.delete(
+  '/:postId/comments/:commentId',
+  validateAuthentication,
+  deleteCommentById
+)
 router.post(
   '/:postId/comments/:commentId/likes',
   validateAuthentication,
