@@ -548,7 +548,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-
   /posts/:postId/comments/:commentId/likes:
     post:
       tags:
@@ -775,6 +774,53 @@ paths:
                 $ref: '#/components/schemas/Error'
         403:
           description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/{id}:
+    patch:
+      tags:
+        - cohort
+      summary: Update a cohort
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: updateCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort id that needs to be updated'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update cohort(Student cannot update cohort)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCohort'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedCohort'
+        400:
+          description: Bad Request (A cohort with given name already exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot update cohort)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not found (Cohort with given id not found)
           content:
             application/json:
               schema:
