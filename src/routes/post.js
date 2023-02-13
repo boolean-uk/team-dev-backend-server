@@ -6,7 +6,8 @@ import {
   createLike,
   deleteLike,
   getAllLikes,
-  createCommentLike
+  createCommentLike,
+  deleteCommentLike
 } from '../controllers/like.js'
 const router = Router()
 
@@ -26,6 +27,11 @@ router.post(
   '/:postId/comments/:commentId/likes',
   validateAuthentication,
   createCommentLike
+)
+router.delete(
+  '/:postId/comments/:commentId/likes',
+  validateAuthentication,
+  deleteCommentLike
 )
 
 export default router
