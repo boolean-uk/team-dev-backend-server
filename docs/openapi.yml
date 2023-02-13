@@ -548,7 +548,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-
   /posts/:postId/comments/:commentId/likes:
     post:
       tags:
@@ -664,10 +663,14 @@ paths:
             schema:
               type: object
               properties:
-                date:
-                  type: string
                 cohortId:
                   type: integer
+                date:
+                  type: string
+                  format: DateTime
+                  pattern: YYYY-MM-DD HH:MM:SS
+                title:
+                  type: string
                 lines:
                   type: array
                   items:
@@ -677,13 +680,26 @@ paths:
                         type: string
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
+        '400':
+          description: Bad Request (One or more fields are missing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
         '401':
-          description: Unauthorised
+          description: Unauthorised (Only teacher is authorised to create log)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (Students do not have the required access)
           content:
             application/json:
               schema:
@@ -1338,6 +1354,7 @@ components:
       properties:
         status:
           type: string
+          example: success
         data:
           properties:
             log:
@@ -1347,6 +1364,10 @@ components:
                 cohortId:
                   type: integer
                 date:
+                  type: string
+                  format: DateTime
+                  pattern: YYYY-MM-DD HH:MM:SS
+                title:
                   type: string
                 author:
                   type: object
