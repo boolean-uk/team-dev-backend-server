@@ -548,7 +548,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-
   /posts/:postId/comments/:commentId/likes:
     post:
       tags:
