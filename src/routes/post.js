@@ -20,6 +20,10 @@ router.delete('/:postId/likes/:userId', validateAuthentication, deleteLike)
 
 router.post('/:id/comments', validateAuthentication, createComment)
 router.get('/:id/comments', validateAuthentication, getAllComments)
-router.patch('/:id/comments/:id', validateAuthentication, updateComment)
+router.patch(
+  '/:postId/comments/:commentId',
+  validateAuthentication,
+  updateComment
+)
 
 export default router

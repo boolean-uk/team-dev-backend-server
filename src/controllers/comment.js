@@ -50,7 +50,9 @@ export const getAllComments = async (req, res) => {
 
 export const updateComment = async (req, res) => {
   const postId = Number(req.params.postId)
-  const commentId = Number(req.params.userId)
+  const commentId = Number(req.params.commentId)
+
+  console.log('2 id:', postId, commentId)
 
   try {
     const foundPost = await Post.findById(postId)
@@ -64,9 +66,10 @@ export const updateComment = async (req, res) => {
     if (!foundPost.comments) {
       return sendDataResponse(res, 404, { error: 'This post has no comments' })
     }
-
-    const foundComment = await foundPost.comments.findById(commentId)
-
+    const foundComments = foundPost.comments
+    console.log('foundcomments', foundComments)
+    const foundComment = await foundComments.findById(commentId)
+    console.log('foundcomment???', foundComment)
     if (!foundComment) {
       return sendDataResponse(res, 404, {
         error: 'Comment with given id not found'
