@@ -16,7 +16,7 @@ paths:
     post:
       tags:
         - user
-      summary: Create user
+      summary: Createuser
       description: Create new user
       operationId: createUser
       requestBody:
@@ -704,6 +704,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /logs/{logId}:
+    get:
+      tags:
+        - log
+      summary: Get log by id
+      description: Only teachers can Get logs
+      operation: getLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the log to be found'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        404:
+          description: A log with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
@@ -791,6 +827,53 @@ paths:
                 $ref: '#/components/schemas/Error'
         403:
           description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/:cohortid:
+    patch:
+      tags:
+        - cohort
+      summary: Update a cohort
+      description: This can only be done by the logged in user with role TEACHER. One or more fields can be updated according to requirement
+      operationId: updateCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort id that needs to be updated'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update cohort(Student cannot update cohort)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCohort'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedCohort'
+        400:
+          description: Bad Request (A cohort with given name already exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot update cohort)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not found (Cohort with given id not found)
           content:
             application/json:
               schema:
@@ -902,6 +985,42 @@ components:
                   type: string
                   format: date
                   pattern: YYYY-MM-DD
+    UpdateCohort:
+      type: object
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+    UpdatedCohort:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
 
     AllUsers:
       type: object

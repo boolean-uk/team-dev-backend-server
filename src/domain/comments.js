@@ -189,4 +189,17 @@ export default class Comment {
 
     return likedComment
   }
+
+  async deleteCommentLike(userId) {
+    await dbClient.comment.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        likes: {
+          disconnect: [{ id: userId }]
+        }
+      }
+    })
+  }
 }
