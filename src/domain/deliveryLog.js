@@ -39,4 +39,22 @@ export class DeliveryLog {
     this.author = author
     this.lines = lines
   }
+
+  static async findById(id) {
+    return DeliveryLog._findByUnique('id', id)
+  }
+
+  static async _findByUnique(key, value) {
+    const foundLog = await dbClient.deliveryLog.findUnique({
+      where: {
+        [key]: value
+      }
+    })
+
+    if (foundLog) {
+      return foundLog
+    }
+
+    return null
+  }
 }
