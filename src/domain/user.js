@@ -171,6 +171,7 @@ export default class User {
       phone: this.phone,
       profileImageUrl: this.profileImageUrl
     }
+
     const updatedUser = await dbClient.user.update({
       where: {
         id: this.id
