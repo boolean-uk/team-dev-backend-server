@@ -41,7 +41,11 @@ export default class User {
       profileImageUrl
     } = json
 
-    const passwordHash = await bcrypt.hash(password, 8)
+    let passwordHash = null
+
+    if (password) {
+      passwordHash = await bcrypt.hash(password, 8)
+    }
 
     return new User(
       null,
