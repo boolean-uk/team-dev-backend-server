@@ -57,19 +57,13 @@ export const updateComment = async (req, res) => {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
   if (!postId) {
-    return sendDataResponse(res, 404, { error: 'Valid id not given' })
+    return sendDataResponse(res, 400, { error: 'Valid id not given' })
   }
   if (!commentId) {
-    return sendDataResponse(res, 404, { error: 'Valid id not given' })
+    return sendDataResponse(res, 400, { error: 'Valid id not given' })
   }
   try {
     const foundPost = await Post.findById(postId)
-
-    if (!foundPost) {
-      return sendDataResponse(res, 404, {
-        error: 'Post with given id not found'
-      })
-    }
 
     if (!foundPost.comments) {
       return sendDataResponse(res, 404, { error: 'This post has no comments' })
@@ -81,7 +75,7 @@ export const updateComment = async (req, res) => {
     const updatedComment = await foundComment.updateById()
     return sendDataResponse(res, 201, { updatedComment })
   } catch (error) {
-    console.error(error)
+    console.error('error caught:', error)
     sendMessageResponse(res, 400, `Unable to update comment: ${error}`)
   }
 }
