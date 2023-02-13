@@ -1,5 +1,5 @@
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
-import { createLog } from '../domain/deliveryLog.js'
+import { createLog, DeliveryLog } from '../domain/deliveryLog.js'
 import { Cohort } from '../domain/cohort.js'
 
 export const create = async (req, res) => {
@@ -39,4 +39,15 @@ export const create = async (req, res) => {
   return sendDataResponse(res, 201, {
     log
   })
+}
+// get log by id
+export const getById = async (req, res) => {
+  const id = Number(req.params.id)
+  const log = await DeliveryLog.findById(id)
+  if (!log) {
+    return sendDataResponse(res, 404, {
+      error: 'Log with given id not found'
+    })
+  }
+  return sendDataResponse(res, 200, { log })
 }
