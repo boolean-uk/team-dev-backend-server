@@ -456,7 +456,7 @@ paths:
   /posts/:postId/comments/:commentId:
     delete:
       tags:
-        - post
+        - comment
       summary: Delete a single comment on a post
       description: A logged in user can delete their comment on a post
       operationId: deleteComment
@@ -497,7 +497,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     patch:
       tags:
-        - post
+        - comment
       summary: Edit comment in a post
       description: A user can only update their own comments.
       operationId: updateComment
