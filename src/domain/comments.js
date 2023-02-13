@@ -1,7 +1,17 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Comment {
-  constructor(id, userId, user, postId, post, content, createdAt, updatedAt, likes) {
+  constructor(
+    id,
+    userId,
+    user,
+    postId,
+    post,
+    content,
+    createdAt,
+    updatedAt,
+    likes
+  ) {
     this.id = id
     this.userId = userId
     this.user = user
@@ -160,7 +170,7 @@ export default class Comment {
   }
 
   async createCommentLike(userId) {
-    const likedComment = await dbClient.commment.update({
+    const likedComment = await dbClient.comment.update({
       where: {
         id: this.id
       },

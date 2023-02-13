@@ -131,11 +131,11 @@ export const createCommentLike = async (req, res) => {
        return sendMessageResponse(res, 400, 'You already liked this comment')
      }
     const likedComment = await foundComment.createCommentLike(req.user.id)
-    // console.log(likedComment)
+   
     sendDataResponse(res, 200, { comment: likedComment })
 
 
   } catch (error) {
-    console.error(error)
+    sendMessageResponse(res, 400, `Unable to like comment ${error}`)
   }
 }
