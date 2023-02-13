@@ -693,7 +693,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
         '401':
-          description: Unauthorised (Only teacher is authorised to create log)
+          description: Unauthorised (User need to log in as a teacher to perform)
           content:
             application/json:
               schema:
