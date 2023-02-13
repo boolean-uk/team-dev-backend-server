@@ -3,7 +3,8 @@ import { create, getAll, deleteById, updateById } from '../controllers/post.js'
 import {
   getAllComments,
   createComment,
-  deleteCommentById
+  deleteCommentById,
+  updateComment
 } from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
 import {
@@ -30,6 +31,12 @@ router.delete(
   validateAuthentication,
   deleteCommentById
 )
+router.patch(
+  '/:postId/comments/:commentId',
+  validateAuthentication,
+  updateComment
+)
+
 router.post(
   '/:postId/comments/:commentId/likes',
   validateAuthentication,
