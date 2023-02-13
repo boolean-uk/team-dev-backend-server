@@ -74,3 +74,34 @@ export const updateComment = async (req, res) => {
     sendMessageResponse(res, 500, `Unable to update comment: ${error}`)
   }
 }
+
+export const deleteCommentById = async (req, res) => {
+  const postId = Number(req.params.postId)
+  const commentId = Number(req.params.commentId)
+
+  try {
+    if (!postId) {
+      return sendDataResponse(res, 400, { error: 'Valid Id must be given' })
+    }
+
+    const commentExists = await Comment.findById(commentId)
+
+    if (!commentId) {
+      return sendDataResponse(res, 400, { error: 'Valid id must be given' })
+    }
+    if (req.user.role === 'TEACHER' || req.user.id === commentExists.user.id) {
+      return sendMessageResponse(
+        res,
+        403,
+        'You are unble to delete this comment'
+      )
+    }
+    const deletedComment = await commentExists.delete()
+
+    return sendDataResponse(res, 201, {
+      deletedComment
+    })
+  } catch (error) {
+    return sendMessageResponse(res, 500, `Unable to delete comment: ${error}`)
+  }
+}
