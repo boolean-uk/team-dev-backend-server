@@ -1,5 +1,6 @@
 import Post from '../domain/posts.js'
 import User from '../domain/user.js'
+import Comment from '../domain/comments.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const createLike = async (req, res) => {
@@ -97,5 +98,44 @@ export const getAllLikes = async (req, res) => {
     sendDataResponse(res, 200, { post: foundPost })
   } catch (error) {
     sendMessageResponse(res, 400, `Unable to get likes ${error}`)
+  }
+}
+export const createCommentLike = async (req, res) => {
+  const postId = Number(req.params.postId)
+  const commentId = Number(req.params.commentId)
+
+  try {
+    const foundPost = await Post.findById(postId)
+
+    if (!foundPost) {
+
+      return sendDataResponse(res, 404, {
+        error: 'Post with given id not found'
+      })
+    }
+     const foundComment = await Comment.findById(commentId)
+
+     if (!foundComment) {
+       return sendDataResponse(res, 404, {
+         error: 'Comment with given id, not found!'
+       })
+     }
+     let isLiked = false
+     foundComment.likes.forEach((like) => {
+       if (req.user.id === like.id) {
+         isLiked = true
+       }
+     })
+
+     if (isLiked) {
+       return sendMessageResponse(res, 400, 'You already liked this comment')
+     }
+    const likedComment = await foundComment.createCommentLike(req.user.id)
+    // console.log(likedComment)
+    sendDataResponse(res, 200, { comment: likedComment })
+
+
+  } catch (error) {
+    console.error(error)
   }
 }

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { create, getAll, deleteById, updateById } from '../controllers/post.js'
 import { getAllComments, createComment } from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
-import { createLike, deleteLike, getAllLikes } from '../controllers/like.js'
+import { createLike, deleteLike, getAllLikes, createCommentLike } from '../controllers/like.js'
 const router = Router()
 
 router.post('/', validateAuthentication, create)
@@ -16,5 +16,7 @@ router.delete('/:postId/likes/:userId', validateAuthentication, deleteLike)
 
 router.post('/:id/comments', validateAuthentication, createComment)
 router.get('/:id/comments', validateAuthentication, getAllComments)
+
+router.post('/:postId/comments/:commentId/likes', validateAuthentication, createCommentLike)
 
 export default router
