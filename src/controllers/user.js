@@ -45,22 +45,22 @@ export const create = async (req, res) => {
       })
     }
 
-    const optionalKeys = [
-      'githubUrl',
-      'biography',
-      'specialism',
-      'phone',
-      'profileImageUrl'
-    ]
-    const hasOptional = Object.keys(req.body).some((key) =>
-      optionalKeys.includes(key)
-    )
+    // const optionalKeys = [
+    //   'githubUrl',
+    //   'biography',
+    //   'specialism',
+    //   'phone',
+    //   'profileImageUrl'
+    // ]
+    // const hasOptional = Object.keys(req.body).some((key) =>
+    //   optionalKeys.includes(key)
+    // )
 
-    if (hasOptional && (!req.body.firstName || !req.body.lastName)) {
-      return sendDataResponse(res, 400, {
-        error: 'Missing first name or last name'
-      })
-    }
+    // if (!req.body.firstName || !req.body.lastName) {
+    //   return sendDataResponse(res, 400, {
+    //     error: 'Missing first name or last name'
+    //   })
+    // }
 
     const createdUser = await userToCreate.save()
 
