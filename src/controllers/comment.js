@@ -47,3 +47,33 @@ export const getAllComments = async (req, res) => {
 
   return sendDataResponse(res, 200, { comments: comments })
 }
+
+export const updateComment = async (req, res) => {
+  const postId = Number(req.params.postId)
+  const commentId = Number(req.params.userId)
+
+  try {
+    const foundPost = await Post.findById(postId)
+
+    if (!foundPost) {
+      return sendDataResponse(res, 404, {
+        error: 'Post with given id not found'
+      })
+    }
+
+    if (!foundPost.comments) {
+      return sendDataResponse(res, 404, { error: 'This post has no comments' })
+    }
+
+    const foundComment = await foundPost.comments.findById(commentId)
+
+    if (!foundComment) {
+      return sendDataResponse(res, 404, {
+        error: 'Comment with given id not found'
+      })
+    }
+  } catch (error) {
+    console.error(error)
+    sendMessageResponse(res, 400, `Unable to update comment: ${error}`)
+  }
+}
