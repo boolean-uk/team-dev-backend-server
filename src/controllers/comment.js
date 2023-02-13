@@ -49,18 +49,12 @@ export const getAllComments = async (req, res) => {
 }
 
 export const deleteCommentById = async (req, res) => {
-  const postId = Number(req.params.postId)
   const commentId = Number(req.params.commentId)
 
   try {
-    const postExists = await Post.findById(postId)
     const commentExists = await Comment.findById(commentId)
 
-    if (!postExists)
-      return sendDataResponse(res, 404, {
-        error: 'Post does not exist'
-      })
-    if (commentId !== postExists.comments.commentId)
+    if (!commentId)
       return sendDataResponse(res, 404, { error: 'Comment does not exist' })
     if (req.user.role === 'TEACHER' || req.user.id === commentExists.user.id)
       return sendMessageResponse(
@@ -75,6 +69,6 @@ export const deleteCommentById = async (req, res) => {
       deletedComment
     })
   } catch (error) {
-    return sendMessageResponse(res, 400, `Unable to delete comment: ${error}`)
+    return sendMessageResponse(res, 500, `Unable to delete comment: ${error}`)
   }
 }
