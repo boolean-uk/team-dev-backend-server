@@ -140,33 +140,26 @@ export const createCommentLike = async (req, res) => {
 }
 
 export const deleteCommentLike = async (req, res) => {
-  const postId = Number(req.params.postId)
+  // const postId = Number(req.params.postId)
   const commentId = Number(req.params.commentId)
   const userId = Number(req.params.userId)
 
   try {
-    const foundPost = await Post.findById(postId)
-
-    if (!foundPost) {
-      return sendDataResponse(res, 404, {
-        error: 'Post with given id not found'
-      })
-    }
     const foundComment = await Comment.findById(commentId)
 
     if (!foundComment) {
-      return sendDataResponse(res, 404, {
+      return sendDataResponse(res, 400, {
         error: 'Comment with given id, not found!'
       })
     }
     const foundUser = await User.findById(userId)
     if (!foundUser) {
-      return sendDataResponse(res, 404, {
+      return sendDataResponse(res, 400, {
         error: 'User with given Id not found.'
       })
     }
     if (req.user.id !== userId) {
-      return sendDataResponse(res, 404, {
+      return sendDataResponse(res, 400, {
         error: "You cannot delete someone else's like"
       })
     }
@@ -181,7 +174,7 @@ export const deleteCommentLike = async (req, res) => {
     if (!wasLiked) {
       return sendMessageResponse(
         res,
-        404,
+        400,
         'The user has not liked this comment'
       )
     }
