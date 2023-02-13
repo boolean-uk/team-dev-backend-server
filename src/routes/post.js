@@ -6,7 +6,12 @@ import {
   updateComment
 } from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
-import { createLike, deleteLike, getAllLikes } from '../controllers/like.js'
+import {
+  createLike,
+  deleteLike,
+  getAllLikes,
+  createCommentLike
+} from '../controllers/like.js'
 const router = Router()
 
 router.post('/', validateAuthentication, create)
@@ -24,6 +29,12 @@ router.patch(
   '/:postId/comments/:commentId',
   validateAuthentication,
   updateComment
+)
+
+router.post(
+  '/:postId/comments/:commentId/likes',
+  validateAuthentication,
+  createCommentLike
 )
 
 export default router

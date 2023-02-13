@@ -23,6 +23,20 @@ export default class Post {
 
   static fromDb(post) {
     delete post.user.password
+    if (post.comments) {
+      post.comments.forEach((comment) => {
+        comment.likes.forEach((like) => {
+          delete like.password
+        })
+      })
+    }
+
+    if (post.likes.length > 0) {
+      post.likes.forEach((like) => {
+        delete like.password
+      })
+    }
+
     return new Post(
       post.id,
       post.userId,
@@ -104,7 +118,11 @@ export default class Post {
       },
       include: {
         user: true,
-        comments: true,
+        comments: {
+          include: {
+            likes: true
+          }
+        },
         likes: true
       }
     })
