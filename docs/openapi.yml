@@ -778,12 +778,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /cohorts/{id}:
+  /cohorts/:cohortid:
     patch:
       tags:
         - cohort
       summary: Update a cohort
-      description: This can only be done by the logged in user with role TEACHER.
+      description: This can only be done by the logged in user with role TEACHER. One or more fields can be updated according to requirement
       operationId: updateCohort
       security:
         - bearerAuth: []
@@ -932,6 +932,42 @@ components:
                   type: string
                   format: date
                   pattern: YYYY-MM-DD
+    UpdateCohort:
+      type: object
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+    UpdatedCohort:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
 
     AllUsers:
       type: object
