@@ -49,15 +49,11 @@ export const getAllComments = async (req, res) => {
 }
 
 export const updateComment = async (req, res) => {
-  const postId = Number(req.params.postId)
   const commentId = Number(req.params.commentId)
   const { content } = req.body
 
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
-  }
-  if (!postId) {
-    return sendDataResponse(res, 400, { error: 'Valid id not given' })
   }
   if (!commentId) {
     return sendDataResponse(res, 400, { error: 'Valid id not given' })
