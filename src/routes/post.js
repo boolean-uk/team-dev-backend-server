@@ -6,8 +6,12 @@ import {
   deleteCommentById
 } from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
-import { createLike, deleteLike, getAllLikes } from '../controllers/like.js'
-
+import {
+  createLike,
+  deleteLike,
+  getAllLikes,
+  createCommentLike
+} from '../controllers/like.js'
 const router = Router()
 
 router.post('/', validateAuthentication, create)
@@ -21,10 +25,11 @@ router.delete('/:postId/likes/:userId', validateAuthentication, deleteLike)
 
 router.post('/:id/comments', validateAuthentication, createComment)
 router.get('/:id/comments', validateAuthentication, getAllComments)
-router.delete(
-  '/:postId/comments/:commentId',
+
+router.post(
+  '/:postId/comments/:commentId/likes',
   validateAuthentication,
-  deleteCommentById
+  createCommentLike
 )
 
 export default router
