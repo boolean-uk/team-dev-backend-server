@@ -71,6 +71,6 @@ export const updateComment = async (req, res) => {
     return sendDataResponse(res, 201, { updatedComment })
   } catch (error) {
     console.error('error caught:', error)
-    sendMessageResponse(res, 400, `Unable to update comment: ${error}`)
+    sendMessageResponse(res, 500, `Unable to update comment: ${error}`)
   }
 }
