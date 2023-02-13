@@ -495,6 +495,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - post
+      summary: Edit comment in a post
+      description: A user can only update their own comments.
+      operationId: updateComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post that contain the comment to be Updated.'
+          required: true
+          schema:
+            type: integer
+        - name: commentId
+          in: path
+          description: 'The id of the comment that you want to update.'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Content to update the Comment with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateComment'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedComment'
+        400:
+          description: Bad Request - No content has been provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: The postID/commentID does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
   /posts/:postId/comments/:commentId/likes:
     post:
@@ -879,6 +932,32 @@ components:
           type: object
           properties:
             deletedCohort:
+              type: object
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                postId:
+                  type: integer
+                content:
+                  type: string
+    UpdateComment:
+      type: object
+      required: content
+      properties:
+        content:
+          type: string
+    UpdatedComment:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Success
+        data:
+          type: object
+          properties:
+            comment:
               type: object
               properties:
                 id:
