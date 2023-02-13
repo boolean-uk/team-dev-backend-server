@@ -53,8 +53,6 @@ export const updateComment = async (req, res) => {
   const commentId = Number(req.params.commentId)
   const { content } = req.body
 
-  console.log('2 id:', postId, commentId)
-
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
