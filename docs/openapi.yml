@@ -548,7 +548,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-
   /posts/:postId/comments/:commentId/likes:
     post:
       tags:
@@ -688,6 +687,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+    /logs/{CohortId}:
+    get:
+      tags:
+        - log
+      summary: Get logs by cohort id
+      description: ''
+      operationId: getAllLogsByCohortId
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The logs linked to cohort id will be returned'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/getAllLogsById'
+
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
@@ -1366,3 +1408,15 @@ components:
                         type: integer
                       content:
                         type: string
+    getAllLogsById:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/Log'
