@@ -97,7 +97,15 @@ model Comment {
 }
 
 model Course {
-  id Int @id @default(autoincrement())
+  id         Int  @id @default(autoincrement())
   courseName String
-  cohorts Cohort[]
+  cohorts    Cohort[]
+  modules    Module[]
+}
+
+model Module {
+  id          Int       @id @default(autoincrement())
+  moduleName  String
+  course      Course?   @relation(fields: [courseId], references: [id])
+  courseId    Int?  
 }
