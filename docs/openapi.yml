@@ -739,6 +739,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /logs/:logId:
+    delete:
+      tags:
+        - log
+      summary: Delete log by id
+      description: Only teachers can delete logs
+      operation: deleteLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The id of the log that needs to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        403:
+          description: Forbidden(Invalid permissions as students do not have the required access)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: A log with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /logs/{CohortId}:
     get:
