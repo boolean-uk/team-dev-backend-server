@@ -107,5 +107,24 @@ model Module {
   id          Int       @id @default(autoincrement())
   moduleName  String
   course      Course?   @relation(fields: [courseId], references: [id])
-  courseId    Int?  
+  courseId    Int?
+  unit        Unit[]
+}
+
+
+model Unit {
+  id          Int       @id @default(autoincrement())
+  unitName    String
+  module    Module?  @relation(fields: [moduleId], references: [id])
+  moduleId  Int?
+  exercise  Exercise[]
+}
+
+model Exercise {
+  id Int @id @default(autoincrement())
+  exerciseName String
+  githubUrl    String
+  description  String
+  unit    Unit?  @relation(fields: [unitId], references: [id])
+  unitId  Int?
 }
