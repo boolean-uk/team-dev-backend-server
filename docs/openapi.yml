@@ -745,7 +745,7 @@ paths:
       tags:
         - log
       summary: Get logs by cohort id
-      description: ''
+      description: 'Retrieve all logs made by a specific cohort id'
       operationId: getAllLogsByCohortId
       security:
         - bearerAuth: []
