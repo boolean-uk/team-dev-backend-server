@@ -49,6 +49,8 @@ model Cohort {
   cohortName   String        @unique
   startDate    DateTime
   endDate      DateTime
+  courseId     Int?
+  course       Course?      @relation(fields: [courseId], references: [id])   
   users        User[]
   deliveryLogs DeliveryLog[]
 }
@@ -92,4 +94,18 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   likes     User[]
+}
+
+model Course {
+  id         Int  @id @default(autoincrement())
+  courseName String
+  cohorts    Cohort[]
+  modules    Module[]
+}
+
+model Module {
+  id          Int       @id @default(autoincrement())
+  moduleName  String
+  course      Course?   @relation(fields: [courseId], references: [id])
+  courseId    Int?  
 }
