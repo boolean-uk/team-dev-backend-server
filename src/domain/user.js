@@ -41,7 +41,11 @@ export default class User {
       profileImageUrl
     } = json
 
-    const passwordHash = await bcrypt.hash(password, 8)
+    let passwordHash = null
+
+    if (password) {
+      passwordHash = await bcrypt.hash(password, 8)
+    }
 
     return new User(
       null,
@@ -158,6 +162,16 @@ export default class User {
   }
 
   async updateById() {
+    const userData = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      bio: this.bio,
+      githubUrl: this.githubUrl,
+      specialism: this.specialism,
+      phone: this.phone,
+      profileImageUrl: this.profileImageUrl
+    }
+
     const updatedUser = await dbClient.user.update({
       where: {
         id: this.id
@@ -168,14 +182,9 @@ export default class User {
         role: this.role,
         cohortId: this.cohortId,
         profile: {
-          update: {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            bio: this.bio,
-            githubUrl: this.githubUrl,
-            specialism: this.specialism,
-            phone: this.phone,
-            profileImageUrl: this.profileImageUrl
+          upsert: {
+            update: userData,
+            create: userData
           }
         }
       },

@@ -16,7 +16,7 @@ paths:
     post:
       tags:
         - user
-      summary: Create user
+      summary: Createuser
       description: Create new user
       operationId: createUser
       requestBody:
@@ -111,7 +111,7 @@ paths:
         '400':
           description: Invalid username/password supplied
 
-  /users/{id}:
+  /users/:id:
     get:
       tags:
         - user
@@ -322,7 +322,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /posts/:id/likes:
+  /posts/:postId/likes:
     post:
       tags:
         - post
@@ -379,7 +379,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /posts/:id/comments:
+  /posts/:postId/comments:
     get:
       tags:
         - comment
@@ -408,7 +408,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /posts/:id/likes/:id:
+  /posts/:postId/likes/:userId:
     delete:
       tags:
         - post
@@ -456,7 +456,7 @@ paths:
   /posts/:postId/comments/:commentId:
     delete:
       tags:
-        - post
+        - comment
       summary: Delete a single comment on a post
       description: A logged in user can delete their comment on a post
       operationId: deleteComment
@@ -497,7 +497,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     patch:
       tags:
-        - post
+        - comment
       summary: Edit comment in a post
       description: A user can only update their own comments.
       operationId: updateComment
@@ -663,10 +663,14 @@ paths:
             schema:
               type: object
               properties:
-                date:
-                  type: string
                 cohortId:
                   type: integer
+                date:
+                  type: string
+                  format: DateTime
+                  pattern: YYYY-MM-DD HH:MM:SS
+                title:
+                  type: string
                 lines:
                   type: array
                   items:
@@ -676,19 +680,67 @@ paths:
                         type: string
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-        '401':
-          description: Unauthorised
+        '400':
+          description: Bad Request (One or more fields are missing)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 
-    /logs/{CohortId}:
+        '401':
+          description: Unauthorised (User need to log in as a teacher to perform)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (Students do not have the required access)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logs/{logId}:
+    get:
+      tags:
+        - log
+      summary: Get log by id
+      description: Only teachers can Get logs
+      operation: getLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the log to be found'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        404:
+          description: A log with this Id does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /logs/{CohortId}:
     get:
       tags:
         - log
@@ -716,7 +768,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/getAllLogsById'
-
         '401':
           description: unable to retrieve items, due to unmatching ID
           content:
@@ -780,7 +831,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /cohorts/{cohortId}:
+  /cohorts/:cohortId:
     delete:
       tags:
         - cohort
@@ -790,7 +841,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: cohortId
           in: path
           description: 'The id of the cohort that is to be deleted.'
           required: true
@@ -811,6 +862,53 @@ paths:
                 $ref: '#/components/schemas/Error'
         403:
           description: Invalid permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/:cohortid:
+    patch:
+      tags:
+        - cohort
+      summary: Update a cohort
+      description: This can only be done by the logged in user with role TEACHER. One or more fields can be updated according to requirement
+      operationId: updateCohort
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort id that needs to be updated'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update cohort(Student cannot update cohort)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCohort'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedCohort'
+        400:
+          description: Bad Request (A cohort with given name already exist)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden (Students cannot update cohort)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not found (Cohort with given id not found)
           content:
             application/json:
               schema:
@@ -922,6 +1020,42 @@ components:
                   type: string
                   format: date
                   pattern: YYYY-MM-DD
+    UpdateCohort:
+      type: object
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+        endDate:
+          type: string
+          format: date
+          pattern: YYYY/MM/DD
+    UpdatedCohort:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            cohort:
+              type: object
+              properties:
+                id:
+                  type: integer
+                cohortName:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
+                endDate:
+                  type: string
+                  format: date
+                  pattern: YYYY/MM/DD
 
     AllUsers:
       type: object
@@ -1374,6 +1508,7 @@ components:
       properties:
         status:
           type: string
+          example: success
         data:
           properties:
             log:
@@ -1383,6 +1518,10 @@ components:
                 cohortId:
                   type: integer
                 date:
+                  type: string
+                  format: DateTime
+                  pattern: YYYY-MM-DD HH:MM:SS
+                title:
                   type: string
                 author:
                   type: object

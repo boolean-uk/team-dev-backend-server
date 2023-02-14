@@ -1,7 +1,17 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Comment {
-  constructor(id, userId, user, postId, post, content, createdAt, updatedAt) {
+  constructor(
+    id,
+    userId,
+    user,
+    postId,
+    post,
+    content,
+    createdAt,
+    updatedAt,
+    likes
+  ) {
     this.id = id
     this.userId = userId
     this.user = user
@@ -10,10 +20,10 @@ export default class Comment {
     this.content = content
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.likes = likes
   }
 
   static fromDb(comment) {
-    delete comment.user.password
     return new Comment(
       comment.id,
       comment.userId,
@@ -22,14 +32,15 @@ export default class Comment {
       comment.post,
       comment.content,
       comment.createdAt,
-      comment.updatedAt
+      comment.updatedAt,
+      comment.likes
     )
   }
 
   static async fromJson(json) {
     const { content } = json
 
-    return new Comment(null, null, null, null, null, content, null, null)
+    return new Comment(null, null, null, null, null, content, null, null, [])
   }
 
   toJSON() {
@@ -42,7 +53,8 @@ export default class Comment {
         post: this.post,
         content: this.content,
         createdAt: this.createdAt,
-        updatedAt: this.updatedAt
+        updatedAt: this.updatedAt,
+        likes: this.likes
       }
     }
   }
@@ -101,10 +113,10 @@ export default class Comment {
       },
       include: {
         user: true,
-        post: true
+        post: true,
+        likes: true
       }
     })
-
     if (foundComment) {
       return Comment.fromDb(foundComment)
     }
@@ -154,5 +166,40 @@ export default class Comment {
     })
 
     return Comment.fromDb(updatedComment)
+  }
+
+  async createCommentLike(userId) {
+    const likedComment = await dbClient.comment.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        likes: {
+          connect: [{ id: userId }]
+        }
+      },
+      include: {
+        likes: true
+      }
+    })
+
+    likedComment.likes.forEach((like) => {
+      delete like.password
+    })
+
+    return likedComment
+  }
+
+  async deleteCommentLike(userId) {
+    await dbClient.comment.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        likes: {
+          disconnect: [{ id: userId }]
+        }
+      }
+    })
   }
 }
