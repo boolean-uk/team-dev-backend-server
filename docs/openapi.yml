@@ -717,14 +717,8 @@ paths:
                   data:
                     $ref: '#/components/schemas/getAllLogsById'
 
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: fail
+        '401':
+          description: unable to retrieve items, due to unmatching ID
           content:
             application/json:
               schema:
