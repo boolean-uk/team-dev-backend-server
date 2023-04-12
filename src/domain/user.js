@@ -124,6 +124,12 @@ export default class User {
     return emailRegex.test(email)
   }
 
+  static passwordValidation(password) {
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    return passwordRegex.test(password)
+  }
+
   static async findByEmail(email) {
     return User._findByUnique('email', email)
   }

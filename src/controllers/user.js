@@ -2,7 +2,32 @@ import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
+  if (!User.emailValidation(req.body.email)) {
+    return sendMessageResponse(res, 400, 'Email format invalid')
+  }
+  if (!req.body.password) {
+    return sendMessageResponse(res, 400, 'Password is required')
+  }
+  if (!User.passwordValidation(req.body.password)) {
+    return sendMessageResponse(
+      res,
+      400,
+      'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
+    )
+  }
+  if (
+    (req.body.bio || req.body.githubUrl) &&
+    (!req.body.firstName || !req.body.lastName)
+  ) {
+    return sendMessageResponse(
+      res,
+      400,
+      'Must include first name and last name'
+    )
+  }
+
   const userToCreate = await User.fromJson(req.body)
+
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
 
@@ -14,9 +39,6 @@ export const create = async (req, res) => {
       return sendMessageResponse(res, 400, 'Email is required')
     }
 
-    if (!User.emailValidation(userToCreate.email)) {
-      return sendMessageResponse(res, 400, 'Email format invalid')
-    }
     const createdUser = await userToCreate.save()
 
     return sendDataResponse(res, 201, createdUser)
