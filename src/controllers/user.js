@@ -130,14 +130,14 @@ export const updateById = async (req, res) => {
 
   try {
     const updatedUser = await User.updateById(Number(req.params.id), data)
-    return sendDataResponse(res, 201, { User: updatedUser })
+    return sendDataResponse(res, 201, { user: updatedUser })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2025') {
-        return sendMessageResponse(res, 500, 'Invalid cohortId')
+        return sendMessageResponse(res, 404, 'Invalid cohortId')
       }
       if (e.code === 'P2002') {
-        return sendMessageResponse(res, 400, 'Email is already in use')
+        return sendMessageResponse(res, 409, 'Email is already in use')
       }
     }
     if (e instanceof Prisma.PrismaClientValidationError) {

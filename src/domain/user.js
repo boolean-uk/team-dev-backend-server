@@ -187,7 +187,6 @@ export default class User {
     }
 
     const updatedUser = await dbClient.user.update(query)
-    console.log(updatedUser)
 
     return updatedUser
   }

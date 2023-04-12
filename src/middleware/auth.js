@@ -19,7 +19,7 @@ export async function validateTeacherRole(req, res, next) {
 
 export async function validateIdOrRole(req, res, next) {
   if (!req.user) {
-    return sendMessageResponse(res, 500, 'Unable to verify user')
+    return sendMessageResponse(res, 401, 'Unable to verify user')
   }
 
   if (req.user.id === Number(req.params.id) || req.user.role === 'TEACHER') {
