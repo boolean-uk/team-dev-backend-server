@@ -170,4 +170,25 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async updateById(id, data) {
+    const query = {
+      where: {
+        id: id
+      },
+      data: data,
+      include: {
+        profile: true
+      }
+    }
+
+    if (query.data.password) {
+      query.data.password = await bcrypt.hash(query.data.password, 8)
+    }
+
+    const updatedUser = await dbClient.user.update(query)
+    console.log(updatedUser)
+
+    return updatedUser
+  }
 }
