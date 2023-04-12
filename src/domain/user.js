@@ -68,7 +68,7 @@ export default class User {
     return {
       user: {
         id: this.id,
-        cohort_id: this.cohortId,
+        cohortId: this.cohortId,
         role: this.role,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -181,5 +181,25 @@ export default class User {
     const foundUsers = await dbClient.user.findMany(query)
 
     return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async updateById(id, data) {
+    const query = {
+      where: {
+        id: id
+      },
+      data: data,
+      include: {
+        profile: true
+      }
+    }
+
+    if (query.data.password) {
+      query.data.password = await bcrypt.hash(query.data.password, 8)
+    }
+
+    const updatedUser = await dbClient.user.update(query)
+
+    return updatedUser
   }
 }
