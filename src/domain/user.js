@@ -68,7 +68,7 @@ export default class User {
     return {
       user: {
         id: this.id,
-        cohort_id: this.cohortId,
+        cohortId: this.cohortId,
         role: this.role,
         firstName: this.firstName,
         lastName: this.lastName,

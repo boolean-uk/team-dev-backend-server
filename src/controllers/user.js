@@ -57,11 +57,11 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const { cohortId } = req.body
 
   if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+    return sendDataResponse(res, 400, { cohortId: 'Cohort ID is required' })
   }
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  return sendDataResponse(res, 201, { user: { cohortId: cohortId } })
 }
