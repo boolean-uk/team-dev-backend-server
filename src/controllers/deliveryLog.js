@@ -1,12 +1,12 @@
 import { sendDataResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
-  const { date, cohort_id: cohortId, lines } = req.body
+  const { date, cohortId, lines } = req.body
 
   return sendDataResponse(res, 201, {
     log: {
       id: 1,
-      cohort_id: cohortId,
+      cohortId: cohortId,
       date,
       author: {
         id: req.user.id,
