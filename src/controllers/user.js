@@ -3,7 +3,6 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
-
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
 
@@ -11,6 +10,13 @@ export const create = async (req, res) => {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
 
+    if (!userToCreate.email) {
+      return sendMessageResponse(res, 400, 'Email is required')
+    }
+
+    if (!User.emailValidation(userToCreate.email)) {
+      return sendMessageResponse(res, 400, 'Email format invalid')
+    }
     const createdUser = await userToCreate.save()
 
     return sendDataResponse(res, 201, createdUser)

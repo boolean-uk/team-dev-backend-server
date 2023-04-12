@@ -118,6 +118,12 @@ export default class User {
     return User.fromDb(createdUser)
   }
 
+  static emailValidation(email) {
+    const emailRegex =
+      /^[0-9a-zA-Z]+(?:\.[0-9a-zA-Z]+)*@[a-zA-Z0-9]{2,}(?:\.[a-zA-Z]{2,})+$/gm
+    return emailRegex.test(email)
+  }
+
   static async findByEmail(email) {
     return User._findByUnique('email', email)
   }
