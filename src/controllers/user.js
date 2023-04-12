@@ -61,7 +61,7 @@ export const updateById = async (req, res) => {
   // TODO: These functions are placholders, will later be checked in the domain user.js
   function checkPassword(str) {
     const regex =
-      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-\/\.\,\[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     return regex.test(str)
   }
   function emailValidation(email) {
