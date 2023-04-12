@@ -22,8 +22,8 @@ export const create = async (req, res) => {
   ) {
     return sendMessageResponse(
       res,
-      400,
-      'Must include first name and last name'
+      409,
+      'Must include first name and last name if providing bio or github details'
     )
   }
 
