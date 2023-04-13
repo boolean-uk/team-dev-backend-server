@@ -86,22 +86,11 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  // TODO: These functions are placholders, will later be checked in the domain user.js
-  function checkPassword(str) {
-    const regex =
-      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-    return regex.test(str)
-  }
-  function emailValidation(email) {
-    const emailRegex =
-      /^[0-9a-zA-Z]+(?:\.[0-9a-zA-Z]+)*@[a-zA-Z0-9]{2,}(?:\.[a-zA-Z]{2,})+$/gm
-    return emailRegex.test(email)
-  }
 
   const data = { profile: { update: {} } }
 
   if (req.body.email) {
-    if (emailValidation(req.body.email)) {
+    if (User.emailValidation(req.body.email)) {
       data.email = req.body.email
     } else {
       return sendMessageResponse(res, 400, 'Invalid Email')
@@ -109,7 +98,7 @@ export const updateById = async (req, res) => {
   }
 
   if (req.body.password) {
-    if (checkPassword(req.body.password)) {
+    if (User.checkPassword(req.body.password)) {
       data.password = req.body.password
     } else {
       return sendMessageResponse(res, 400, 'Invalid Password')
