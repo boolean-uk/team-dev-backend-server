@@ -119,14 +119,24 @@ export default class User {
   }
 
   static emailValidation(email) {
+    // regex explanation:
+    // matches a-z, digits, and all special characters, including full stops before the @ symbol.
+    // After the @ it makes sure the domain name of the email address ends in a dot. and only includes a-z, digits or hyphens.
+    // and then the final part of the email address is the top-level domain name which may only contain a-z, digits, or hyphen.
     const emailRegex =
-      /^[0-9a-zA-Z]+(?:\.[0-9a-zA-Z]+)*@[a-zA-Z0-9]{2,}(?:\.[a-zA-Z]{2,})+$/gm
-    return emailRegex.test(email)
+      /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/gm
+    return emailRegex.test(email.toLowerCase())
   }
 
   static passwordValidation(password) {
+    // regex explanation:
+    // Checks to make sure that the password has at least one digit (0-9), - (?=.*\d)
+    // Checks it has at least one special character in the provided list, with some escape characters to allow backslashes etc - (?=.*[!?@#$%^&*()+_{}<>`~\\\-/.,[\]])
+    // Checks it has at east one lowercase a-z character, - (?=.*[a-z])
+    // Checks it has at least one uppercase a-z character, - (?=.*[A-Z])
+    // Checks that it is at least 8 characters long. - .{8,}
     const passwordRegex =
-      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+      /^(?=.*\d)(?=.*[!?@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     return passwordRegex.test(password)
   }
 
