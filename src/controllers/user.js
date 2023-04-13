@@ -86,7 +86,8 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const data = { profile: { update: {} } }
+  const data = {}
+  console.log(data)
 
   if (req.body.email) {
     if (User.emailValidation(req.body.email)) {
@@ -95,7 +96,6 @@ export const updateById = async (req, res) => {
       return sendMessageResponse(res, 400, 'Invalid Email')
     }
   }
-
   if (req.body.password) {
     if (User.checkPassword(req.body.password)) {
       data.password = req.body.password
