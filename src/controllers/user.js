@@ -65,8 +65,25 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const { firstName, lastName } = req.query
-  let amountOfQueries = 0
+  const { name } = req.query
+
+  let firstName = ''
+  let lastName = ''
+
+  if (name) {
+    const nameSplitIntoArray = name.split(' ')
+
+    if (nameSplitIntoArray[0].length > 0) {
+      firstName = nameSplitIntoArray[0]
+    }
+    if (nameSplitIntoArray.length > 1) {
+      if (nameSplitIntoArray[1].length > 0) {
+        lastName = nameSplitIntoArray[1]
+      }
+    }
+  }
+
+  let numberOfNamesGiven = 0
 
   const mapOutUsers = (users) => {
     return users.map((item) => {
@@ -76,7 +93,7 @@ export const getAll = async (req, res) => {
     })
   }
 
-  if (!firstName && !lastName) {
+  if (!name) {
     const users = await User.findAll().then((users) => mapOutUsers(users))
     return sendDataResponse(res, 200, { users })
   }
@@ -86,7 +103,7 @@ export const getAll = async (req, res) => {
   }
 
   if (firstName) {
-    amountOfQueries++
+    numberOfNamesGiven++
     where.profile.firstName = {
       contains: firstName,
       mode: 'insensitive'
@@ -94,14 +111,14 @@ export const getAll = async (req, res) => {
   }
 
   if (lastName) {
-    amountOfQueries++
+    numberOfNamesGiven++
     where.profile.lastName = {
       contains: lastName,
       mode: 'insensitive'
     }
   }
 
-  if (amountOfQueries !== 1) {
+  if (numberOfNamesGiven !== 1) {
     const _where = {
       AND: where
     }
@@ -111,7 +128,7 @@ export const getAll = async (req, res) => {
     )
 
     return sendDataResponse(res, 200, { users })
-  } else if (amountOfQueries === 1) {
+  } else if (numberOfNamesGiven === 1) {
     const users = await User.findByName(where).then((users) =>
       mapOutUsers(users)
     )
