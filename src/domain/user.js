@@ -1,5 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
+import { query } from 'express'
 
 export default class User {
   /**
@@ -204,5 +205,20 @@ export default class User {
     const updatedUser = await dbClient.user.update(query)
 
     return updatedUser
+  }
+
+  static async findByName(name) {
+    const query = {
+      include: {
+        profile: true
+      }
+    }
+
+    if (name) {
+      query.where = name
+    }
+
+    const users = await dbClient.user.findMany(query)
+    return users.map((item) => User.fromDb(item))
   }
 }
