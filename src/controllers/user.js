@@ -69,9 +69,7 @@ export const getAll = async (req, res) => {
   let amountOfQueries = 0
 
   if (!firstName && !lastName) {
-    const users = await (
-      await User.findAll()
-    ).map((item) => {
+    const users = await User.findAll().map((item) => {
       return {
         ...item.toJSON().user
       }
@@ -104,9 +102,7 @@ export const getAll = async (req, res) => {
       AND: where
     }
 
-    const users = await (
-      await User.findByName(_where)
-    ).map((item) => {
+    const users = await User.findByName(_where).map((item) => {
       return {
         ...item.toJSON().user
       }
