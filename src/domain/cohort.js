@@ -25,3 +25,22 @@ export class Cohort {
     }
   }
 }
+
+export async function findByCohortId(id) {
+  const foundCohort = await dbClient.cohort.findOne({
+    where: {
+      id: id
+    },
+    include: {
+      user: true
+    }
+  })
+
+  if (foundCohort) {
+    return Cohort(foundCohort)
+  }
+
+  if (!foundCohort) {
+    return 'No cohort with {id} found'
+  }
+}
