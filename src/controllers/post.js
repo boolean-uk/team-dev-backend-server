@@ -1,14 +1,19 @@
 import { sendDataResponse } from '../utils/responses.js'
-
+import dbClient from '../utils/dbClient.js'
 export const create = async (req, res) => {
   const { content } = req.body
   console.log('this is the req.user', req.user)
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-
+  await dbClient.post.create({
+    data: {
+      content: content,
+      userId: req.user.id
+    }
+  })
   return sendDataResponse(res, 201, {
-    post: { id: 1, content: content, author: req.user }
+    post: { id: 1, content: content, author: { ...req.user } }
   })
 }
 
