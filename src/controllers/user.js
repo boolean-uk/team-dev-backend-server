@@ -86,7 +86,6 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-
   const data = { profile: { update: {} } }
 
   if (req.body.email) {
@@ -140,7 +139,6 @@ export const updateById = async (req, res) => {
   if (req.body.bio) {
     data.profile.update.bio = req.body.bio
   }
-
   if (req.body.githubUrl) {
     data.profile.update.githubUrl = req.body.githubUrl
   }
