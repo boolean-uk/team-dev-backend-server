@@ -3,7 +3,9 @@ import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
-  if (!User.emailValidation(req.body.email)) {
+  let { firstName, lastName, email, bio, githubUrl, password } = req.body
+
+  if (!User.emailValidation(email)) {
     return sendMessageResponse(res, 400, 'Email format invalid')
   }
   if (!req.body.password) {
@@ -16,18 +18,39 @@ export const create = async (req, res) => {
       'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
     )
   }
-  if (
-    (req.body.bio || req.body.githubUrl) &&
-    (!req.body.firstName || !req.body.lastName)
-  ) {
+  console.log('lastName', lastName.empty)
+  if ((bio || githubUrl) && !(firstName || lastName)) {
     return sendMessageResponse(
       res,
       409,
-      'Must include first name and last name if providing bio or github details'
+      'Must include first name or last name if providing bio or github details'
     )
   }
 
-  const userToCreate = await User.fromJson(req.body)
+  if (!firstName) {
+    firstName = ' '
+  }
+
+  if (!lastName) {
+    lastName = ' '
+  }
+
+  if (!bio) {
+    bio = ' '
+  }
+
+  if (!githubUrl) {
+    githubUrl = ' '
+  }
+
+  const userToCreate = await User.fromJson({
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    bio: bio,
+    githubUrl: githubUrl,
+    password: password
+  })
 
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
