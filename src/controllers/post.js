@@ -1,4 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
+import dbClient from '../utils/dbClient.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -11,18 +12,34 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  return sendDataResponse(res, 200, {
-    posts: [
-      {
-        id: 1,
-        content: 'Hello world!',
-        author: { ...req.user }
-      },
-      {
-        id: 2,
-        content: 'Hello from the void!',
-        author: { ...req.user }
+  const allPostsNoAuthor = await dbClient.post.findMany({
+    include: {
+      user: {
+        include: {
+          profile: true
+        }
       }
-    ]
+    }
   })
+
+  const author = {
+    id: allPostsNoAuthor.id,
+    cohortId: allPostsNoAuthor.cohortId,
+    role: allPostsNoAuthor.role,
+    firstName: allPostsNoAuthor.firstName,
+    lastName: allPostsNoAuthor.lastName,
+    bio: allPostsNoAuthor.bio,
+    githubUrl: allPostsNoAuthor.githubUrl,
+    profileImageUrl: allPostsNoAuthor.profileImageUrl
+  }
+
+  const formattedPosts = await dbClient.post.findMany()
+  const FinalPosts = formattedPosts.forEach((post) =>
+    // console.log('CL post:', post)
+    Object.assign(post, { author: author })
+  )
+
+  console.log('formattedPosts as array??', formattedPosts)
+
+  return sendDataResponse(res, 200, { posts: FinalPosts })
 }
