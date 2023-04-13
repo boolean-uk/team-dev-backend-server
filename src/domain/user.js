@@ -119,9 +119,10 @@ export default class User {
   }
 
   static emailValidation(email) {
+    const emailLC = email.toLowerCase()
     const emailRegex =
-      /^[0-9a-zA-Z]+(?:\.[0-9a-zA-Z]+)*@[a-zA-Z0-9]{2,}(?:\.[a-zA-Z]{2,})+$/gm
-    return emailRegex.test(email)
+      /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/gm
+    return emailRegex.test(emailLC)
   }
 
   static passwordValidation(password) {
