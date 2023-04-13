@@ -197,9 +197,13 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - content
               properties:
                 content:
                   type: string
+                  
+                  
       responses:
         201:
           description: success
@@ -324,6 +328,31 @@ components:
                   type: integer
                 content:
                   type: string
+                createdAt:
+                  type: string
+                  format: string
+                updatedAt: 
+                  type: string
+                  format: string
+                author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      cohortId:
+                        type: integer
+                      role:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      bio:
+                        type: string
+                      githubUrl:
+                        type: string
+                      profileImageUrl:
+                        type: string
 
     Cohort:
       type: object
