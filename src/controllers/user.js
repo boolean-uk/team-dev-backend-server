@@ -67,6 +67,7 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
   const { firstName, lastName } = req.query
+  let amountOfQueries = 0
 
   if (!firstName && !lastName) {
     const users = await (
@@ -79,6 +80,25 @@ export const getAll = async (req, res) => {
     return sendDataResponse(res, 200, { users: users })
   }
 
+  const where = {
+    profile: {}
+  }
+
+  if (firstName) {
+    amountOfQueries++
+    where.profile.firstName = {
+      equals: firstName,
+      mode: 'insensitive'
+    }
+  }
+
+  if (lastName) {
+    amountOfQueries++
+    where.profile.lastName = {
+      equals: lastName,
+      mode: 'insensitive'
+    }
+  }
   // let foundUsers
 
   // if (firstName) {
