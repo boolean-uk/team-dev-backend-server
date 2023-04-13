@@ -16,7 +16,7 @@ export const create = async (req, res) => {
   return sendDataResponse(res, 201, {
     post: {
       id: createdPost.id,
-      content: content,
+      content: createdPost.content,
       createdAt: createdPost.createdAt,
       updatedAt: createdPost.updatedAt,
       author: { ...req.user }
