@@ -15,7 +15,7 @@ export const create = async (req, res) => {
   })
   return sendDataResponse(res, 201, {
     post: {
-      id: 1,
+      id: createdPost.id,
       content: content,
       createdAt: createdPost.createdAt,
       updatedAt: createdPost.updatedAt,
