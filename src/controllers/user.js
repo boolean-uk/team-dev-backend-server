@@ -99,21 +99,32 @@ export const getAll = async (req, res) => {
       mode: 'insensitive'
     }
   }
-  // let foundUsers
 
-  // if (firstName) {
-  //   foundUsers = await User.findManyByFirstName(firstName)
-  // } else {
-  //   foundUsers = await User.findAll()
-  // }
+  if (amountOfQueries !== 1) {
+    const _where = {
+      AND: where
+    }
 
-  // const formattedUsers = foundUsers.map((user) => {
-  //   return {
-  //     ...user.toJSON().user
-  //   }
-  // })
+    const users = await (
+      await User.findByName(_where)
+    ).map((item) => {
+      return {
+        ...item.toJSON().user
+      }
+    })
 
-  // return sendDataResponse(res, 200, { users: formattedUsers })
+    return sendDataResponse(res, 200, { users: users })
+  } else if (amountOfQueries === 1) {
+    const users = await (
+      await User.findByName(where)
+    ).map((item) => {
+      return {
+        ...item.toJSON().user
+      }
+    })
+
+    return sendDataResponse(res, 200, { users: users })
+  }
 }
 
 export const updateById = async (req, res) => {

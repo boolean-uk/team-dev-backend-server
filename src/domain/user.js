@@ -1,6 +1,5 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
-import { query } from 'express'
 
 export default class User {
   /**
@@ -218,7 +217,10 @@ export default class User {
       query.where = name
     }
 
-    const users = await dbClient.user.findMany(query)
-    return users.map((item) => User.fromDb(item))
+    const users = await (
+      await dbClient.user.findMany(query)
+    ).map((item) => User.fromDb(item))
+
+    return users
   }
 }
