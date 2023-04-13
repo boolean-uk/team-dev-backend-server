@@ -3,31 +3,30 @@ import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
-  if (!User.emailValidation(req.body.email)) {
+  const { firstName, lastName, email, bio, githubUrl, password } = req.body
+
+  if (!User.emailValidation(email)) {
     return sendMessageResponse(res, 400, 'Email format invalid')
   }
-  if (!req.body.password) {
+  if (!password) {
     return sendMessageResponse(res, 400, 'Password is required')
   }
-  if (!User.passwordValidation(req.body.password)) {
+  if (!User.passwordValidation(password)) {
     return sendMessageResponse(
       res,
       400,
       'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
     )
   }
-  if (
-    (req.body.bio || req.body.githubUrl) &&
-    (!req.body.firstName || !req.body.lastName)
-  ) {
-    return sendMessageResponse(
-      res,
-      409,
-      'Must include first name and last name if providing bio or github details'
-    )
-  }
 
-  const userToCreate = await User.fromJson(req.body)
+  const userToCreate = await User.fromJson({
+    firstName,
+    lastName,
+    email,
+    bio,
+    githubUrl,
+    password
+  })
 
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
@@ -86,22 +85,10 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  // TODO: These functions are placholders, will later be checked in the domain user.js
-  function checkPassword(str) {
-    const regex =
-      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-    return regex.test(str)
-  }
-  function emailValidation(email) {
-    const emailRegex =
-      /^[0-9a-zA-Z]+(?:\.[0-9a-zA-Z]+)*@[a-zA-Z0-9]{2,}(?:\.[a-zA-Z]{2,})+$/gm
-    return emailRegex.test(email)
-  }
-
   const data = { profile: { update: {} } }
 
   if (req.body.email) {
-    if (emailValidation(req.body.email)) {
+    if (User.emailValidation(req.body.email)) {
       data.email = req.body.email
     } else {
       return sendMessageResponse(res, 400, 'Invalid Email')
@@ -109,7 +96,7 @@ export const updateById = async (req, res) => {
   }
 
   if (req.body.password) {
-    if (checkPassword(req.body.password)) {
+    if (User.checkPassword(req.body.password)) {
       data.password = req.body.password
     } else {
       return sendMessageResponse(res, 400, 'Invalid Password')
@@ -151,7 +138,6 @@ export const updateById = async (req, res) => {
   if (req.body.bio) {
     data.profile.update.bio = req.body.bio
   }
-
   if (req.body.githubUrl) {
     data.profile.update.githubUrl = req.body.githubUrl
   }
