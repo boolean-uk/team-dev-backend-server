@@ -67,24 +67,6 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
   const { name } = req.query
 
-  let firstName = ''
-  let lastName = ''
-
-  if (name) {
-    const nameSplitIntoArray = name.split(' ')
-
-    if (nameSplitIntoArray[0].length > 0) {
-      firstName = nameSplitIntoArray[0]
-    }
-    if (nameSplitIntoArray.length > 1) {
-      if (nameSplitIntoArray[1].length > 0) {
-        lastName = nameSplitIntoArray[1]
-      }
-    }
-  }
-
-  let numberOfNamesGiven = 0
-
   const mapOutUsers = (users) => {
     return users.map((item) => {
       return {
@@ -93,45 +75,58 @@ export const getAll = async (req, res) => {
     })
   }
 
-  if (!name) {
-    const users = await User.findAll().then((users) => mapOutUsers(users))
-    return sendDataResponse(res, 200, { users })
-  }
-
-  const where = {
-    profile: {}
-  }
-
-  if (firstName) {
-    numberOfNamesGiven++
-    where.profile.firstName = {
-      contains: firstName,
-      mode: 'insensitive'
-    }
-  }
-
-  if (lastName) {
-    numberOfNamesGiven++
-    where.profile.lastName = {
-      contains: lastName,
-      mode: 'insensitive'
-    }
-  }
-
-  if (numberOfNamesGiven !== 1) {
-    const _where = {
-      AND: where
+  if (name) {
+    const where = {
+      profile: {}
     }
 
-    const users = await User.findByName(_where).then((users) =>
-      mapOutUsers(users)
-    )
+    const [firstName, ...rest] = name.split(' ')
+    const lastName = rest.join(' ')
+    const amountOfNames = name.split(' ').length
 
-    return sendDataResponse(res, 200, { users })
-  } else if (numberOfNamesGiven === 1) {
+    if (amountOfNames === 1) {
+      where.profile = {
+        OR: [
+          {
+            firstName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
+    } else if (amountOfNames > 1) {
+      where.profile = {
+        AND: [
+          {
+            firstName: {
+              contains: firstName,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: lastName,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
+    }
+
     const users = await User.findByName(where).then((users) =>
       mapOutUsers(users)
     )
+
+    return sendDataResponse(res, 200, { users })
+  } else {
+    const users = await User.findAll().then((users) => mapOutUsers(users))
 
     return sendDataResponse(res, 200, { users })
   }
