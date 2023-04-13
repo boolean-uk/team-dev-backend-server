@@ -145,6 +145,7 @@ export const updateById = async (req, res) => {
 
   try {
     const updatedUser = await User.updateById(Number(req.params.id), data)
+    delete updatedUser.password
     return sendDataResponse(res, 201, { user: updatedUser })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
