@@ -78,7 +78,7 @@ export const getAll = async (req, res) => {
 
   if (!firstName && !lastName) {
     const users = await User.findAll().then((users) => mapOutUsers(users))
-    return sendDataResponse(res, 200, { users: users })
+    return sendDataResponse(res, 200, { users })
   }
 
   const where = {
@@ -110,13 +110,13 @@ export const getAll = async (req, res) => {
       mapOutUsers(users)
     )
 
-    return sendDataResponse(res, 200, { users: users })
+    return sendDataResponse(res, 200, { users })
   } else if (amountOfQueries === 1) {
     const users = await User.findByName(where).then((users) =>
       mapOutUsers(users)
     )
 
-    return sendDataResponse(res, 200, { users: users })
+    return sendDataResponse(res, 200, { users })
   }
 }
 
