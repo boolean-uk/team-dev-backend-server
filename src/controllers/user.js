@@ -68,12 +68,16 @@ export const getAll = async (req, res) => {
   const { firstName, lastName } = req.query
   let amountOfQueries = 0
 
-  if (!firstName && !lastName) {
-    const users = await User.findAll().map((item) => {
+  const mapOutUsers = (users) => {
+    return users.map((item) => {
       return {
         ...item.toJSON().user
       }
     })
+  }
+
+  if (!firstName && !lastName) {
+    const users = await User.findAll().then((users) => mapOutUsers(users))
     return sendDataResponse(res, 200, { users: users })
   }
 
@@ -102,21 +106,15 @@ export const getAll = async (req, res) => {
       AND: where
     }
 
-    const users = await User.findByName(_where).map((item) => {
-      return {
-        ...item.toJSON().user
-      }
-    })
+    const users = await User.findByName(_where).then((users) =>
+      mapOutUsers(users)
+    )
 
     return sendDataResponse(res, 200, { users: users })
   } else if (amountOfQueries === 1) {
-    const users = await (
-      await User.findByName(where)
-    ).map((item) => {
-      return {
-        ...item.toJSON().user
-      }
-    })
+    const users = await User.findByName(where).then((users) =>
+      mapOutUsers(users)
+    )
 
     return sendDataResponse(res, 200, { users: users })
   }
