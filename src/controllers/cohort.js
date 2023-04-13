@@ -1,6 +1,5 @@
-import { createCohort, Cohort, findByCohortId } from '../domain/cohort.js'
+import { createCohort, getStudentsOfCohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
-import User from '../domain/user.js'
 
 export const create = async (req, res) => {
   try {
@@ -13,16 +12,11 @@ export const create = async (req, res) => {
 }
 
 export const getStudents = async (req, res) => {
-  const { cohortId } = req.query
-  const { userId } = req.params.id
+  const cohortId = req.params.id
 
-  const foundStudents = await User._findMany(userId)
-  if (foundStudents) {
-    const foundCohort = await Cohort.findByCohortId(cohortId)
-    if (!foundCohort) {
-      return sendMessageResponse(res, 404, 'No cohort with{id}')
-    }
-    const foundStudents = foundCohort.users
-    return sendDataResponse(res, 200, foundStudents)
-  }
+  const students = await getStudentsOfCohort(cohortId)
+
+  students.forEach((student) => delete student.password)
+
+  return sendDataResponse(res, 200, students)
 }

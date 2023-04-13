@@ -44,3 +44,18 @@ export async function findByCohortId(id) {
     return 'No cohort with {id} found'
   }
 }
+
+export async function getStudentsOfCohort(id) {
+  const query = {
+    where: {
+      id: Number(id)
+    },
+    include: {
+      users: true
+    }
+  }
+
+  const students = await dbClient.cohort.findUnique(query)
+
+  return students.users
+}
