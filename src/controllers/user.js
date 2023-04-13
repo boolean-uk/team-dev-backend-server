@@ -66,23 +66,34 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { firstName, lastName } = req.query
 
-  let foundUsers
-
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
-  } else {
-    foundUsers = await User.findAll()
+  if (!firstName && !lastName) {
+    const users = await (
+      await User.findAll()
+    ).map((item) => {
+      return {
+        ...item.toJSON().user
+      }
+    })
+    return sendDataResponse(res, 200, { users: users })
   }
 
-  const formattedUsers = foundUsers.map((user) => {
-    return {
-      ...user.toJSON().user
-    }
-  })
+  // let foundUsers
 
-  return sendDataResponse(res, 200, { users: formattedUsers })
+  // if (firstName) {
+  //   foundUsers = await User.findManyByFirstName(firstName)
+  // } else {
+  //   foundUsers = await User.findAll()
+  // }
+
+  // const formattedUsers = foundUsers.map((user) => {
+  //   return {
+  //     ...user.toJSON().user
+  //   }
+  // })
+
+  // return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
 export const updateById = async (req, res) => {
