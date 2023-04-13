@@ -127,7 +127,7 @@ export default class User {
 
   static passwordValidation(password) {
     const passwordRegex =
-      /^(?=.*\d)(?=.*[!@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+      /^(?=.*\d)(?=.*[!?@#$%^&*()+_{}<>`~\\\-/.,[\]])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     return passwordRegex.test(password)
   }
 
