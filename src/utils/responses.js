@@ -10,7 +10,6 @@ const STATUS_MESSAGES = {
 
 // When sending back errors, make sure to use sendDataResponse with a payload formatted this way:
 // {error: <error_message>} to maintain consistency across error reporting.
-
 export function sendDataResponse(res, statusCode, payload) {
   return res.status(statusCode).json({
     status: STATUS_MESSAGES[statusCode],
