@@ -87,7 +87,6 @@ export const getAll = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const data = {}
-  console.log(data)
 
   if (req.body.email) {
     if (User.emailValidation(req.body.email)) {
