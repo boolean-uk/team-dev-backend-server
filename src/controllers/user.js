@@ -128,6 +128,14 @@ export const updateById = async (req, res) => {
     }
   }
 
+  if (
+    req.body.firstName ||
+    req.body.lastName ||
+    req.body.bio ||
+    req.body.githubUrl
+  ) {
+    data.profile = { update: {} }
+  }
   if (req.body.firstName) {
     data.profile.update.firstName = req.body.firstName
   }
