@@ -25,6 +25,9 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
+  let postWithAuthor
+  const posts = []
+
   const allPostsNoAuthor = await dbClient.post.findMany({
     include: {
       user: {
@@ -38,9 +41,30 @@ export const getAll = async (req, res) => {
     }
   })
 
-  console.log('allPostsNoAuthor---', allPostsNoAuthor)
+  for (let i = 0; i < allPostsNoAuthor.length; i++) {
+    console.log('checking stuff---', allPostsNoAuthor[i].content)
+    const post = allPostsNoAuthor[i]
+    const user = post.user
+    const profile = user.profile
 
-  return sendDataResponse(res, 200, { posts: allPostsNoAuthor })
+    postWithAuthor = {
+      id: post.id,
+      content: post.content,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      author: {
+        id: user.id,
+        cohortId: user.cohortId,
+        role: user.role,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        bio: profile.bio,
+        githubUrl: profile.githubUrl,
+        profileImageUrl: profile.profileImageUrl
+      }
+    }
+    posts.push(postWithAuthor)
+  }
 
-  // return sendDataResponse(res, 200, { posts: formattedPosts })
+  return sendDataResponse(res, 200, { posts: posts })
 }
