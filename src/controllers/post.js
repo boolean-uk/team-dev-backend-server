@@ -25,18 +25,42 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  return sendDataResponse(res, 200, {
-    posts: [
-      {
-        id: 1,
-        content: 'Hello world!',
-        author: { ...req.user }
-      },
-      {
-        id: 2,
-        content: 'Hello from the void!',
-        author: { ...req.user }
+  const allPostsNoAuthor = await dbClient.post.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          cohortId: true,
+          role: true,
+          profile: true
+        }
       }
-    ]
+    }
   })
+
+  const postsWithAuthor = allPostsNoAuthor.map((post) => {
+    const { id, content, createdAt, updatedAt } = post
+    const { cohortId, role } = post.user
+    const { firstName, lastName, bio, githubUrl, profileImageUrl } =
+      post.user.profile
+
+    return {
+      id,
+      content,
+      createdAt,
+      updatedAt,
+      author: {
+        id: post.user.id,
+        cohortId,
+        role,
+        firstName,
+        lastName,
+        bio,
+        githubUrl,
+        profileImageUrl
+      }
+    }
+  })
+
+  return sendDataResponse(res, 200, { posts: postsWithAuthor })
 }
