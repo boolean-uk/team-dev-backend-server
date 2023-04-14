@@ -156,6 +156,13 @@ export const updateById = async (req, res) => {
     return sendDataResponse(res, 201, { user: updatedUser })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2016') {
+        return sendDataResponse(
+          res,
+          400,
+          'Please create a Profile before updating it.'
+        )
+      }
       if (e.code === 'P2025') {
         return sendMessageResponse(res, 404, 'Invalid cohortId')
       }
