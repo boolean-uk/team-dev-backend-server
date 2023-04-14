@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { createCohort, getStudentsOfCohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
