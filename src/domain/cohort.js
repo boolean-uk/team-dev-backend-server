@@ -26,25 +26,6 @@ export class Cohort {
   }
 }
 
-export async function findByCohortId(id) {
-  const foundCohort = await dbClient.cohort.findOne({
-    where: {
-      id: id
-    },
-    include: {
-      user: true
-    }
-  })
-
-  if (foundCohort) {
-    return Cohort(foundCohort)
-  }
-
-  if (!foundCohort) {
-    return 'No cohort with {id} found'
-  }
-}
-
 export async function getStudentsOfCohort(id) {
   const query = {
     where: {
@@ -55,7 +36,8 @@ export async function getStudentsOfCohort(id) {
     }
   }
 
-  const res = await dbClient.cohort.findUnique(query)
+  const data = await dbClient.cohort.findUnique(query)
+  data.users.forEach((student) => delete student.password)
 
-  return res
+  return data
 }

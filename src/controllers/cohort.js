@@ -23,6 +23,6 @@ export const getStudents = async (req, res) => {
       `No students found for Cohort ${cohortId}`
     )
   }
-  students.users.forEach((student) => delete student.password)
+
   return sendDataResponse(res, 200, students)
 }
