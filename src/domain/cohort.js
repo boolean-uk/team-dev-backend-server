@@ -24,4 +24,13 @@ export class Cohort {
       }
     }
   }
+
+  static async findAll() {
+    return Cohort._findMany()
+  }
+
+  static async _findMany() {
+    const foundCohorts = await dbClient.cohort.findMany()
+    return foundCohorts
+  }
 }
