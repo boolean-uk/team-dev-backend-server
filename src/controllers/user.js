@@ -84,7 +84,7 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const data = { profile: { update: {} } }
+  const data = {}
 
   if (req.body.email) {
     if (User.emailValidation(req.body.email)) {
@@ -93,7 +93,6 @@ export const updateById = async (req, res) => {
       return sendDataResponse(res, 400, { error: 'Invalid Email' })
     }
   }
-
   if (req.body.password) {
     if (User.checkPassword(req.body.password)) {
       data.password = req.body.password
@@ -126,6 +125,14 @@ export const updateById = async (req, res) => {
     }
   }
 
+  if (
+    req.body.firstName ||
+    req.body.lastName ||
+    req.body.bio ||
+    req.body.githubUrl
+  ) {
+    data.profile = { update: {} }
+  }
   if (req.body.firstName) {
     data.profile.update.firstName = req.body.firstName
   }
@@ -143,9 +150,17 @@ export const updateById = async (req, res) => {
 
   try {
     const updatedUser = await User.updateById(Number(req.params.id), data)
+    delete updatedUser.password
     return sendDataResponse(res, 201, { user: updatedUser })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2016') {
+        return sendDataResponse(
+          res,
+          400,
+          'Please create a Profile before updating it.'
+        )
+      }
       if (e.code === 'P2025') {
         return sendDataResponse(res, 404, { error: 'Invalid cohortId' })
       }
