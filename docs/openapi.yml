@@ -278,7 +278,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /cohorts:
-    post:
+    get:
       tags:
         - cohort
       summary: Get all cohorts
@@ -287,14 +287,43 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        200:
+        '200':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
+  /cohorts/:id/users:
     get:
+      tags:
+        - cohort
+      summary: Get all Students in cohort
+      description: This can only be done by a logged in user
+      operationId: getAllStudentsOfCohort
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
       tags:
         - cohort
       summary: Create a cohort
