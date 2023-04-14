@@ -25,3 +25,19 @@ export class Cohort {
     }
   }
 }
+
+export async function getStudentsOfCohort(id) {
+  const query = {
+    where: {
+      id: Number(id)
+    },
+    include: {
+      users: true
+    }
+  }
+
+  const data = await dbClient.cohort.findUnique(query)
+  data.users.forEach((student) => delete student.password)
+
+  return data
+}

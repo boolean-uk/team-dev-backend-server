@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { create } from '../controllers/cohort.js'
+import { create, getStudents } from '../controllers/cohort.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -8,5 +8,6 @@ import {
 const router = Router()
 
 router.post('/', validateAuthentication, validateTeacherRole, create)
+router.get('/:id/users', validateAuthentication, getStudents)
 
 export default router
