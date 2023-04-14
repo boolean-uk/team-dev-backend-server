@@ -1,22 +1,21 @@
 import { Prisma } from '@prisma/client'
 import User from '../domain/user.js'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const { firstName, lastName, email, bio, githubUrl, password } = req.body
 
   if (!User.emailValidation(email)) {
-    return sendMessageResponse(res, 400, 'Email format invalid')
+    return sendDataResponse(res, 400, { error: 'Email format invalid' })
   }
   if (!password) {
-    return sendMessageResponse(res, 400, 'Password is required')
+    return sendDataResponse(res, 400, { error: 'Password is required' })
   }
   if (!User.passwordValidation(password)) {
-    return sendMessageResponse(
-      res,
-      400,
-      'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
-    )
+    return sendDataResponse(res, 400, {
+      error:
+        'Password must contain at least one upper case character, at least one number, at least one special character and not be less than 8 characters in length.'
+    })
   }
 
   const userToCreate = await User.fromJson({
@@ -32,18 +31,18 @@ export const create = async (req, res) => {
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
-      return sendDataResponse(res, 400, { email: 'Email already in use' })
+      return sendDataResponse(res, 400, { error: 'Email already in use' })
     }
 
     if (!userToCreate.email) {
-      return sendMessageResponse(res, 400, 'Email is required')
+      return sendDataResponse(res, 400, { error: 'Email is required' })
     }
 
     const createdUser = await userToCreate.save()
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to create new user')
+    return sendDataResponse(res, 500, { error: 'Unable to create new user' })
   }
 }
 
@@ -54,12 +53,12 @@ export const getById = async (req, res) => {
     const foundUser = await User.findById(id)
 
     if (!foundUser) {
-      return sendDataResponse(res, 404, { id: 'User not found' })
+      return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
     return sendDataResponse(res, 200, foundUser)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to get user')
+    return sendDataResponse(res, 500, { error: 'Unable to get user' })
   }
 }
 
@@ -85,21 +84,20 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const data = { profile: { update: {} } }
+  const data = {}
 
   if (req.body.email) {
     if (User.emailValidation(req.body.email)) {
       data.email = req.body.email
     } else {
-      return sendMessageResponse(res, 400, 'Invalid Email')
+      return sendDataResponse(res, 400, { error: 'Invalid Email' })
     }
   }
-
   if (req.body.password) {
     if (User.checkPassword(req.body.password)) {
       data.password = req.body.password
     } else {
-      return sendMessageResponse(res, 400, 'Invalid Password')
+      return sendDataResponse(res, 400, { error: 'Invalid Password' })
     }
   }
 
@@ -127,6 +125,14 @@ export const updateById = async (req, res) => {
     }
   }
 
+  if (
+    req.body.firstName ||
+    req.body.lastName ||
+    req.body.bio ||
+    req.body.githubUrl
+  ) {
+    data.profile = { update: {} }
+  }
   if (req.body.firstName) {
     data.profile.update.firstName = req.body.firstName
   }
@@ -144,22 +150,28 @@ export const updateById = async (req, res) => {
 
   try {
     const updatedUser = await User.updateById(Number(req.params.id), data)
+    delete updatedUser.password
     return sendDataResponse(res, 201, { user: updatedUser })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2016') {
+        return sendDataResponse(
+          res,
+          400,
+          'Please create a Profile before updating it.'
+        )
+      }
       if (e.code === 'P2025') {
-        return sendMessageResponse(res, 404, 'Invalid cohortId')
+        return sendDataResponse(res, 404, { error: 'Invalid cohortId' })
       }
       if (e.code === 'P2002') {
-        return sendMessageResponse(res, 409, 'Email is already in use')
+        return sendDataResponse(res, 409, { error: 'Email is already in use' })
       }
     }
     if (e instanceof Prisma.PrismaClientValidationError) {
-      return sendMessageResponse(
-        res,
-        400,
-        'Invalid Role. Valid roles are: STUDENT, TEACHER'
-      )
+      return sendDataResponse(res, 400, {
+        error: 'Invalid Role. Valid roles are: STUDENT, TEACHER'
+      })
     }
   }
 }
