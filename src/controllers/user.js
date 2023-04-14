@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import mapOutUsers from '../utils/mapOutUsers.js'
 
 export const create = async (req, res) => {
   const { firstName, lastName, email, bio, githubUrl, password } = req.body
@@ -65,14 +66,6 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   const { name } = req.query
-
-  const mapOutUsers = (users) => {
-    return users.map((item) => {
-      return {
-        ...item.toJSON().user
-      }
-    })
-  }
 
   if (name) {
     const where = {
