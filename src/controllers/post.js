@@ -42,7 +42,6 @@ export const getAll = async (req, res) => {
   })
 
   for (let i = 0; i < allPostsNoAuthor.length; i++) {
-    console.log('checking stuff---', allPostsNoAuthor[i].content)
     const post = allPostsNoAuthor[i]
     const user = post.user
     const profile = user.profile
