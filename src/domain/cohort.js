@@ -55,7 +55,7 @@ export async function getStudentsOfCohort(id) {
     }
   }
 
-  const students = await dbClient.cohort.findUnique(query)
+  const res = await dbClient.cohort.findUnique(query)
 
-  return students.users
+  return res
 }

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { createCohort, getStudentsOfCohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
@@ -16,7 +17,13 @@ export const getStudents = async (req, res) => {
 
   const students = await getStudentsOfCohort(cohortId)
 
-  students.forEach((student) => delete student.password)
-
+  if (students === null) {
+    return sendDataResponse(
+      res,
+      404,
+      `No students found for Cohort ${cohortId}`
+    )
+  }
+  students.users.forEach((student) => delete student.password)
   return sendDataResponse(res, 200, students)
 }
