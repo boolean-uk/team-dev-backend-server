@@ -27,6 +27,7 @@ model User {
   posts         Post[]
   deliveryLogs  DeliveryLog[]
   commments     Comment[]
+  likes         Like[]
 }
 
 model Profile {
@@ -90,8 +91,8 @@ model Like {
   userId    Int
   user      User          @relation(fields: [userId], references: [id])
   postId    Int?
-  post      Post          @relation(fields: [postId], references: [id])
+  post      Post?          @relation(fields: [postId], references: [id])
   commentId Int?
-  comment   Comment       @relation(fields: [commentId], references: [id])
+  comment   Comment?       @relation(fields: [commentId], references: [id])
   createdAt DateTime      @default(now()) 
 }
