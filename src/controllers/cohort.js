@@ -11,7 +11,7 @@ export const create = async (req, res) => {
   }
 }
 
-export const get = async (req, res) => {
+export const getAllCohorts = async (req, res) => {
   const cohortList = await Cohort.findAll()
   if (cohortList) {
     return sendDataResponse(res, 200, cohortList)
