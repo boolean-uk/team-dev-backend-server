@@ -10,10 +10,40 @@ async function seed() {
 
     const post1 = await createPost(student.id, 'My first post!')
     const post2 = await createPost(teacher.id, 'Hello, students')
-    await createComment(teacher.id, post1.id, 'congrats on the first post')
-    await createComment(student.id, post2.id, 'hello teacher')
+    const comment1 = await createComment(teacher.id, post1.id, 'congrats on the first post')
+    const comment2 = await createComment(student.id, post2.id, 'hello teacher')
+    await createLikeOnPost(student.id, post1.id)
+    await createLikeOnComment(student.id, comment1.id)
+    await createLikeOnComment(teacher.id, comment2.id)
     process.exit(0);
 }
+
+async function createLikeOnPost(userId, postId) {
+    const like = await prisma.like.create({
+        data: {
+            userId: userId,
+            postId: postId
+        }
+    })
+
+    console.info('post like created', like)
+
+    return like
+}
+
+async function createLikeOnComment(userId, commentId) {
+    const like = await prisma.like.create({
+        data: {
+            userId: userId,
+            commentId: commentId
+        }
+    })
+
+    console.info('comment like created', like)
+    
+    return like
+}
+
 async function createComment(userId, postId, content) {
     const comment = await prisma.comment.create({
         data: {
