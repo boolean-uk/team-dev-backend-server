@@ -15,31 +15,19 @@ export const getAll = async (req, res) => {
   const allPostsNoAuthor = await dbClient.post.findMany({
     include: {
       user: {
-        include: {
+        select: {
+          id: true,
+          cohortId: true,
+          role: true,
           profile: true
         }
       }
     }
   })
 
-  const author = {
-    id: allPostsNoAuthor.id,
-    cohortId: allPostsNoAuthor.cohortId,
-    role: allPostsNoAuthor.role,
-    firstName: allPostsNoAuthor.firstName,
-    lastName: allPostsNoAuthor.lastName,
-    bio: allPostsNoAuthor.bio,
-    githubUrl: allPostsNoAuthor.githubUrl,
-    profileImageUrl: allPostsNoAuthor.profileImageUrl
-  }
+  console.log('allPostsNoAuthor---', allPostsNoAuthor)
 
-  const formattedPosts = await dbClient.post.findMany()
-  const FinalPosts = formattedPosts.forEach((post) =>
-    // console.log('CL post:', post)
-    Object.assign(post, { author: author })
-  )
+  return sendDataResponse(res, 200, { posts: allPostsNoAuthor })
 
-  console.log('formattedPosts as array??', formattedPosts)
-
-  return sendDataResponse(res, 200, { posts: FinalPosts })
+  // return sendDataResponse(res, 200, { posts: formattedPosts })
 }
