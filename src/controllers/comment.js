@@ -1,6 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
 import { create } from '../domain/comment.js'
-import { findById } from '../domain/post.js'
 import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
