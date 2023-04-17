@@ -175,3 +175,25 @@ export const updateById = async (req, res) => {
     }
   }
 }
+
+export const getByRole = async (req, res) => {
+  try {
+    const foundUser = await User.findAllTeachers()
+
+    if (!foundUser) {
+      return sendDataResponse(res, 404, 'No teachers found')
+    }
+    console.log(foundUser)
+    return sendDataResponse(res, 200, { user: foundUser })
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2016') {
+        return sendDataResponse(
+          res,
+          400,
+          'Please create a Profile before getting it'
+        )
+      }
+    }
+  }
+}
