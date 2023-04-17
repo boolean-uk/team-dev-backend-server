@@ -3,7 +3,6 @@ import dbClient from '../utils/dbClient.js'
 
 export const createComment = async (req, res) => {
   const { content } = req.body
-  const id = parseInt(req.params.id)
 
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
@@ -11,7 +10,7 @@ export const createComment = async (req, res) => {
   const createdComment = await dbClient.comment.create({
     data: {
       content: content,
-      postId: id,
+      postId: parseInt(req.params.id),
       userId: req.user.id
     }
   })

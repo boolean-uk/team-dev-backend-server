@@ -330,7 +330,7 @@ paths:
       description: This can only be done by the logged in user with role TEACHER.
       operationId: createCohort
       security:
-        - bearerAuth: [] 
+        - bearerAuth: []
       responses:
         201:
           description: success
@@ -364,7 +364,7 @@ paths:
       parameters:
         - name: postId
           in: path
-          description: 'The post ID that the comment needs to be link. '
+          description: 'The post ID that the comment needs to be linked to. '
           required: true
           schema:
             type: string
@@ -722,11 +722,8 @@ components:
       properties:
         content:
           type: string
-        postId:
-          type: integer
         userId:
           type: integer
       required: 
         - content
-        - postId
         - userId

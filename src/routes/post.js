@@ -7,7 +7,6 @@ const router = Router()
 
 router.post('/', validateAuthentication, create)
 router.get('/', validateAuthentication, getAll)
-
 router.post('/:id/comments', validateAuthentication, createComment)
 
 export default router
