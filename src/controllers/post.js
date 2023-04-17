@@ -1,5 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { createPost, getAllPosts } from '../domain/post.js'
+import { createPost, getAllPosts, findById } from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -48,4 +48,27 @@ export const getAll = async (req, res) => {
   })
 
   return sendDataResponse(res, 200, { posts: postsWithAuthor })
+}
+
+export const getById = async (req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+    const foundPost = await findById(id)
+    if (!foundPost) {
+      return sendDataResponse(res, 404, { error: 'Post not found' })
+    }
+    const post = {
+      id: foundPost.id,
+      content: foundPost.content,
+      userId: foundPost.userId,
+      createdAt: foundPost.createdAt,
+      updatedAt: foundPost.updatedAt,
+      author: { ...foundPost.user }
+    }
+
+    return sendDataResponse(res, 200, post)
+  } catch (e) {
+    console.log('this one', e)
+    return sendDataResponse(res, 500, { error: 'Unable to get Post' })
+  }
 }

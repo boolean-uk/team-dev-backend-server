@@ -23,3 +23,21 @@ export async function getAllPosts() {
     }
   })
 }
+
+export async function findById(id) {
+  return await dbClient.post.findUnique({
+    where: {
+      id: id
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          cohortId: true,
+          role: true,
+          profile: true
+        }
+      }
+    }
+  })
+}
