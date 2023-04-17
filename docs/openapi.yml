@@ -389,7 +389,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        401:
+        400:
           description: must include content
           content:
             application/json:
