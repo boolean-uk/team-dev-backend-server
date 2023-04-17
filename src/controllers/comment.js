@@ -7,6 +7,9 @@ export const createComment = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
+  if (!postId) {
+    return sendDataResponse(res, 404, { error: 'Post does not exist' })
+  }
   const createdComment = await create(content, postId, req.user.id)
   return sendDataResponse(res, 201, {
     comment: {

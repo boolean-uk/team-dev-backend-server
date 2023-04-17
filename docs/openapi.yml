@@ -395,6 +395,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        404:
+          description: post must exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
