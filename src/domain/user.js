@@ -210,7 +210,6 @@ export default class User {
     return updatedUser
   }
 
-
   static async findAllTeachers() {
     console.log('all teacher')
     const query = {
@@ -224,5 +223,5 @@ export default class User {
     const foundTeachers = await dbClient.user.findMany(query)
     console.log(foundTeachers)
     return foundTeachers.map((user) => User.fromDb(user))
-  } 
+  }
 }
