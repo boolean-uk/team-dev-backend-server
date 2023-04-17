@@ -1,5 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import dbClient from '../utils/dbClient.js'
+import { createPost, getAllPosts } from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -7,12 +7,8 @@ export const create = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  const createdPost = await dbClient.post.create({
-    data: {
-      content: content,
-      userId: req.user.id
-    }
-  })
+  const createdPost = await createPost(content, req.user.id)
+
   return sendDataResponse(res, 201, {
     post: {
       id: createdPost.id,
@@ -25,18 +21,7 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const allPostsNoAuthor = await dbClient.post.findMany({
-    include: {
-      user: {
-        select: {
-          id: true,
-          cohortId: true,
-          role: true,
-          profile: true
-        }
-      }
-    }
-  })
+  const allPostsNoAuthor = await getAllPosts()
 
   const postsWithAuthor = allPostsNoAuthor.map((post) => {
     const { id, content, createdAt, updatedAt } = post
