@@ -351,6 +351,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+                
+  /posts/{id}/comment:
+    post:
+      tags:
+        - comment
+      summary: Create a comment
+      description: this can only be done by a logged in user
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The post ID that the comment needs to be linked to. '
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Created Comment Object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reqpostcomment'
+            
+                             
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resComment'
+        400:
+          description: must include content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: post must exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -639,3 +683,47 @@ components:
                         type: integer
                       content:
                         type: string
+    resComment:
+      type: object
+      properties:
+        status:
+          type: string 
+        data:
+          properties: 
+            id:
+              type: integer
+            content:
+              type: string
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+            author:
+              type: object
+              properties:
+                id:
+                  type: integer
+                cohortId:
+                  type: integer
+                role:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                bio:
+                  type: string
+                githubUrl:
+                  type: string
+                profileImageUrl:
+                  type: string
+    reqpostcomment:
+      type: object
+      properties:
+        content:
+          type: string
+        userId:
+          type: integer
+      required: 
+        - content
+        - userId
