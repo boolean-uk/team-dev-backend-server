@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { sendDataResponse } from '../utils/responses.js'
 import { createPost, getAllPosts, findById } from '../domain/post.js'
 import dbClient from '../utils/dbClient.js'
@@ -93,23 +94,33 @@ export const updateById = async (req, res) => {
       }
     }
   })
-  // console.log(' req.body is the content', req.body)
-  // console.log(' req.params.id is the content', req.params.id)
-  // console.log(' after findUnique:', post)
-  // console.log(' post.userId after findUniquae:', post.userId)
 
-  if (req.user.role === 'TEACHER' || req.user.id === post.userId) {
-    // console.log('yes')
-    data.post = {
-      content: req.body.content,
-      updatedBy: req.user.id
-    }
-  } else {
-    return sendDataResponse(res, 403, {
-      authorization:
-        'You must be the original poster or a teacher to edit this post'
-    })
+  if (!req.body.content) {
+    return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
 
-  return sendDataResponse(res, 200, { post: data.post })
+  try {
+    if (req.user.role === 'TEACHER' || req.user.id === post.userId) {
+      // console.log('yes')
+      data.post = {
+        content: req.body.content,
+        updatedBy: req.user.id
+      }
+    } else {
+      return sendDataResponse(res, 403, {
+        authorization:
+          'You must be the original poster or a teacher to edit this post'
+      })
+    }
+
+    return sendDataResponse(res, 200, { post: data.post })
+  } catch (e) {
+    // TODO: figure out error for 404 instead of having app crash
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+    }
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
 }
