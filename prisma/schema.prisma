@@ -17,82 +17,82 @@ enum Role {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  password      String
-  role          Role      @default(STUDENT)
-  profile       Profile?
-  cohortId      Int?
-  cohort        Cohort?   @relation(fields: [cohortId], references: [id])
-  posts         Post[]
-  deliveryLogs  DeliveryLog[]
-  commments     Comment[]
-  likes         Like[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  role         Role          @default(STUDENT)
+  profile      Profile?
+  cohortId     Int?
+  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
+  posts        Post[]
+  deliveryLogs DeliveryLog[]
+  commments    Comment[]
+  likes        Like[]
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  user      User    @relation(fields: [userId], references: [id])
+  firstName String
+  lastName  String
+  bio       String?
+  githubUrl String?
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  users        User[]
+  deliveryLogs DeliveryLog[]
 }
 
 model Post {
-  id          Int           @id @default(autoincrement())
-  content     String
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  commments   Comment[]
-  likes       Like[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  commments Comment[]
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model DeliveryLog {
-  id        Int           @id @default(autoincrement())
-  date      DateTime
-  userId    Int
-  user      User          @relation(fields: [userId], references: [id])
-  cohortId  Int
-  cohort    Cohort        @relation(fields: [cohortId], references: [id])
-  lines     DeliveryLogLine[]
+  id       Int               @id @default(autoincrement())
+  date     DateTime
+  userId   Int
+  user     User              @relation(fields: [userId], references: [id])
+  cohortId Int
+  cohort   Cohort            @relation(fields: [cohortId], references: [id])
+  lines    DeliveryLogLine[]
 }
 
 model DeliveryLogLine {
-  id        Int           @id @default(autoincrement())
-  content   String
-  logId     Int
-  log       DeliveryLog   @relation(fields: [logId], references: [id])
+  id      Int         @id @default(autoincrement())
+  content String
+  logId   Int
+  log     DeliveryLog @relation(fields: [logId], references: [id])
 }
 
 model Comment {
-  id        Int           @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   content   String
   postId    Int
-  post      Post          @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
   userId    Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   likes     Like[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Like {
-  id        Int           @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   postId    Int?
-  post      Post?          @relation(fields: [postId], references: [id])
+  post      Post?    @relation(fields: [postId], references: [id])
   commentId Int?
-  comment   Comment?       @relation(fields: [commentId], references: [id])
-  createdAt DateTime      @default(now()) 
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  createdAt DateTime @default(now())
 }

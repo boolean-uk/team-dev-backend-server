@@ -18,7 +18,7 @@ Once you have complete the above guide, continue to the steps below.
 
 ## API Spec
 
-[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+[https://supreme-bassoon-7v7v8r2.pages.github.io/](https://supreme-bassoon-7v7v8r2.pages.github.io/)
 
 ### Updating the API spec
 1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes

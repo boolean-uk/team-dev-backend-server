@@ -180,7 +180,10 @@ export default class User {
     if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
-          [key]: value
+          [key]: {
+            equals: value,
+            mode: 'insensitive'
+          }
         }
       }
     }
@@ -223,5 +226,62 @@ export default class User {
     const foundTeachers = await dbClient.user.findMany(query)
     console.log(foundTeachers)
     return foundTeachers.map((user) => User.fromDb(user))
+  }
+
+  static async findByName(name) {
+    const query = {
+      where: {
+        profile: {}
+      },
+      include: {
+        profile: true
+      }
+    }
+
+    const [firstName, ...rest] = name.split(' ')
+    const lastName = rest.join(' ')
+    const amountOfNames = name.split(' ').length
+
+    if (amountOfNames === 1) {
+      query.where.profile = {
+        OR: [
+          {
+            firstName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
+    } else if (amountOfNames > 1) {
+      query.where.profile = {
+        AND: [
+          {
+            firstName: {
+              contains: firstName,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: lastName,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
+    }
+
+    const users = await (
+      await dbClient.user.findMany(query)
+    ).map((item) => User.fromDb(item))
+
+    return users
   }
 }
