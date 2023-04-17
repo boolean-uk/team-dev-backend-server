@@ -1,5 +1,6 @@
 import { sendDataResponse } from '../utils/responses.js'
 import { create } from '../domain/comment.js'
+import { findById } from '../domain/post.js'
 
 export const createComment = async (req, res) => {
   const { content } = req.body
@@ -7,7 +8,8 @@ export const createComment = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  if (!postId) {
+  const post = findById(postId)
+  if (!post) {
     return sendDataResponse(res, 404, { error: 'Post does not exist' })
   }
   const createdComment = await create(content, postId, req.user.id)
