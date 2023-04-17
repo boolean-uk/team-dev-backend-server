@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client'
 import User from '../domain/user.js'
 import { sendDataResponse } from '../utils/responses.js'
-import mapOutUsers from '../utils/mapOutUsers.js'
 
 export const create = async (req, res) => {
   const { firstName, lastName, email, bio, githubUrl, password } = req.body
@@ -66,50 +65,20 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
   const { name } = req.query
 
+  const mapOutUsers = (users) => {
+    return users.map((item) => {
+      return {
+        ...item.toJSON().user
+      }
+    })
+  }
+
   if (name) {
     const where = {
       profile: {}
     }
 
-    const [firstName, ...rest] = name.split(' ')
-    const lastName = rest.join(' ')
-    const amountOfNames = name.split(' ').length
-
-    if (amountOfNames === 1) {
-      where.profile = {
-        OR: [
-          {
-            firstName: {
-              contains: name,
-              mode: 'insensitive'
-            }
-          },
-          {
-            lastName: {
-              contains: name,
-              mode: 'insensitive'
-            }
-          }
-        ]
-      }
-    } else if (amountOfNames > 1) {
-      where.profile = {
-        AND: [
-          {
-            firstName: {
-              contains: firstName,
-              mode: 'insensitive'
-            }
-          },
-          {
-            lastName: {
-              contains: lastName,
-              mode: 'insensitive'
-            }
-          }
-        ]
-      }
-    }
+    where.profile = formatName(name)
 
     const users = await User.findByName(where).then((users) =>
       mapOutUsers(users)
@@ -120,6 +89,48 @@ export const getAll = async (req, res) => {
     const users = await User.findAll().then((users) => mapOutUsers(users))
 
     return sendDataResponse(res, 200, { users })
+  }
+}
+
+const formatName = (name) => {
+  const [firstName, ...rest] = name.split(' ')
+  const lastName = rest.join(' ')
+  const amountOfNames = name.split(' ').length
+
+  if (amountOfNames === 1) {
+    return {
+      OR: [
+        {
+          firstName: {
+            contains: name,
+            mode: 'insensitive'
+          }
+        },
+        {
+          lastName: {
+            contains: name,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  } else if (amountOfNames > 1) {
+    return {
+      AND: [
+        {
+          firstName: {
+            contains: firstName,
+            mode: 'insensitive'
+          }
+        },
+        {
+          lastName: {
+            contains: lastName,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
   }
 }
 
