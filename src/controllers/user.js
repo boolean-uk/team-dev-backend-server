@@ -74,13 +74,7 @@ export const getAll = async (req, res) => {
   }
 
   if (name) {
-    const where = {
-      profile: {}
-    }
-
-    where.profile = formatName(name)
-
-    const users = await User.findByName(where).then((users) =>
+    const users = await User.findByName(name).then((users) =>
       mapOutUsers(users)
     )
 
@@ -89,48 +83,6 @@ export const getAll = async (req, res) => {
     const users = await User.findAll().then((users) => mapOutUsers(users))
 
     return sendDataResponse(res, 200, { users })
-  }
-}
-
-const formatName = (name) => {
-  const [firstName, ...rest] = name.split(' ')
-  const lastName = rest.join(' ')
-  const amountOfNames = name.split(' ').length
-
-  if (amountOfNames === 1) {
-    return {
-      OR: [
-        {
-          firstName: {
-            contains: name,
-            mode: 'insensitive'
-          }
-        },
-        {
-          lastName: {
-            contains: name,
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
-  } else if (amountOfNames > 1) {
-    return {
-      AND: [
-        {
-          firstName: {
-            contains: firstName,
-            mode: 'insensitive'
-          }
-        },
-        {
-          lastName: {
-            contains: lastName,
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
   }
 }
 

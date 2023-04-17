@@ -215,13 +215,52 @@ export default class User {
 
   static async findByName(name) {
     const query = {
+      where: {
+        profile: {}
+      },
       include: {
         profile: true
       }
     }
 
-    if (name) {
-      query.where = name
+    const [firstName, ...rest] = name.split(' ')
+    const lastName = rest.join(' ')
+    const amountOfNames = name.split(' ').length
+
+    if (amountOfNames === 1) {
+      query.where.profile = {
+        OR: [
+          {
+            firstName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: name,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
+    } else if (amountOfNames > 1) {
+      query.where.profile = {
+        AND: [
+          {
+            firstName: {
+              contains: firstName,
+              mode: 'insensitive'
+            }
+          },
+          {
+            lastName: {
+              contains: lastName,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      }
     }
 
     const users = await (
