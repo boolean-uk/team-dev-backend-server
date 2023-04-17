@@ -1,6 +1,7 @@
 import { sendDataResponse } from '../utils/responses.js'
 import { create } from '../domain/comment.js'
 import { findById } from '../domain/post.js'
+import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
   const { content } = req.body
@@ -8,18 +9,24 @@ export const createComment = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  const post = findById(postId)
-  if (!post) {
-    return sendDataResponse(res, 404, { error: 'Post does not exist' })
-  }
-  const createdComment = await create(content, postId, req.user.id)
-  return sendDataResponse(res, 201, {
-    comment: {
-      id: createdComment.id,
-      content: createdComment.content,
-      createdAt: createdComment.createdAt,
-      updatedAt: createdComment.updatedAt,
-      author: { ...req.user }
+  try {
+    findById(postId)
+    const createdComment = await create(content, postId, req.user.id)
+    return sendDataResponse(res, 201, {
+      comment: {
+        id: createdComment.id,
+        content: createdComment.content,
+        createdAt: createdComment.createdAt,
+        updatedAt: createdComment.updatedAt,
+        author: { ...req.user }
+      }
+    })
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
     }
-  })
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
 }
