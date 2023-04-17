@@ -6,8 +6,9 @@ const router = Router()
 
 router.post('/', create)
 router.get('/', validateAuthentication, getAll)
+router.get('/teachers', validateAuthentication, validateTeacherRole, getByRole)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validateIdOrRole, updateById)
-router.get('/teachers', validateTeacherRole, validateAuthentication, getByRole)
+
 
 export default router

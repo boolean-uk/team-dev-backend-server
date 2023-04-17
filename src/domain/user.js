@@ -210,9 +210,7 @@ export default class User {
     return updatedUser
   }
 
-  // static async findAllTeachers() {
-  //   return User._findMany('role', 'TEACHER')
-  // }
+
   static async findAllTeachers() {
     console.log('all teacher')
     const query = {
