@@ -1,5 +1,11 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { createPost, getAllPosts, findById } from '../domain/post.js'
+import { Prisma } from '@prisma/client'
+import {
+  createPost,
+  getAllPosts,
+  findById,
+  deletebyId
+} from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -68,7 +74,21 @@ export const getById = async (req, res) => {
 
     return sendDataResponse(res, 200, post)
   } catch (e) {
-    console.log('this one', e)
     return sendDataResponse(res, 500, { error: 'Unable to get Post' })
+  }
+}
+
+export const deletePost = async (req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+    const deletedPost = await deletebyId(id)
+    return sendDataResponse(res, 200, deletedPost)
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+    }
+    return sendDataResponse(res, 500, { error: 'Unable to delete post' })
   }
 }
