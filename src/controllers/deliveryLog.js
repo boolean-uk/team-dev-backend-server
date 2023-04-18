@@ -8,6 +8,7 @@ export const create = async (req, res) => {
       id: 1,
       cohortId: cohortId,
       date,
+      title: 'test',
       author: {
         id: req.user.id,
         first_name: req.user.firstName,
@@ -21,4 +22,10 @@ export const create = async (req, res) => {
       })
     }
   })
+}
+
+export const update = async (req, res) => {
+  const { logId } = parseInt(req.params.id)
+  const { data } = req.body
+  console.log(logId, data)
 }
