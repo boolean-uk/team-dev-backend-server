@@ -1,5 +1,10 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { createPost, getAllPosts, findById } from '../domain/post.js'
+import {
+  createPost,
+  getAllPosts,
+  findById,
+  createLike
+} from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -68,7 +73,25 @@ export const getById = async (req, res) => {
 
     return sendDataResponse(res, 200, post)
   } catch (e) {
-    console.log('this one', e)
+    return sendDataResponse(res, 500, { error: 'Unable to get Post' })
+  }
+}
+
+export const likePost = async (req, res) => {
+  const userId = parseInt(req.user.id)
+  const postId = parseInt(req.params.id)
+
+  console.log('like working so far')
+
+  try {
+    const foundPost = await findById(postId)
+    if (!foundPost) {
+      return sendDataResponse(res, 404, { error: 'Post not found' })
+    }
+    const likedPost = await createLike(userId, postId)
+
+    return sendDataResponse(res, 200, likedPost)
+  } catch (e) {
     return sendDataResponse(res, 500, { error: 'Unable to get Post' })
   }
 }
