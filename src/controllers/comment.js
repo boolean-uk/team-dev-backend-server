@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
   const { content } = req.body
-  const postId = parseInt(req.params.id)
+  const postId = Number(req.params.id)
   if (!content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
