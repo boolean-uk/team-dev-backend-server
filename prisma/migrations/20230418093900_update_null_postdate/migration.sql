@@ -1,3 +1,3 @@
 UPDATE "Post"
 SET "createdAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP
-WHERE "createdAt" = IS NULL
+WHERE "createdAt" IS NULL
