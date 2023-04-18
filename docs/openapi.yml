@@ -237,6 +237,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  
+  /posts/{id}:             
+    get:
+      tags:
+        - post
+      summary: Get post by id
+      description: get a post by its id
+      operationId: getPost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          id: id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Posts'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     patch:
       tags:
         - post

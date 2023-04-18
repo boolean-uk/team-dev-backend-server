@@ -1,4 +1,5 @@
 import dbClient from '../utils/dbClient.js'
+// import { validateAuthentication, validateIdOrRole } from '../middleware/auth.js'
 
 export async function createPost(content, userId) {
   return await dbClient.post.create({
@@ -39,5 +40,24 @@ export async function findById(id) {
         }
       }
     }
+  })
+}
+
+export async function updatePostById(id, content) {
+  return await dbClient.post.update({
+    where: {
+      id
+    },
+    data: {
+      content
+    }
+    // include: {
+    //   user: {
+    //     select: {
+    //       id: true,
+    //       role: true
+    //     }
+    //   }
+    // }
   })
 }

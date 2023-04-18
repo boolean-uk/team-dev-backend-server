@@ -1,7 +1,10 @@
-import { Prisma } from '@prisma/client'
 import { sendDataResponse } from '../utils/responses.js'
-import { createPost, getAllPosts, findById } from '../domain/post.js'
-import dbClient from '../utils/dbClient.js'
+import {
+  createPost,
+  getAllPosts,
+  findById,
+  updatePostById
+} from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -76,51 +79,31 @@ export const getById = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const data = {}
+  const id = parseInt(req.params.id)
 
-  const post = await dbClient.post.update({
-    where: {
-      id: Number(req.params.id)
-    },
-    data: {
-      content: req.body.content
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          role: true
-        }
-      }
-    }
-  })
+  const foundPost = await findById(id)
+  if (!foundPost) {
+    return sendDataResponse(res, 404, { error: 'Post not found' })
+  }
 
   if (!req.body.content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-
-  try {
-    if (req.user.role === 'TEACHER' || req.user.id === post.userId) {
-      // console.log('yes')
-      data.post = {
-        content: req.body.content,
-        updatedBy: req.user.id
-      }
-    } else {
-      return sendDataResponse(res, 403, {
-        authorization:
-          'You must be the original poster or a teacher to edit this post'
-      })
-    }
-
-    return sendDataResponse(res, 200, { post: data.post })
-  } catch (e) {
-    // TODO: figure out error for 404 instead of having app crash
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2003') {
-        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
-      }
-    }
-    return sendDataResponse(res, 500, { error: 'server error' })
+  const post = await updatePostById(id, req.body.content)
+  const authorFrame = { ...foundPost.user }
+  const author = {
+    id: authorFrame.id,
+    cohortId: authorFrame.cohortId,
+    role: authorFrame.profile.role,
+    firstName: authorFrame.profile.firstName,
+    lastName: authorFrame.profile.lastName,
+    bio: authorFrame.profile.bio,
+    githubUrl: authorFrame.profile.githubUrl,
+    profileImageUrl: authorFrame.profile.profileImageUrl
   }
+  console.log('pre-object.assign POST=', post)
+  Object.assign(post, { author })
+  console.log('post-object.assign POST=', post)
+
+  return sendDataResponse(res, 200, { post: post })
 }
