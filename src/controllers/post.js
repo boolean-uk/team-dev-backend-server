@@ -82,7 +82,15 @@ export const deletePost = async (req, res) => {
   const id = parseInt(req.params.id)
   try {
     const deletedPost = await deletebyId(id)
-    return sendDataResponse(res, 200, deletedPost)
+    const post = {
+      id: deletedPost.id,
+      content: deletedPost.content,
+      userId: deletedPost.userId,
+      createdAt: deletedPost.createdAt,
+      updatedAt: deletedPost.updatedAt,
+      author: { ...deletedPost.user }
+    }
+    return sendDataResponse(res, 200, post)
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2003') {
