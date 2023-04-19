@@ -90,3 +90,22 @@ export async function deleteById(id) {
     }
   })
 }
+
+export async function updatePostById(id, content) {
+  return await dbClient.post.update({
+    where: {
+      id
+    },
+    data: {
+      content
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          role: true
+        }
+      }
+    }
+  })
+}

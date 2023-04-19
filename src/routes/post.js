@@ -3,11 +3,16 @@ import {
   create,
   getAll,
   getById,
+  updateById,
   deletePost,
   likePost
 } from '../controllers/post.js'
 import { createComment } from '../controllers/comment.js'
-import { validateAuthentication, validateIdOrRole } from '../middleware/auth.js'
+import {
+  validateAuthentication,
+  validateIdOrRole,
+  validateEditPostAuth
+} from '../middleware/auth.js'
 
 const router = Router()
 
@@ -17,5 +22,6 @@ router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)
 router.get('/:id', validateAuthentication, getById)
 router.delete('/:id', validateAuthentication, validateIdOrRole, deletePost)
+router.patch('/:id', validateAuthentication, validateEditPostAuth, updateById)
 
 export default router

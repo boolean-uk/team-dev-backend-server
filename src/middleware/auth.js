@@ -1,7 +1,9 @@
+import { Prisma } from '@prisma/client'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
+import { findById } from '../domain/post.js'
 
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
@@ -85,4 +87,30 @@ function validateTokenType(type) {
   }
 
   return true
+}
+
+export async function validateEditPostAuth(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 401, 'Unable to verify user')
+  }
+
+  try {
+    const post = await findById(Number(req.params.id))
+    if (req.user.id === post.user.id || req.user.role === 'TEACHER') {
+      req.post = post
+    } else {
+      return sendDataResponse(res, 403, {
+        authorization: 'You are not authorized to perform this action'
+      })
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025') {
+        console.error(e)
+        return sendDataResponse(res, 404, { error: 'Post not found' })
+      }
+    }
+  }
+
+  next()
 }
