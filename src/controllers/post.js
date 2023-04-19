@@ -4,7 +4,7 @@ import {
   createPost,
   getAllPosts,
   findById,
-  deletebyId
+  deleteById
 } from '../domain/post.js'
 
 export const create = async (req, res) => {
@@ -81,7 +81,7 @@ export const getById = async (req, res) => {
 export const deletePost = async (req, res) => {
   const id = Number(req.params.id)
   try {
-    const deletedPost = await deletebyId(id)
+    const deletedPost = await deleteById(id)
     const post = {
       id: deletedPost.id,
       content: deletedPost.content,
@@ -93,7 +93,7 @@ export const deletePost = async (req, res) => {
     return sendDataResponse(res, 200, post)
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2003') {
+      if (e.code === 'P2025') {
         return sendDataResponse(res, 404, { error: 'Post does not exist.' })
       }
     }

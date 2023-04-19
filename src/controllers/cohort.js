@@ -1,4 +1,4 @@
-import { Cohort, getStudentsOfCohort } from '../domain/cohort.js'
+import { Cohort, getStudentsOfCohort, createCohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -7,6 +7,7 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdCohort)
   } catch (e) {
+    console.log(e)
     return sendDataResponse(res, 500, { error: 'Unable to create cohort' })
   }
 }

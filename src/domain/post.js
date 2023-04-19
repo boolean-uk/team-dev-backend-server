@@ -42,10 +42,10 @@ export async function findById(id) {
   })
 }
 
-export async function deletebyId(id) {
+export async function deleteById(id) {
   return await dbClient.post.delete({
     where: {
-      id: id
+      id
     }
   })
 }
