@@ -42,6 +42,14 @@ export async function findById(id) {
   })
 }
 
+export async function deleteById(id) {
+  return await dbClient.post.delete({
+    where: {
+      id
+    }
+  })
+}
+
 export async function updatePostById(id, content) {
   return await dbClient.post.update({
     where: {
