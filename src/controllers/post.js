@@ -82,6 +82,8 @@ export const updateById = async (req, res) => {
   const id = parseInt(req.params.id)
 
   const foundPost = await findById(id)
+  // const foundPost = req.post
+
   if (!foundPost) {
     return sendDataResponse(res, 404, { error: 'Post not found' })
   }
@@ -89,21 +91,24 @@ export const updateById = async (req, res) => {
   if (!req.body.content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
+  console.log('checking stuff: foundPost.userId---', foundPost.userId)
+
   const post = await updatePostById(id, req.body.content)
   const authorFrame = { ...foundPost.user }
+  const profile = authorFrame.profile
   const author = {
     id: authorFrame.id,
     cohortId: authorFrame.cohortId,
-    role: authorFrame.profile.role,
-    firstName: authorFrame.profile.firstName,
-    lastName: authorFrame.profile.lastName,
-    bio: authorFrame.profile.bio,
-    githubUrl: authorFrame.profile.githubUrl,
-    profileImageUrl: authorFrame.profile.profileImageUrl
+    role: profile.role,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    bio: profile.bio,
+    githubUrl: profile.githubUrl,
+    profileImageUrl: profile.profileImageUrl
   }
-  console.log('pre-object.assign POST=', post)
+
   Object.assign(post, { author })
-  console.log('post-object.assign POST=', post)
+  delete post.user
 
   return sendDataResponse(res, 200, { post: post })
 }

@@ -2,6 +2,7 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
+import { findById } from '../domain/post.js'
 
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
@@ -85,4 +86,22 @@ function validateTokenType(type) {
   }
 
   return true
+}
+
+export async function validateEditPostAuth(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 401, 'Unable to verify user')
+  }
+  // prisma call--> find post
+  const post = await findById(Number(req.params.id))
+  // req.user.id === foundPost.author.id
+  // console.log(
+  //   'req.user.id === post.author.id:',
+  //   req.user.id === res.post.author.id
+  // )
+  console.log(post)
+  // if user can edit post, put post on the request req.post = foundPost
+  const foundPost = req.post
+  console.log(foundPost)
+  next()
 }
