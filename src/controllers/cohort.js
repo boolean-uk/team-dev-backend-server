@@ -7,7 +7,6 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdCohort)
   } catch (e) {
-    console.log(e)
     return sendDataResponse(res, 500, { error: 'Unable to create cohort' })
   }
 }
