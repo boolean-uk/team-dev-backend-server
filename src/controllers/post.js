@@ -56,7 +56,7 @@ export const getAll = async (req, res) => {
 }
 
 export const getById = async (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = Number(req.params.id)
   try {
     const foundPost = await findById(id)
     if (!foundPost) {
@@ -78,10 +78,8 @@ export const getById = async (req, res) => {
 }
 
 export const likePost = async (req, res) => {
-  const userId = parseInt(req.user.id)
-  const postId = parseInt(req.params.id)
-
-  console.log('like working so far')
+  const userId = Number(req.user.id)
+  const postId = Number(req.params.id)
 
   try {
     const foundPost = await findById(postId)
@@ -89,9 +87,17 @@ export const likePost = async (req, res) => {
       return sendDataResponse(res, 404, { error: 'Post not found' })
     }
     const likedPost = await createLike(userId, postId)
+    // Swapping the creator of the Post which has been liked, from user to author.
+    const author = likedPost.post.user
+    likedPost.post = {
+      id: likedPost.post.id,
+      content: likedPost.post.content,
+      author: author
+    }
 
     return sendDataResponse(res, 200, likedPost)
   } catch (e) {
+    console.log(e.message)
     return sendDataResponse(res, 500, { error: 'Unable to get Post' })
   }
 }

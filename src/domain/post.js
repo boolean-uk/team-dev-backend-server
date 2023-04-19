@@ -45,8 +45,40 @@ export async function findById(id) {
 export async function createLike(userId, postId) {
   return await dbClient.like.create({
     data: {
-      userId,
-      postId
+      user: {
+        connect: {
+          id: userId
+        }
+      },
+      post: {
+        connect: {
+          id: postId
+        }
+      }
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          cohortId: true,
+          role: true,
+          profile: true
+        }
+      },
+      post: {
+        select: {
+          id: true,
+          content: true,
+          user: {
+            select: {
+              id: true,
+              cohortId: true,
+              role: true,
+              profile: true
+            }
+          }
+        }
+      }
     }
   })
 }
