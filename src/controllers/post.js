@@ -95,9 +95,8 @@ export const likePost = async (req, res) => {
       author: author
     }
 
-    return sendDataResponse(res, 200, likedPost)
+    return sendDataResponse(res, 201, likedPost)
   } catch (e) {
-    console.log(e.message)
     return sendDataResponse(res, 500, { error: 'Unable to get Post' })
   }
 }
