@@ -99,7 +99,7 @@ export const likePost = async (req, res) => {
 
     return sendDataResponse(res, 201, likedPost)
   } catch (e) {
-    return sendDataResponse(res, 500, { error: 'Unable to get Post' })
+    return sendDataResponse(res, 500, { error: e.message })
   }
 }
 
