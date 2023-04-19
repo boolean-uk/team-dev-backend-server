@@ -6,11 +6,7 @@ import {
   updateById,
   getByRole
 } from '../controllers/user.js'
-import {
-  validateAuthentication,
-  validateIdOrRole,
-  validateTeacherRole
-} from '../middleware/auth.js'
+import { validateAuthentication, validateIdOrRole } from '../middleware/auth.js'
 
 const router = Router()
 

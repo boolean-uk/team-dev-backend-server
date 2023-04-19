@@ -1,6 +1,5 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
-import { sendDataResponse } from '../utils/responses.js'
 
 export default class User {
   /**
