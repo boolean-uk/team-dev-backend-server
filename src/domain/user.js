@@ -1,5 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
+import { sendDataResponse } from '../utils/responses.js'
 
 export default class User {
   /**
@@ -214,7 +215,6 @@ export default class User {
   }
 
   static async findAllTeachers() {
-    console.log('all teacher')
     const query = {
       where: {
         role: 'TEACHER'
@@ -224,8 +224,11 @@ export default class User {
       }
     }
     const foundTeachers = await dbClient.user.findMany(query)
-    console.log(foundTeachers)
-    return foundTeachers.map((user) => User.fromDb(user))
+    if (foundTeachers === null) {
+      return 'No teacher found'
+    } else {
+      return foundTeachers.map((user) => User.fromDb(user))
+    }
   }
 
   static async findByName(name) {

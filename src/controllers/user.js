@@ -184,19 +184,11 @@ export const getByRole = async (req, res) => {
     const foundUser = await User.findAllTeachers()
 
     if (!foundUser) {
-      return sendDataResponse(res, 404, 'No teachers found')
+      return sendDataResponse(res, 400, 'Invalid or missing input')
     }
-    console.log(foundUser)
-    return sendDataResponse(res, 200, { user: foundUser })
+
+    return sendDataResponse(res, 200, { users: foundUser })
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2016') {
-        return sendDataResponse(
-          res,
-          400,
-          'Please create a Profile before getting it'
-        )
-      }
-    }
+    return sendDataResponse(res, 500, 'Unable to get all teachers')
   }
 }

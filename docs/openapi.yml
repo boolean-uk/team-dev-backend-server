@@ -111,7 +111,7 @@ paths:
       tags:
         - user
       summary: Get all Teachers
-      description: ''
+      description: Student and teachers can get list of teachers
       operationId: getAllTeachers
       security:
         - bearerAuth: []
@@ -121,13 +121,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/User'
-        '404':
+                $ref: '#/components/schemas/User'
+        '400':
           description: fail
           content:
             application/json:
