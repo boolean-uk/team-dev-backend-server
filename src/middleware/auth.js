@@ -106,7 +106,7 @@ export async function validateEditPostAuth(req, res, next) {
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2025') {
-        console.log(e)
+        console.error(e)
         return sendDataResponse(res, 404, { error: 'Post not found' })
       }
     }
