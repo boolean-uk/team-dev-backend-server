@@ -92,16 +92,17 @@ export async function validateEditPostAuth(req, res, next) {
   if (!req.user) {
     return sendMessageResponse(res, 401, 'Unable to verify user')
   }
-  // prisma call--> find post
+
   const post = await findById(Number(req.params.id))
-  // req.user.id === foundPost.author.id
-  // console.log(
-  //   'req.user.id === post.author.id:',
-  //   req.user.id === res.post.author.id
-  // )
-  console.log(post)
-  // if user can edit post, put post on the request req.post = foundPost
-  const foundPost = req.post
-  console.log(foundPost)
+
+  if (req.user.id === post.user.id || req.user.role === 'TEACHER') {
+    console.log('req.user.id === post.user.id:', req.user.id === post.user.id)
+    req.post = post
+  } else {
+    return sendDataResponse(res, 403, {
+      authorization: 'You are not authorized to perform this action'
+    })
+  }
+
   next()
 }

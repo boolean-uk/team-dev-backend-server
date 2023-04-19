@@ -79,10 +79,9 @@ export const getById = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = Number(req.params.id)
 
-  const foundPost = await findById(id)
-  // const foundPost = req.post
+  const foundPost = req.post
 
   if (!foundPost) {
     return sendDataResponse(res, 404, { error: 'Post not found' })
@@ -91,7 +90,7 @@ export const updateById = async (req, res) => {
   if (!req.body.content) {
     return sendDataResponse(res, 400, { error: 'Must provide content' })
   }
-  console.log('checking stuff: foundPost.userId---', foundPost.userId)
+  console.log('checking stuff: foundPost.userId---', foundPost)
 
   const post = await updatePostById(id, req.body.content)
   const authorFrame = { ...foundPost.user }
