@@ -11,8 +11,6 @@ export class DeliveryLog {
   }
 
   static async createLog(date, title, userId, cohortId, lines) {
-    console.log('lines')
-    console.log(lines)
     const data = {
       date: date,
       title: title,
