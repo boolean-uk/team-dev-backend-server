@@ -11,13 +11,17 @@ export class DeliveryLog {
   }
 
   static async createLog(date, title, userId, cohortId, lines) {
+    console.log('lines')
+    console.log(lines)
     const data = {
       date: date,
       title: title,
       lines: {
-        create: {
-          content: lines.content
-        }
+        create: lines.map((line) => {
+          return {
+            content: line.content
+          }
+        })
       },
       user: {
         connect: {
@@ -41,7 +45,6 @@ export class DeliveryLog {
         lines: true
       }
     })
-    console.log(createdLog)
     return createdLog
   }
 }
