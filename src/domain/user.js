@@ -223,6 +223,9 @@ export default class User {
       }
     }
     const foundTeachers = await dbClient.user.findMany(query)
+    if (!foundTeachers) {
+      return []
+    }
     return foundTeachers.map((user) => User.fromDb(user))
   }
 
