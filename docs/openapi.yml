@@ -289,6 +289,8 @@ paths:
               properties:
                 date:
                   type: string
+                title:
+                  type: string
                 cohortId:
                   type: integer
                 lines:
@@ -305,8 +307,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
+        '400':
+          description: Missing fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Cohort not found
           content:
             application/json:
               schema:
@@ -385,7 +399,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+
   /posts/{id}/comment:
     post:
       tags:
@@ -408,8 +422,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/reqpostcomment'
-            
-                             
+
       responses:
         201:
           description: success
@@ -721,9 +734,9 @@ components:
       type: object
       properties:
         status:
-          type: string 
+          type: string
         data:
-          properties: 
+          properties:
             id:
               type: integer
             content:
@@ -758,6 +771,6 @@ components:
           type: string
         userId:
           type: integer
-      required: 
+      required:
         - content
         - userId
