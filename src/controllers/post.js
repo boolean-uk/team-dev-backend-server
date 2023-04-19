@@ -58,7 +58,7 @@ export const getAll = async (req, res) => {
 }
 
 export const getById = async (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = Number(req.params.id)
   try {
     const foundPost = await findById(id)
     if (!foundPost) {
