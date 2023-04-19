@@ -1,27 +1,26 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { DeliveryLog } from '../domain/deliveryLog.js'
 
 export const create = async (req, res) => {
-  const { date, cohortId, lines } = req.body
+  const { date, title, cohortId, lines } = req.body
+  const author = req.user.id
 
-  return sendDataResponse(res, 201, {
-    log: {
-      id: 1,
-      cohortId: cohortId,
-      date,
-      title: 'test',
-      author: {
-        id: req.user.id,
-        first_name: req.user.firstName,
-        last_name: req.user.lastName
-      },
-      lines: lines.map((line, index) => {
-        return {
-          id: index + 1,
-          content: line.content
-        }
-      })
-    }
-  })
+  if (!title || !lines) {
+    return sendMessageResponse(res, 400, {
+      error: 'The log must have a title and a content'
+    })
+  }
+  const parsedDate = new Date(date)
+
+  const createdLog = await DeliveryLog.createLog(
+    parsedDate,
+    title,
+    author,
+    cohortId,
+    lines
+  )
+  console.log(createdLog)
+  return sendDataResponse(res, 201, { log: createdLog })
 }
 
 export const update = async (req, res) => {
