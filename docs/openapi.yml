@@ -121,8 +121,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
+                $ref: '#/components/schemas/AllUsers'
+        '404':
           description: fail
           content:
             application/json:

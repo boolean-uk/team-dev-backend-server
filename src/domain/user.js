@@ -223,11 +223,7 @@ export default class User {
       }
     }
     const foundTeachers = await dbClient.user.findMany(query)
-    if (foundTeachers === null) {
-      return 'No teacher found'
-    } else {
-      return foundTeachers.map((user) => User.fromDb(user))
-    }
+    return foundTeachers.map((user) => User.fromDb(user))
   }
 
   static async findByName(name) {

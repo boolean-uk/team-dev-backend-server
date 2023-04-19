@@ -181,13 +181,13 @@ export const updateById = async (req, res) => {
 
 export const getByRole = async (req, res) => {
   try {
-    const foundUser = await User.findAllTeachers()
+    const foundTeachers = await User.findAllTeachers()
 
-    if (!foundUser) {
-      return sendDataResponse(res, 400, 'Invalid or missing input')
+    if (foundTeachers.length === 0) {
+      return sendDataResponse(res, 404, 'No teachers found')
     }
 
-    return sendDataResponse(res, 200, { users: foundUser })
+    return sendDataResponse(res, 200, { users: foundTeachers })
   } catch (e) {
     return sendDataResponse(res, 500, 'Unable to get all teachers')
   }
