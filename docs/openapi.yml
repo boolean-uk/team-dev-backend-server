@@ -237,7 +237,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /post/{id}:
+  /post/{id}/like:
     post:
       tags:
         - post
@@ -254,24 +254,65 @@ paths:
           schema:
             type: string
       responses:
-        201:
+        '201':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LikePost'
-        401:
-          description: Unauthorised
+        '401':
+          description: Unable to verify user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
-          description: fail
+        '404':
+          description: post not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '403':
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /post/{id}:
+    delete:
+      tags:
+        - post
+      summary: delete post and its comments
+      description: delete post by Id
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unable to verify user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /logs:
     post:
       tags:

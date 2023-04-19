@@ -82,3 +82,11 @@ export async function createLike(userId, postId) {
     }
   })
 }
+
+export async function deleteById(id) {
+  return await dbClient.post.delete({
+    where: {
+      id
+    }
+  })
+}

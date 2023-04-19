@@ -1,8 +1,10 @@
 import { sendDataResponse } from '../utils/responses.js'
+import { Prisma } from '@prisma/client'
 import {
   createPost,
   getAllPosts,
   findById,
+  deleteById,
   createLike
 } from '../domain/post.js'
 
@@ -56,7 +58,7 @@ export const getAll = async (req, res) => {
 }
 
 export const getById = async (req, res) => {
-  const id = Number(req.params.id)
+  const id = parseInt(req.params.id)
   try {
     const foundPost = await findById(id)
     if (!foundPost) {
@@ -98,5 +100,28 @@ export const likePost = async (req, res) => {
     return sendDataResponse(res, 201, likedPost)
   } catch (e) {
     return sendDataResponse(res, 500, { error: 'Unable to get Post' })
+  }
+}
+
+export const deletePost = async (req, res) => {
+  const id = Number(req.params.id)
+  try {
+    const deletedPost = await deleteById(id)
+    const post = {
+      id: deletedPost.id,
+      content: deletedPost.content,
+      userId: deletedPost.userId,
+      createdAt: deletedPost.createdAt,
+      updatedAt: deletedPost.updatedAt,
+      author: { ...deletedPost.user }
+    }
+    return sendDataResponse(res, 200, post)
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+    }
+    return sendDataResponse(res, 500, { error: 'Unable to delete post' })
   }
 }
