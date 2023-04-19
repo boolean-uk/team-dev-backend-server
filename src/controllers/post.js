@@ -1,10 +1,12 @@
-import { sendDataResponse } from '../utils/responses.js'
 import { Prisma } from '@prisma/client'
+import { sendDataResponse } from '../utils/responses.js'
 import {
   createPost,
   getAllPosts,
   findById,
-  deleteById
+  updatePostById,
+  deleteById,
+  createLike
 } from '../domain/post.js'
 
 export const create = async (req, res) => {
@@ -78,6 +80,30 @@ export const getById = async (req, res) => {
   }
 }
 
+export const likePost = async (req, res) => {
+  const userId = Number(req.user.id)
+  const postId = Number(req.params.id)
+
+  try {
+    const foundPost = await findById(postId)
+    if (!foundPost) {
+      return sendDataResponse(res, 404, { error: 'Post not found' })
+    }
+    const likedPost = await createLike(userId, postId)
+    // Swapping the creator of the Post which has been liked, from user to author.
+    const author = likedPost.post.user
+    likedPost.post = {
+      id: likedPost.post.id,
+      content: likedPost.post.content,
+      author: author
+    }
+
+    return sendDataResponse(res, 201, likedPost)
+  } catch (e) {
+    return sendDataResponse(res, 500, { error: e.message })
+  }
+}
+
 export const deletePost = async (req, res) => {
   const id = Number(req.params.id)
   try {
@@ -98,5 +124,41 @@ export const deletePost = async (req, res) => {
       }
     }
     return sendDataResponse(res, 500, { error: 'Unable to delete post' })
+  }
+}
+
+export const updateById = async (req, res) => {
+  const id = Number(req.params.id)
+
+  const foundPost = req.post
+
+  try {
+    if (!foundPost) {
+      return sendDataResponse(res, 404, { error: 'Post not found' })
+    }
+
+    if (!req.body.content) {
+      return sendDataResponse(res, 400, { error: 'Must provide content' })
+    }
+    const post = await updatePostById(id, req.body.content)
+    const authorFrame = { ...foundPost.user }
+    const profile = authorFrame.profile
+    const author = {
+      id: authorFrame.id,
+      cohortId: authorFrame.cohortId,
+      role: profile.role,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      bio: profile.bio,
+      githubUrl: profile.githubUrl,
+      profileImageUrl: profile.profileImageUrl
+    }
+
+    Object.assign(post, { author })
+    delete post.user
+
+    return sendDataResponse(res, 200, { post: post })
+  } catch (e) {
+    return sendDataResponse(res, 500, { error: 'Unable to update Post' })
   }
 }
