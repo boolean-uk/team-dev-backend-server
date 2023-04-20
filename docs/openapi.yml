@@ -59,9 +59,9 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by first and last name if provided (separated by '%20')
           schema:
             type: string
       responses:
@@ -71,14 +71,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid token
         '404':
-          description: fail
+          description: User not found
           content:
             application/json:
               schema:
