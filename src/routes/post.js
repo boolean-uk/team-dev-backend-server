@@ -7,7 +7,11 @@ import {
   deletePost,
   likePost
 } from '../controllers/post.js'
-import { createComment, getAllComments } from '../controllers/comment.js'
+import {
+  createComment,
+  getAllComments,
+  likeComment
+} from '../controllers/comment.js'
 import {
   validateAuthentication,
   validateIdOrRole,
@@ -18,6 +22,11 @@ const router = Router()
 
 router.post('/', validateAuthentication, create)
 router.get('/', validateAuthentication, getAll)
+router.post(
+  '/:id/comments/:commentId/like',
+  validateAuthentication,
+  likeComment
+)
 router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)
 router.get('/:id', validateAuthentication, getById)

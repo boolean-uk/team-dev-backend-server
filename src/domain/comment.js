@@ -20,3 +20,62 @@ export const getAllForPost = async (postId) => {
     }
   })
 }
+
+export async function createLike(userId, commentId) {
+  return await dbClient.likeComment.create({
+    data: {
+      user: {
+        connect: {
+          id: userId
+        }
+      },
+      comment: {
+        connect: {
+          id: commentId
+        }
+      }
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          cohortId: true,
+          role: true,
+          profile: true
+        }
+      },
+      comment: {
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            select: {
+              id: true,
+              cohortId: true,
+              role: true,
+              profile: true
+            }
+          },
+          post: {
+            select: {
+              id: true,
+              content: true,
+              createdAt: true,
+              updatedAt: true,
+              user: {
+                select: {
+                  id: true,
+                  cohortId: true,
+                  role: true,
+                  profile: true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+}
