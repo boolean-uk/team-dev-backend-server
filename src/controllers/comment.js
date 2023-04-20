@@ -1,5 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { create } from '../domain/comment.js'
+import { create, getAllForPost } from '../domain/comment.js'
 import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
@@ -19,6 +19,22 @@ export const createComment = async (req, res) => {
         author: { ...req.user }
       }
     })
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+    }
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
+}
+
+export const getAllComments = async (req, res) => {
+  const postId = Number(req.params.id)
+  try {
+    const comments = await getAllForPost(postId)
+
+    return sendDataResponse(res, 200, { comments })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2003') {

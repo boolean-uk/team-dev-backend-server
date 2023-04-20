@@ -7,7 +7,7 @@ import {
   deletePost,
   likePost
 } from '../controllers/post.js'
-import { createComment } from '../controllers/comment.js'
+import { createComment, getAllComments } from '../controllers/comment.js'
 import {
   validateAuthentication,
   validateIdOrRole,
@@ -22,6 +22,7 @@ router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)
 router.get('/:id', validateAuthentication, getById)
 router.delete('/:id', validateAuthentication, validateIdOrRole, deletePost)
+router.get('/:id/comments', validateAuthentication, getAllComments)
 router.patch('/:id', validateAuthentication, validateEditPostAuth, updateById)
 
 export default router
