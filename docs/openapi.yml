@@ -106,7 +106,28 @@ paths:
 
         '400':
           description: Invalid username/password supplied
-
+  /users/teachers:
+    get:
+      tags:
+        - user
+      summary: Get all Teachers
+      description: Student and teachers can get list of teachers
+      operationId: getAllTeachers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /users/{id}:
     get:
       tags:
