@@ -12,12 +12,16 @@ export const create = async (req, res) => {
   }
   const parsedDate = new Date(date)
 
-  const createdLog = await DeliveryLog.createLog(
-    parsedDate,
-    title,
-    author,
-    cohortId,
-    lines
-  )
-  return sendDataResponse(res, 201, { log: createdLog })
+  try {
+    const createdLog = await DeliveryLog.createLog(
+      parsedDate,
+      title,
+      author,
+      cohortId,
+      lines
+    )
+    return sendDataResponse(res, 201, { log: createdLog })
+  } catch (e) {
+    return sendMessageResponse(res, 500, { Error: 'Unable to create log' })
+  }
 }
