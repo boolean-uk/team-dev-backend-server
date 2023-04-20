@@ -47,7 +47,7 @@ export const create = async (req, res) => {
 }
 
 export const getById = async (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = Number(req.params.id)
 
   try {
     const foundUser = await User.findById(id)
@@ -101,7 +101,7 @@ export const updateById = async (req, res) => {
     }
   }
   if (req.body.password) {
-    if (User.checkPassword(req.body.password)) {
+    if (User.passwordValidation(req.body.password)) {
       data.password = req.body.password
     } else {
       return sendDataResponse(res, 400, { error: 'Invalid Password' })
@@ -180,5 +180,19 @@ export const updateById = async (req, res) => {
         error: 'Invalid Role. Valid roles are: STUDENT, TEACHER'
       })
     }
+  }
+}
+
+export const getByRole = async (req, res) => {
+  try {
+    const foundTeachers = await User.findAllTeachers()
+
+    if (foundTeachers.length === 0) {
+      return sendDataResponse(res, 404, 'No teachers found')
+    }
+
+    return sendDataResponse(res, 200, { users: foundTeachers })
+  } catch (e) {
+    return sendDataResponse(res, 500, 'Unable to get all teachers')
   }
 }

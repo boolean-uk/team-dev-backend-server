@@ -213,6 +213,22 @@ export default class User {
     return updatedUser
   }
 
+  static async findAllTeachers() {
+    const query = {
+      where: {
+        role: 'TEACHER'
+      },
+      include: {
+        profile: true
+      }
+    }
+    const foundTeachers = await dbClient.user.findMany(query)
+    if (!foundTeachers) {
+      return []
+    }
+    return foundTeachers.map((user) => User.fromDb(user))
+  }
+
   static async findByName(name) {
     const query = {
       where: {
