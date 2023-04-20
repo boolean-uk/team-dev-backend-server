@@ -10,10 +10,10 @@ export const create = async (content, postId, userId) => {
   })
 }
 
-export const getAll = async (postId) => {
+export const getAllForPost = async (postId) => {
   return await dbClient.comment.findMany({
     where: {
-      postId: postId
+      postId
     },
     orderBy: {
       createdAt: 'asc'

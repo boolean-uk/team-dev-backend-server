@@ -603,14 +603,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/allComments'
-        201:
-          description: no comments on post
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/allComments'
         404:
-          description: post must exist
+          description: post does not exist
           content:
             application/json:
               schema:
