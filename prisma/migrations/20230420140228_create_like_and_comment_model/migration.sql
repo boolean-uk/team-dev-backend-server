@@ -4,15 +4,6 @@
   - You are about to drop the `Post_Like` table. If the table is not empty, all the data it contains will be lost.
 
 */
--- DropForeignKey
-ALTER TABLE "Post_Like" DROP CONSTRAINT "Post_Like_postId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Post_Like" DROP CONSTRAINT "Post_Like_userId_fkey";
-
--- DropTable
-DROP TABLE "Post_Like";
-
 -- CreateTable
 CREATE TABLE "LikePost" (
     "userId" INTEGER NOT NULL,
