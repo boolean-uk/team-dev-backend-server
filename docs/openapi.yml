@@ -59,9 +59,9 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by first and last name if provided (separated by '%20')
           schema:
             type: string
       responses:
@@ -71,14 +71,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid token
         '404':
-          description: fail
+          description: User not found
           content:
             application/json:
               schema:
@@ -258,8 +254,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  
-  /posts/{id}:             
+
+  /posts/{id}:
     get:
       tags:
         - post
@@ -340,14 +336,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'        
+                $ref: '#/components/schemas/Error'
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    
+
     delete:
       tags:
         - post
@@ -381,7 +377,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+
     /post/{id}/like:
     post:
       tags:
@@ -609,7 +605,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+
 components:
   securitySchemes:
     bearerAuth:
@@ -977,7 +973,7 @@ components:
           type: string
         data:
           type: object
-          properties: 
+          properties:
             comments:
               type: array
               items:
