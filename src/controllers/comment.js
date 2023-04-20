@@ -55,11 +55,13 @@ export const editComment = async (req, res) => {
     }
     const updatedComment = await updateComment(id, content)
     const updatedCommentWithAuthor = {
-      id: updatedComment.id,
-      content: updatedComment.content,
-      createdAt: updatedComment.createdAt,
-      updatedAt: updatedComment.updatedAt,
-      author: { ...req.user }
+      comment: {
+        id: updatedComment.id,
+        content: updatedComment.content,
+        createdAt: updatedComment.createdAt,
+        updatedAt: updatedComment.updatedAt,
+        author: { ...req.user }
+      }
     }
 
     return sendDataResponse(res, 200, { updatedCommentWithAuthor })
