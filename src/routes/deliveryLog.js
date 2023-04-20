@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { create, update } from '../controllers/deliveryLog.js'
+import { create } from '../controllers/deliveryLog.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -8,6 +8,5 @@ import {
 const router = Router()
 
 router.post('/', validateAuthentication, validateTeacherRole, create)
-router.patch('/:id', validateAuthentication, validateTeacherRole, update)
 
 export default router

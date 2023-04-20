@@ -12,8 +12,8 @@ export class DeliveryLog {
 
   static async createLog(date, title, userId, cohortId, lines) {
     const data = {
-      date: date,
-      title: title,
+      date,
+      title,
       lines: {
         create: lines.map((line) => {
           return {
