@@ -97,7 +97,7 @@ export const updateById = async (req, res) => {
     }
   }
   if (req.body.password) {
-    if (User.checkPassword(req.body.password)) {
+    if (User.passwordValidation(req.body.password)) {
       data.password = req.body.password
     } else {
       return sendDataResponse(res, 400, { error: 'Invalid Password' })
