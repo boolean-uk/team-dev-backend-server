@@ -78,7 +78,11 @@ export const getAll = async (req, res) => {
       mapOutUsers(users)
     )
 
-    return sendDataResponse(res, 200, { users })
+    if (users.length > 0) {
+      return sendDataResponse(res, 200, { users })
+    } else {
+      return sendDataResponse(res, 404, { error: 'User not found' })
+    }
   } else {
     const users = await User.findAll().then((users) => mapOutUsers(users))
 
