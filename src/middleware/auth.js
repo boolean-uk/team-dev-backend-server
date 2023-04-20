@@ -4,7 +4,7 @@ import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
 import { findById } from '../domain/post.js'
-
+import { getCommentById } from '../domain/comment.js'
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
     return sendMessageResponse(res, 500, 'Unable to verify user')
@@ -108,6 +108,31 @@ export async function validateEditPostAuth(req, res, next) {
       if (e.code === 'P2025') {
         console.error(e)
         return sendDataResponse(res, 404, { error: 'Post not found' })
+      }
+    }
+  }
+
+  next()
+}
+
+export async function validateEditCommentAuth(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 401, 'Unable to verify user')
+  }
+
+  try {
+    const comment = await getCommentById(Number(req.params.commentid))
+
+    if (req.user.id !== comment.userId) {
+      return sendDataResponse(res, 403, {
+        authorization: 'You are not authorized to perform this action'
+      })
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025') {
+        console.error(e)
+        return sendDataResponse(res, 404, { error: 'Comment not found' })
       }
     }
   }

@@ -50,11 +50,20 @@ export const editComment = async (req, res) => {
 
   const { content } = req.body
   try {
+    if (!req.body.content) {
+      return sendDataResponse(res, 400, { error: 'Must provide content' })
+    }
     const updatedComment = await updateComment(id, content)
+    const updatedCommentWithAuthor = {
+      id: updatedComment.id,
+      content: updatedComment.content,
+      createdAt: updatedComment.createdAt,
+      updatedAt: updatedComment.updatedAt,
+      author: { ...req.user }
+    }
 
-    return sendDataResponse(res, 200, { updatedComment })
+    return sendDataResponse(res, 200, { updatedCommentWithAuthor })
   } catch (e) {
-    console.log(e)
     return sendDataResponse(res, 500, { error: 'server error' })
   }
 }
