@@ -470,7 +470,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  
+  /posts/{id}/comment:
+    get:
+      tags:
+        - comment
+      summary: Get all comments on a post
+      description: this can only be done by a logged in user
+      operationId: GetAllComments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The post ID of the post the comments are attached to '
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resComment'
+        404:
+          description: post must exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
 components:
   securitySchemes:
     bearerAuth:
