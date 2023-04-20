@@ -539,7 +539,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /posts/{id}/comment:
+  /posts/{id}/comments:
     post:
       tags:
         - comment
@@ -581,8 +581,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  
-  /posts/{id}/comment:
     get:
       tags:
         - comment
@@ -599,12 +597,18 @@ paths:
           schema:
             type: string
       responses:
-        201:
+        200:
           description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resComment'
+                $ref: '#/components/schemas/allComments'
+        201:
+          description: no comments on post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/allComments'
         404:
           description: post must exist
           content:
@@ -972,6 +976,18 @@ components:
                         type: integer
                       content:
                         type: string
+    allComments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties: 
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/resComment'
     resComment:
       type: object
       properties:
