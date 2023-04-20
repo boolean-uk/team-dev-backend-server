@@ -17,17 +17,19 @@ enum Role {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
-  role         Role          @default(STUDENT)
-  profile      Profile?
-  cohortId     Int?
-  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
-  posts        Post[]
-  deliveryLogs DeliveryLog[]
-  commments    Comment[]
-  likes        Like[]
+  id              Int           @id @default(autoincrement())
+  email           String        @unique
+  password        String
+  role            Role          @default(STUDENT)
+  profile         Profile?
+  cohortId        Int?
+  cohort          Cohort?       @relation(fields: [cohortId], references: [id])
+  posts           Post[]
+  deliveryLogs    DeliveryLog[]
+  commments       Comment[]
+  likes           Like[]
+  likedPosts      LikePost[]
+  likedComments   LikeComment[]
 }
 
 model Profile {
@@ -47,14 +49,16 @@ model Cohort {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  content   String
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
-  commments Comment[]
-  likes     Like[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int           @id @default(autoincrement())
+  content     String
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id])
+  commments   Comment[]
+  likes       Like[]
+  likedPosts  LikePost[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
 }
 
 model DeliveryLog {
@@ -75,15 +79,16 @@ model DeliveryLogLine {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  postId    Int
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  likes     Like[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int             @id @default(autoincrement())
+  content         String
+  postId          Int
+  post            Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId          Int
+  user            User            @relation(fields: [userId], references: [id])
+  likes           Like[]
+  likedComments   LikeComment[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model Like {
@@ -95,4 +100,22 @@ model Like {
   commentId Int?
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+}
+
+model LikePost {
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  postId      Int
+  post        Post      @relation(fields: [postId], references: [id])
+  @@id([userId, postId])
+}
+
+model LikeComment {
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id])
+  createdAt   DateTime    @default(now())
+  commentId   Int
+  comment     Comment     @relation(fields: [commentId], references: [id])
+  @@id([userId, commentId])
 }
