@@ -1,5 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { create, getAllForPost } from '../domain/comment.js'
+import { create, getAllForPost, updateComment } from '../domain/comment.js'
 import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
@@ -41,6 +41,31 @@ export const getAllComments = async (req, res) => {
         return sendDataResponse(res, 404, { error: 'Post does not exist.' })
       }
     }
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
+}
+
+export const editComment = async (req, res) => {
+  const id = Number(req.params.commentid)
+
+  const { content } = req.body
+  try {
+    if (!req.body.content) {
+      return sendDataResponse(res, 400, { error: 'Must provide content' })
+    }
+    const updatedComment = await updateComment(id, content)
+    const updatedCommentWithAuthor = {
+      comment: {
+        id: updatedComment.id,
+        content: updatedComment.content,
+        createdAt: updatedComment.createdAt,
+        updatedAt: updatedComment.updatedAt,
+        author: { ...req.user }
+      }
+    }
+
+    return sendDataResponse(res, 200, { updatedCommentWithAuthor })
+  } catch (e) {
     return sendDataResponse(res, 500, { error: 'server error' })
   }
 }
