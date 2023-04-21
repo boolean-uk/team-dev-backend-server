@@ -42,8 +42,8 @@ async function seed() {
 async function createLikeOnPost(userId, postId) {
   const like = await prisma.likePost.create({
     data: {
-      userId: userId,
-      postId: postId
+      userId,
+      postId
     }
   })
 
@@ -55,8 +55,8 @@ async function createLikeOnPost(userId, postId) {
 async function createLikeOnComment(userId, commentId) {
   const like = await prisma.likeComment.create({
     data: {
-      userId: userId,
-      commentId: commentId
+      userId,
+      commentId
     }
   })
 
@@ -68,9 +68,9 @@ async function createLikeOnComment(userId, commentId) {
 async function createComment(userId, postId, content) {
   const comment = await prisma.comment.create({
     data: {
-      userId: userId,
-      postId: postId,
-      content: content
+      userId,
+      postId,
+      content
     }
   })
 
