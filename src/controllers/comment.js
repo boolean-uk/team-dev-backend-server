@@ -1,5 +1,11 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { create, getAllForPost, updateComment } from '../domain/comment.js'
+import {
+  create,
+  getAllForPost,
+  updateComment,
+  deleteComment
+} from '../domain/comment.js'
+import { findById } from '../domain/post.js'
 import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
@@ -66,6 +72,36 @@ export const editComment = async (req, res) => {
 
     return sendDataResponse(res, 200, { updatedCommentWithAuthor })
   } catch (e) {
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
+}
+
+export const deleteCommentFromPost = async (req, res) => {
+  const id = Number(req.params.commentid)
+  const postId = Number(req.params.id)
+  const foundPost = findById(postId)
+  if (!foundPost) {
+    return sendDataResponse(res, 404, { error: 'Post not Found.' })
+  }
+  try {
+    const deletedComment = await deleteComment(id)
+
+    const deletedCommentWithAuthor = {
+      comment: {
+        id: deletedComment.id,
+        content: deletedComment.content,
+        createdAt: deletedComment.createdAt,
+        updatedAt: deletedComment.updatedAt,
+        author: { ...req.user }
+      }
+    }
+    return sendDataResponse(res, 200, { deletedCommentWithAuthor })
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025') {
+        return sendDataResponse(res, 404, { error: 'Comment not Found.' })
+      }
+    }
     return sendDataResponse(res, 500, { error: 'server error' })
   }
 }

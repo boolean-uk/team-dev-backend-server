@@ -10,7 +10,8 @@ import {
 import {
   createComment,
   getAllComments,
-  editComment
+  editComment,
+  deleteCommentFromPost
 } from '../controllers/comment.js'
 import {
   validateAuthentication,
@@ -34,5 +35,11 @@ router.patch(
   validateAuthentication,
   validateEditCommentAuth,
   editComment
+)
+router.delete(
+  '/:id/comments/:commentid',
+  validateAuthentication,
+  validateIdOrRole,
+  deleteCommentFromPost
 )
 export default router
