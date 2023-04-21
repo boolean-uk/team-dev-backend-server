@@ -39,3 +39,20 @@ export const updateComment = async (id, content) => {
     }
   })
 }
+
+export async function createLike(userId, commentId) {
+  return await dbClient.likeComment.create({
+    data: {
+      user: {
+        connect: {
+          id: userId
+        }
+      },
+      comment: {
+        connect: {
+          id: commentId
+        }
+      }
+    }
+  })
+}
