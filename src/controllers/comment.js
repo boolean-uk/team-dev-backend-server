@@ -1,10 +1,14 @@
 import { sendDataResponse } from '../utils/responses.js'
+import User from '../domain/user.js'
 import {
   create,
   getAllForPost,
   updateComment,
+  deleteComment,
+  getCommentById,
   createLike
 } from '../domain/comment.js'
+import { findById } from '../domain/post.js'
 import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
@@ -51,7 +55,7 @@ export const getAllComments = async (req, res) => {
 }
 
 export const editComment = async (req, res) => {
-  const id = Number(req.params.commentid)
+  const id = Number(req.params.commentId)
 
   const { content } = req.body
   try {
@@ -70,6 +74,45 @@ export const editComment = async (req, res) => {
     }
 
     return sendDataResponse(res, 200, { updatedCommentWithAuthor })
+  } catch (e) {
+    return sendDataResponse(res, 500, { error: 'server error' })
+  }
+}
+
+export const deleteCommentFromPost = async (req, res) => {
+  const id = Number(req.params.commentId)
+  const postId = Number(req.params.id)
+  try {
+    const post = await findById(postId)
+    if (!post) {
+      return sendDataResponse(res, 404, { error: 'post not found' })
+    }
+    const comment = await getCommentById(id)
+
+    if (!comment) {
+      return sendDataResponse(res, 404, { error: 'comment not found' })
+    }
+    if (req.user.id !== comment.userId || req.user.role !== 'TEACHER') {
+      return sendDataResponse(res, 403, {
+        authorization: 'You are not authorized to perform this action'
+      })
+    }
+    const deletedComment = await deleteComment(id)
+    const author = await User.findById(deletedComment.userId)
+    if (!author) {
+      sendDataResponse(res, 404, { error: 'cannot find author details' })
+    }
+    delete author.passwordHash
+    const deletedCommentWithAuthor = {
+      comment: {
+        id: deletedComment.id,
+        content: deletedComment.content,
+        createdAt: deletedComment.createdAt,
+        updatedAt: deletedComment.updatedAt,
+        author: { ...author }
+      }
+    }
+    return sendDataResponse(res, 200, { deletedCommentWithAuthor })
   } catch (e) {
     return sendDataResponse(res, 500, { error: 'server error' })
   }

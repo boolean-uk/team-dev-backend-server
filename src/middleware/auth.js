@@ -4,6 +4,7 @@ import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
 import { findById } from '../domain/post.js'
+
 import { getCommentById } from '../domain/comment.js'
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {

@@ -11,11 +11,11 @@ import {
   createComment,
   getAllComments,
   editComment,
-  likeComment
+  likeComment,
+  deleteCommentFromPost
 } from '../controllers/comment.js'
 import {
   validateAuthentication,
-  validateIdOrRole,
   validateEditPostAuth,
   validateEditCommentAuth
 } from '../middleware/auth.js'
@@ -32,13 +32,18 @@ router.post(
 router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)
 router.get('/:id', validateAuthentication, getById)
-router.delete('/:id', validateAuthentication, validateIdOrRole, deletePost)
+router.delete('/:id', validateAuthentication, validateEditPostAuth, deletePost)
 router.get('/:id/comments', validateAuthentication, getAllComments)
 router.patch('/:id', validateAuthentication, validateEditPostAuth, updateById)
 router.patch(
-  '/:id/comments/:commentid',
+  '/:id/comments/:commentId',
   validateAuthentication,
   validateEditCommentAuth,
   editComment
+)
+router.delete(
+  '/:id/comments/:commentId',
+  validateAuthentication,
+  deleteCommentFromPost
 )
 export default router
