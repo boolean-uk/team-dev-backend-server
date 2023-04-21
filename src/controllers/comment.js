@@ -88,7 +88,7 @@ export const deleteCommentFromPost = async (req, res) => {
       return sendDataResponse(res, 404, { error: 'post not found' })
     }
     const comment = await getCommentById(id)
-    console.log(comment.user)
+
     if (!comment) {
       return sendDataResponse(res, 404, { error: 'comment not found' })
     }
@@ -99,6 +99,9 @@ export const deleteCommentFromPost = async (req, res) => {
     }
     const deletedComment = await deleteComment(id)
     const author = await User.findById(deletedComment.userId)
+    if (!author) {
+      sendDataResponse(res, 404, { error: 'cannot find author details' })
+    }
     delete author.passwordHash
     const deletedCommentWithAuthor = {
       comment: {
