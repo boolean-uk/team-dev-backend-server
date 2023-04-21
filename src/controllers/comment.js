@@ -93,7 +93,7 @@ export const likeComment = async (req, res) => {
       }
       if (e.code === 'P2002') {
         return sendDataResponse(res, 409, {
-          error: 'You have already liked this comment.'
+          error: 'You can not like a comment more than once.'
         })
       }
     }
