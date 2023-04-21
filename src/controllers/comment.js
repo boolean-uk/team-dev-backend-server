@@ -46,7 +46,7 @@ export const getAllComments = async (req, res) => {
 }
 
 export const likeComment = async (req, res) => {
-  const commentId = Number(req.params.id)
+  const commentId = Number(req.params.commentId)
   const userId = Number(req.user.id)
 
   try {
