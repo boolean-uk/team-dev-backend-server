@@ -20,3 +20,22 @@ export const getAllForPost = async (postId) => {
     }
   })
 }
+
+export const getCommentById = async (commentid) => {
+  return await dbClient.comment.findUnique({
+    where: {
+      id: commentid
+    }
+  })
+}
+
+export const updateComment = async (id, content) => {
+  return await dbClient.comment.update({
+    where: {
+      id
+    },
+    data: {
+      content
+    }
+  })
+}

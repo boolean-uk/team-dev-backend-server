@@ -124,7 +124,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/{id}:
+  /users/{userid}:
     get:
       tags:
         - user
@@ -254,8 +254,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /posts/{id}:
+  
+  /posts/{postid}:             
     get:
       tags:
         - post
@@ -343,7 +343,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /post/{postid}:
     delete:
       tags:
         - post
@@ -377,8 +377,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-    /post/{id}/like:
+                
+  /post/{postid}/like:
     post:
       tags:
         - post
@@ -497,7 +497,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /cohorts/:id/users:
+  /cohorts/{cohortid}/users:
     get:
       tags:
         - cohort
@@ -549,7 +549,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /posts/{id}/comments:
+  /posts/{postid}/comments:
     post:
       tags:
         - comment
@@ -615,6 +615,54 @@ paths:
                 $ref: '#/components/schemas/allComments'
         404:
           description: post does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+  /posts/{postid}/comments/{commentid}:
+    patch:
+      tags:
+        - comment
+      summary: update comment by comment Id
+      description: this can only be done by a looged in user and the author of the comment
+      operationId: updateCommentById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentid
+          in: path
+          description: 'the comment ID of the comment '
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated Comment Object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reqpostcomment'
+      responses:
+        200:
+          description: success
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resComment'
+        400:
+          description: must provide content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: comment not found
           content:
             application/json:
               schema:
