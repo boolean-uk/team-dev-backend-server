@@ -27,6 +27,7 @@ model User {
   posts           Post[]
   deliveryLogs    DeliveryLog[]
   commments       Comment[]
+  likes           Like[]
   likedPosts      LikePost[]
   likedComments   LikeComment[]
 }
@@ -53,6 +54,7 @@ model Post {
   userId      Int
   user        User          @relation(fields: [userId], references: [id])
   commments   Comment[]
+  likes       Like[]
   likedPosts  LikePost[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -83,9 +85,21 @@ model Comment {
   post            Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId          Int
   user            User            @relation(fields: [userId], references: [id])
+  likes           Like[]
   likedComments   LikeComment[]
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId Int?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model LikePost {
