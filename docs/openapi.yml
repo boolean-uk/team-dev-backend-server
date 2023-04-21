@@ -11,6 +11,9 @@ tags:
   - name: post
   - name: cohort
   - name: log
+  - name: comment
+  - name: like
+
 paths:
   /users:
     post:
@@ -377,48 +380,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
-  /post/{postid}/like:
-    post:
-      tags:
-        - post
-      summary: Like a Post
-      description: This can only be done by a logged in user.
-      operationId: likePost
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: PostId
-          in: path
-          description: 'The id of the post which is being liked. Use 1 for testing. '
-          required: true
-          schema:
-            type: string
-      responses:
-        '201':
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LikePost'
-        '401':
-          description: Unable to verify user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: post not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: You are not authorized to perform this action
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
 
   /logs:
     post:
@@ -460,6 +421,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  
   /cohorts:
     get:
       tags:
@@ -616,7 +578,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: commentid
+        - name: commentId
           in: path
           description: 'the comment ID of the comment '
           required: true
@@ -654,6 +616,187 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /post/{postid}/like:
+    post:
+      tags:
+        - like
+      summary: Like a Post
+      description: This can only be done by a logged in user.
+      operationId: likePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: PostId
+          in: path
+          description: 'The id of the post which is being liked. Use 1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikePost'
+        '401':
+          description: Unable to verify user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /delete/{postid}/like:
+    delete:
+      tags:
+        - like
+      summary: Remove a like from a post
+      description: This can only be done by a logged in user.
+      operationId: likePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: PostId
+          in: path
+          description: 'The id of the post which is being liked. Use 1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikePost'
+        '400':
+          description: Fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unable to verify user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /post/{postid}/comments/{commentid}/like:
+    post:
+      tags:
+        - like
+      summary: Like a comment
+      description: This can only be done by a logged in user.
+      operationId: LikeComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: 'The id of the post which is being commented on. Use 1 for testing.'
+          required: true
+        - name: commentId
+          in: path
+          description: 'The id of the comment which is being liked. Use 1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikeComment'
+        '400':
+          description: Unable to verify user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: You can not like a comment more than once.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /delete/{postid}/comments/{commentid}/like:
+    delete:
+      tags:
+        - like
+      summary: Remove a like from a comment
+      description: This can only be done by a logged in user.
+      operationId: LikeComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: PostId
+          in: path
+          description: 'The id of the post the comment belongs to. Use 1 for testing. '
+          required: true
+        - name: commentId
+          in: path
+          description: 'The id of the comment which is being un-liked. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikeComment'
+        '400':
+          description: Fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unable to verify user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: You are not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
@@ -854,61 +997,24 @@ components:
             createdAt:
               type: string
               format: string
-            user:
-              type: object
-              properties:
-                id:
-                  type: integer
-                cohortId:
-                  type: integer
-                role:
-                  type: string
-                profile:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    userId:
-                      type: integer
-                    firstName:
-                      type: string
-                    lastName:
-                      type: string
-                    bio:
-                      type: string
-                    githubUrl:
-                      type: string
-            posts:
-              type: object
-              properties:
-                id:
-                  type: integer
-                content:
-                  type: string
-                author:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    cohortId:
-                      type: integer
-                    role:
-                      type: string
-                    profile:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        userId:
-                          type: integer
-                        firstName:
-                          type: string
-                        lastName:
-                          type: string
-                        bio:
-                          type: string
-                        githubUrl:
-                          type: string
+
+    LikeComment:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            userId:
+              type: integer
+            commentId:
+              type: integer
+            createdAt:
+              type: string
+              format: string
 
     CreatedUser:
       type: object
