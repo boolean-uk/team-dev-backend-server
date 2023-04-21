@@ -43,7 +43,7 @@ export async function findById(id) {
 }
 
 export async function createLike(userId, postId) {
-  return await dbClient.like.create({
+  return await dbClient.likePost.create({
     data: {
       user: {
         connect: {
