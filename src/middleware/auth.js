@@ -154,15 +154,16 @@ export async function validateEditCommentAuth(req, res, next) {
   next()
 }
 
-export async function validatePostExists(req, res, next) {
+export async function validatePostAndCommentExists(req, res, next) {
   const postId = Number(req.params.id)
-  try {
-    await findById(postId)
-  } catch (e) {
-    if (e.code === 'P2025') {
-      console.error(e)
-      return sendDataResponse(res, 404, { error: 'post not found' })
-    }
+  const id = Number(req.params.commentid)
+  const post = await findById(postId)
+  if (!post) {
+    return sendDataResponse(res, 404, { error: 'post not found' })
+  }
+  const comment = await getCommentById(id)
+  if (!comment) {
+    return sendDataResponse(res, 404, { error: 'comment not found' })
   }
   next()
 }
