@@ -97,7 +97,7 @@ export const likeComment = async (req, res) => {
         })
       }
     }
-    console.log(e)
+    console.error(e)
     return sendDataResponse(res, 500, { error: e })
   }
 }
