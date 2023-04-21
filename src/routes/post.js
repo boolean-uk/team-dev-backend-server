@@ -17,7 +17,8 @@ import {
   validateAuthentication,
   validateIdOrRole,
   validateEditPostAuth,
-  validateEditCommentAuth
+  validateEditCommentAuth,
+  validatePostExists
 } from '../middleware/auth.js'
 
 const router = Router()
@@ -39,6 +40,7 @@ router.patch(
 router.delete(
   '/:id/comments/:commentid',
   validateAuthentication,
+  validatePostExists,
   validateIdOrRole,
   deleteCommentFromPost
 )

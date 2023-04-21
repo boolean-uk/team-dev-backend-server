@@ -33,6 +33,20 @@ export async function validateIdOrRole(req, res, next) {
   }
 }
 
+export async function validateIdOrRoleforComment(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 401, 'Unable to verify user')
+  }
+
+  if (req.user.id === Number(req.params.id) || req.user.role === 'TEACHER') {
+    next()
+  } else {
+    return sendDataResponse(res, 403, {
+      authorization: 'You are not authorized to perform this action'
+    })
+  }
+}
+
 export async function validateAuthentication(req, res, next) {
   const header = req.header('authorization')
 
@@ -137,5 +151,18 @@ export async function validateEditCommentAuth(req, res, next) {
     }
   }
 
+  next()
+}
+
+export async function validatePostExists(req, res, next) {
+  const postId = Number(req.params.id)
+  try {
+    await findById(postId)
+  } catch (e) {
+    if (e.code === 'P2025') {
+      console.error(e)
+      return sendDataResponse(res, 404, { error: 'post not found' })
+    }
+  }
   next()
 }
