@@ -4,6 +4,7 @@ import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
 import { findById } from '../domain/post.js'
+
 import { getCommentById } from '../domain/comment.js'
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
@@ -20,20 +21,6 @@ export async function validateTeacherRole(req, res, next) {
 }
 
 export async function validateIdOrRole(req, res, next) {
-  if (!req.user) {
-    return sendMessageResponse(res, 401, 'Unable to verify user')
-  }
-
-  if (req.user.id === Number(req.params.id) || req.user.role === 'TEACHER') {
-    next()
-  } else {
-    return sendDataResponse(res, 403, {
-      authorization: 'You are not authorized to perform this action'
-    })
-  }
-}
-
-export async function validateIdOrRoleforComment(req, res, next) {
   if (!req.user) {
     return sendMessageResponse(res, 401, 'Unable to verify user')
   }
@@ -151,19 +138,5 @@ export async function validateEditCommentAuth(req, res, next) {
     }
   }
 
-  next()
-}
-
-export async function validatePostAndCommentExists(req, res, next) {
-  const postId = Number(req.params.id)
-  const id = Number(req.params.commentid)
-  const post = await findById(postId)
-  if (!post) {
-    return sendDataResponse(res, 404, { error: 'post not found' })
-  }
-  const comment = await getCommentById(id)
-  if (!comment) {
-    return sendDataResponse(res, 404, { error: 'comment not found' })
-  }
   next()
 }
