@@ -81,6 +81,7 @@ export const likeComment = async (req, res) => {
 
   try {
     const likedComment = await createLike(userId, commentId)
+
     return sendDataResponse(res, 201, likedComment)
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -90,7 +91,13 @@ export const likeComment = async (req, res) => {
       if (e.code === 'P2025') {
         return sendDataResponse(res, 404, { error: 'Comment does not exist.' })
       }
+      if (e.code === 'P2002') {
+        return sendDataResponse(res, 409, {
+          error: 'You have already liked this comment.'
+        })
+      }
     }
+    console.log(e)
     return sendDataResponse(res, 500, { error: e })
   }
 }

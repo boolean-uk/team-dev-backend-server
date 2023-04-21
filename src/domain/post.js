@@ -55,30 +55,6 @@ export async function createLike(userId, postId) {
           id: postId
         }
       }
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          cohortId: true,
-          role: true,
-          profile: true
-        }
-      },
-      post: {
-        select: {
-          id: true,
-          content: true,
-          user: {
-            select: {
-              id: true,
-              cohortId: true,
-              role: true,
-              profile: true
-            }
-          }
-        }
-      }
     }
   })
 }

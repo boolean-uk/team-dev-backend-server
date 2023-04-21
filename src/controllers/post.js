@@ -90,17 +90,23 @@ export const likePost = async (req, res) => {
       return sendDataResponse(res, 404, { error: 'Post not found' })
     }
     const likedPost = await createLike(userId, postId)
-    // Swapping the creator of the Post which has been liked, from user to author.
-    const author = likedPost.post.user
-    likedPost.post = {
-      id: likedPost.post.id,
-      content: likedPost.post.content,
-      author: author
-    }
 
     return sendDataResponse(res, 201, likedPost)
   } catch (e) {
-    return sendDataResponse(res, 500, { error: e.message })
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+      if (e.code === 'P2025') {
+        return sendDataResponse(res, 404, { error: 'Comment does not exist.' })
+      }
+      if (e.code === 'P2002') {
+        return sendDataResponse(res, 409, {
+          error: 'You have already liked this post.'
+        })
+      }
+      return sendDataResponse(res, 500, { error: e })
+    }
   }
 }
 
