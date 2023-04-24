@@ -36,6 +36,8 @@ async function seed() {
   await createLikeOnPost(student.id, post1.id)
   await createLikeOnComment(student.id, comment1.id)
   await createLikeOnComment(teacher.id, comment2.id)
+  await createCourse('Front-End')
+  await createCourse('Back-end')
   process.exit(0)
 }
 
@@ -138,6 +140,17 @@ async function createUser(
   console.info(`${role} created`, user)
 
   return user
+}
+
+async function createCourse(name) {
+  const course = await prisma.course.create({
+    data: {
+      name
+    }
+  })
+  console.info('Course created', course)
+
+  return course
 }
 
 seed().catch(async (e) => {
