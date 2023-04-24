@@ -438,6 +438,8 @@ paths:
               properties:
                 date:
                   type: string
+                title:
+                  type: string
                 cohortId:
                   type: integer
                 lines:
@@ -454,8 +456,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
+        '400':
+          description: Missing fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Cohort not found
           content:
             application/json:
               schema:

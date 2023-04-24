@@ -40,6 +40,14 @@ export const updateComment = async (id, content) => {
   })
 }
 
+export const deleteComment = async (id) => {
+  return await dbClient.comment.delete({
+    where: {
+      id
+    }
+  })
+}
+
 export async function createLike(userId, commentId) {
   return await dbClient.likeComment.create({
     data: {
