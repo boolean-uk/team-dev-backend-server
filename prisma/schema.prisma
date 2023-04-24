@@ -16,6 +16,14 @@ enum Role {
   TEACHER
 }
 
+enum Grade {
+  NotSubmitted
+  NotMarked
+  NotPassingCore
+  PassingCore
+  PassingExtension
+}
+
 model User {
   id              Int           @id @default(autoincrement())
   email           String        @unique
@@ -153,8 +161,8 @@ model UserExercises {
   user          User      @relation(fields: [userId], references: [id])
   exerciseId    Int
   exercise      Exercise  @relation(fields: [exerciseId], references: [id])
-  isCompleted   Boolean   @default(false)
-  grade         Float
+  isSubmitted   Boolean   @default(false)
+  grade         Grade     @default(NotSubmitted)  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
