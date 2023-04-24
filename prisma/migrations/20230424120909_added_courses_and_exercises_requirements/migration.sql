@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Grade" AS ENUM ('NotSubmitted', 'NotMarked', 'NotPassingCore', 'PassingCore', 'PassingExtension');
+CREATE TYPE "Grade" AS ENUM ('Not_Submitted', 'Not_Marked', 'Not_Passing_Core', 'Passing_Core', 'Passing_Extension');
 
 -- AlterTable
 ALTER TABLE "Cohort" ADD COLUMN     "courseId" INTEGER;
@@ -7,7 +7,7 @@ ALTER TABLE "Cohort" ADD COLUMN     "courseId" INTEGER;
 -- CreateTable
 CREATE TABLE "Course" (
     "id" SERIAL NOT NULL,
-    "courseName" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -17,7 +17,7 @@ CREATE TABLE "Course" (
 -- CreateTable
 CREATE TABLE "Module" (
     "id" SERIAL NOT NULL,
-    "moduleName" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "courseId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE "Module" (
 -- CreateTable
 CREATE TABLE "Unit" (
     "id" SERIAL NOT NULL,
-    "unitName" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "moduleId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE "Unit" (
 -- CreateTable
 CREATE TABLE "Exercise" (
     "id" SERIAL NOT NULL,
-    "exerciseName" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "unitId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE "UserExercises" (
     "userId" INTEGER NOT NULL,
     "exerciseId" INTEGER NOT NULL,
     "isSubmitted" BOOLEAN NOT NULL DEFAULT false,
-    "grade" "Grade" NOT NULL DEFAULT E'NotSubmitted',
+    "grade" "Grade" NOT NULL DEFAULT E'Not_Submitted',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
