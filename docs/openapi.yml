@@ -718,7 +718,7 @@ paths:
         - like
       summary: Remove a like from a post
       description: This can only be done by a logged in user.
-      operationId: likePost
+      operationId: deleteLikeFromPost
       security:
         - bearerAuth: []
       parameters:
@@ -811,7 +811,7 @@ paths:
         - like
       summary: Remove a like from a comment
       description: This can only be done by a logged in user.
-      operationId: LikeComment
+      operationId: deleteLikeFromComment
       security:
         - bearerAuth: []
       parameters:
