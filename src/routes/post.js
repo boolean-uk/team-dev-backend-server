@@ -13,7 +13,8 @@ import {
   getAllComments,
   editComment,
   likeComment,
-  deleteCommentFromPost
+  deleteCommentFromPost,
+  deleteLikeFromComment
 } from '../controllers/comment.js'
 import {
   validateAuthentication,
@@ -29,6 +30,11 @@ router.post(
   '/:id/comments/:commentId/like',
   validateAuthentication,
   likeComment
+)
+router.delete(
+  '/:id/comments/:commentId/like',
+  validateAuthentication,
+  deleteLikeFromComment
 )
 router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)

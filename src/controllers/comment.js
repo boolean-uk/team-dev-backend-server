@@ -7,7 +7,8 @@ import {
   updateComment,
   deleteComment,
   getCommentById,
-  createLike
+  createLike,
+  deleteLike
 } from '../domain/comment.js'
 import { findById } from '../domain/post.js'
 
@@ -142,5 +143,27 @@ export const likeComment = async (req, res) => {
     }
     console.error(e)
     return sendDataResponse(res, 500, { error: e })
+  }
+}
+
+export const deleteLikeFromComment = async (req, res) => {
+  const userId = Number(req.user.id)
+  const commentId = Number(req.params.commentId)
+  try {
+    const deletedLike = await deleteLike(userId, commentId)
+
+    return sendDataResponse(res, 201, deletedLike)
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Comment does not exist.' })
+      }
+      if (e.code === 'P2025') {
+        return sendDataResponse(res, 404, {
+          error: 'Like to delete does not exist.'
+        })
+      }
+      return sendDataResponse(res, 500, { error: e })
+    }
   }
 }
