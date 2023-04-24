@@ -64,3 +64,14 @@ export async function createLike(userId, commentId) {
     }
   })
 }
+
+export async function deleteLike(userId, commentId) {
+  return await dbClient.likeComment.delete({
+    where: {
+      userId_commentId: {
+        userId,
+        commentId
+      }
+    }
+  })
+}
