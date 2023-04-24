@@ -271,7 +271,7 @@ paths:
         - name: id
           id: id
           in: path
-          description: 'The id that needs to be fetched. Use 1 for testing. '
+          description: 'The id that needs to be fetched. '
           required: true
           schema:
             type: string
@@ -578,6 +578,10 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - name: postId
+          in: path
+          description: 'the post ID of the comment '
+          required: true
         - name: commentId
           in: path
           description: 'the comment ID of the comment '
@@ -616,7 +620,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /post/{postid}/comments/{commentid}:
     delete:
       tags:
         - comment
@@ -626,9 +629,13 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: PostId
+        - name: postId
           in: path
-          description: 'The id of the post which is being liked. Use 1 for testing. '
+          description: 'The id of the post which is being liked. '
+          required: true
+        - name: commentId
+          in: path
+          description: 'The id of the comment which is being liked. '
           required: true
           schema:
             type: string
@@ -674,9 +681,9 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: PostId
+        - name: postId
           in: path
-          description: 'The id of the post which is being liked. Use 1 for testing. '
+          description: 'The id of the post which is being liked. '
           required: true
           schema:
             type: string
@@ -699,8 +706,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '409':
+          description: You can not like a post more than once.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /post/{postid}/like:
     delete:
       tags:
         - like
@@ -710,9 +722,9 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: PostId
+        - name: postId
           in: path
-          description: 'The id of the post which is being liked. Use 1 for testing. '
+          description: 'The id of the post which is being liked.'
           required: true
           schema:
             type: string
@@ -760,11 +772,11 @@ paths:
       parameters:
         - name: postId
           in: path
-          description: 'The id of the post which is being commented on. Use 1 for testing.'
+          description: 'The id of the post which is being commented on. '
           required: true
         - name: commentId
           in: path
-          description: 'The id of the comment which is being liked. Use 1 for testing. '
+          description: 'The id of the comment which is being liked. '
           required: true
           schema:
             type: string
@@ -782,7 +794,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Comment not found
+          description: Post or comment not found
           content:
             application/json:
               schema:
@@ -794,7 +806,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   
-  /post/{postid}/comments/{commentid}/like:
     delete:
       tags:
         - like
@@ -804,9 +815,9 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: PostId
+        - name: postId
           in: path
-          description: 'The id of the post the comment belongs to. Use 1 for testing. '
+          description: 'The id of the post the comment belongs to. '
           required: true
         - name: commentId
           in: path
@@ -840,7 +851,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Comment not found
+          description: Post or comment not found
           content:
             application/json:
               schema:
