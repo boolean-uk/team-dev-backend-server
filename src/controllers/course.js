@@ -1,4 +1,4 @@
-import { createCourse } from '../domain/course.js'
+import Course from '../domain/course.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {

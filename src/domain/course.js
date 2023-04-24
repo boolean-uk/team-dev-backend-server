@@ -38,13 +38,13 @@ export default class Course {
       name: this.name
     }
 
-    const createdCourse = await dbClient.course.create({
+    const createCourse = await dbClient.course.create({
       data,
       include: {
         cohorts: true,
         modules: true
       }
     })
-    return Course.fromDb(createdCourse)
+    return Course.fromDb(createCourse)
   }
 }
