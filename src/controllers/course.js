@@ -8,7 +8,8 @@ export const create = async (req, res) => {
     return sendMessageResponse(res, 400, 'No course name has been provided')
   }
   try {
-    const createdCourse = await createCourse()
+    const courseToCreate = await Course.fromJson(req.body)
+    const createdCourse = await courseToCreate.save()
 
     return sendDataResponse(res, 201, createdCourse)
   } catch (e) {
