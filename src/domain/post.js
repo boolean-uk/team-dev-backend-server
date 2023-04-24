@@ -59,6 +59,17 @@ export async function createLike(userId, postId) {
   })
 }
 
+export async function deleteLike(userId, postId) {
+  return await dbClient.likePost.delete({
+    where: {
+      userId_postId: {
+        userId,
+        postId
+      }
+    }
+  })
+}
+
 export async function deleteById(id) {
   return await dbClient.post.delete({
     where: {
