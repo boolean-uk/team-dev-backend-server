@@ -6,7 +6,8 @@ import {
   findById,
   updatePostById,
   deleteById,
-  createLike
+  createLike,
+  deleteLike
 } from '../domain/post.js'
 
 export const create = async (req, res) => {
@@ -103,6 +104,28 @@ export const likePost = async (req, res) => {
       if (e.code === 'P2002') {
         return sendDataResponse(res, 409, {
           error: 'You can not like a post more than once.'
+        })
+      }
+      return sendDataResponse(res, 500, { error: e })
+    }
+  }
+}
+
+export const deleteLikeFromPost = async (req, res) => {
+  const userId = Number(req.user.id)
+  const postId = Number(req.params.id)
+  try {
+    const deletedLike = await deleteLike(userId, postId)
+
+    return sendDataResponse(res, 201, deletedLike)
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2003') {
+        return sendDataResponse(res, 404, { error: 'Post does not exist.' })
+      }
+      if (e.code === 'P2025') {
+        return sendDataResponse(res, 404, {
+          error: 'Like to delete does not exist.'
         })
       }
       return sendDataResponse(res, 500, { error: e })

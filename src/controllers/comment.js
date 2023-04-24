@@ -1,4 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
+import { Prisma } from '@prisma/client'
 import User from '../domain/user.js'
 import {
   create,
@@ -9,7 +10,6 @@ import {
   createLike
 } from '../domain/comment.js'
 import { findById } from '../domain/post.js'
-import { Prisma } from '@prisma/client'
 
 export const createComment = async (req, res) => {
   const { content } = req.body

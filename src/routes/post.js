@@ -5,7 +5,8 @@ import {
   getById,
   updateById,
   deletePost,
-  likePost
+  likePost,
+  deleteLikeFromPost
 } from '../controllers/post.js'
 import {
   createComment,
@@ -31,6 +32,7 @@ router.post(
 )
 router.post('/:id/comments', validateAuthentication, createComment)
 router.post('/:id/like', validateAuthentication, likePost)
+router.delete('/:id/like', validateAuthentication, deleteLikeFromPost)
 router.get('/:id', validateAuthentication, getById)
 router.delete('/:id', validateAuthentication, validateEditPostAuth, deletePost)
 router.get('/:id/comments', validateAuthentication, getAllComments)
