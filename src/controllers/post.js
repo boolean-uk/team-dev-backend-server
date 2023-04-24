@@ -115,10 +115,6 @@ export const deleteLikeFromPost = async (req, res) => {
   const userId = Number(req.user.id)
   const postId = Number(req.params.id)
   try {
-    const foundPost = await findById(postId)
-    if (!foundPost) {
-      return sendDataResponse(res, 404, { error: 'Post not found' })
-    }
     const deletedLike = await deleteLike(userId, postId)
 
     return sendDataResponse(res, 201, deletedLike)
@@ -128,7 +124,9 @@ export const deleteLikeFromPost = async (req, res) => {
         return sendDataResponse(res, 404, { error: 'Post does not exist.' })
       }
       if (e.code === 'P2025') {
-        return sendDataResponse(res, 404, { error: 'Comment does not exist.' })
+        return sendDataResponse(res, 404, {
+          error: 'Like to delete does not exist.'
+        })
       }
       return sendDataResponse(res, 500, { error: e })
     }
