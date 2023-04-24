@@ -28,7 +28,8 @@ model User {
   deliveryLogs    DeliveryLog[]
   commments       Comment[]
   likedPosts      LikePost[]
-  likedComments   LikeComment[]
+  likedComments   LikeComment[]      
+  exercises       UserExercises[]
 }
 
 model Profile {
@@ -45,6 +46,8 @@ model Cohort {
   id           Int           @id @default(autoincrement())
   users        User[]
   deliveryLogs DeliveryLog[]
+  courseId     Int
+  course       Course       @relation(fields: [courseId], references: [id])
 }
 
 model Post {
@@ -104,4 +107,56 @@ model LikeComment {
   commentId   Int
   comment     Comment     @relation(fields: [commentId], references: [id])
   @@id([userId, commentId])
+}
+
+model Course {
+  id          Int       @id @default(autoincrement())
+  courseName  String
+  cohorts     Cohort[]
+  modules     Module[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Module {
+  id          Int       @id @default(autoincrement())
+  moduleName  String
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  units       Unit[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Unit {
+  id          Int         @id @default(autoincrement())
+  unitName    String    
+  moduleId    Int
+  module      Module      @relation(fields: [moduleId], references: [id])
+  exercises   Exercise[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Exercise {
+  id            Int       @id @default(autoincrement())
+  exerciseName  String
+  unitId        Int
+  unit          Unit      @relation(fields: [unitId], references: [id])
+  userExercises UserExercises[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model UserExercises {
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
+  exerciseId    Int
+  exercise      Exercise  @relation(fields: [exerciseId], references: [id])
+  isCompleted   Boolean   @default(false)
+  grade         Float
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@id([userId, exerciseId])
 }
