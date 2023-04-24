@@ -17,11 +17,11 @@ enum Role {
 }
 
 enum Grade {
-  Not_Submitted
-  Not_Marked
-  Not_Passing_Core
-  Passing_Core
-  Passing_Extension
+  NOT_SUBMITTED
+  NOT_MARKED
+  NOT_PASSING_CORE
+  PASSING_CORE
+  PASSING_EXTENSION
 }
 
 model User {
@@ -162,7 +162,7 @@ model UserExercises {
   exerciseId    Int
   exercise      Exercise  @relation(fields: [exerciseId], references: [id])
   isSubmitted   Boolean   @default(false)
-  grade         Grade     @default(Not_Submitted)  
+  grade         Grade     @default(NOT_SUBMITTED)  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

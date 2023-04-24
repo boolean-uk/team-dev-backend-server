@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Grade" AS ENUM ('Not_Submitted', 'Not_Marked', 'Not_Passing_Core', 'Passing_Core', 'Passing_Extension');
+CREATE TYPE "Grade" AS ENUM ('NOT_SUBMITTED', 'NOT_MARKED', 'NOT_PASSING_CORE', 'PASSING_CORE', 'PASSING_EXTENSION');
 
 -- AlterTable
 ALTER TABLE "Cohort" ADD COLUMN     "courseId" INTEGER;
@@ -52,7 +52,7 @@ CREATE TABLE "UserExercises" (
     "userId" INTEGER NOT NULL,
     "exerciseId" INTEGER NOT NULL,
     "isSubmitted" BOOLEAN NOT NULL DEFAULT false,
-    "grade" "Grade" NOT NULL DEFAULT E'Not_Submitted',
+    "grade" "Grade" NOT NULL DEFAULT E'NOT_SUBMITTED',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
