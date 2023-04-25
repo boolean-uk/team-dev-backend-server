@@ -176,6 +176,7 @@ export const updateById = async (req, res) => {
       }
     }
     if (e instanceof Prisma.PrismaClientValidationError) {
+      console.log(e)
       return sendDataResponse(res, 400, {
         error: 'Invalid Role. Valid roles are: STUDENT, TEACHER'
       })
