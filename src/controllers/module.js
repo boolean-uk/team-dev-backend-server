@@ -1,9 +1,10 @@
-import { getModules, getModuleById } from '../domain/module.js'
+import { getModulesByCourseId, getModuleById } from '../domain/module.js'
 import { sendDataResponse } from '../utils/responses.js'
 
-export const getAll = async (req, res) => {
+export const getAllModulesByCourse = async (req, res) => {
+  const courseId = Number(req.params.id)
   try {
-    const allModules = await getModules()
+    const allModules = await getModulesByCourseId(courseId)
     return sendDataResponse(res, 200, allModules)
   } catch (e) {
     return sendDataResponse(res, 500, { error: e.message })
