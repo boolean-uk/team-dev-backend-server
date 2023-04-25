@@ -1,4 +1,4 @@
-import Course from '../domain/course.js'
+import { createCourse } from '../domain/course.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -8,8 +8,7 @@ export const create = async (req, res) => {
     return sendMessageResponse(res, 400, 'No course name has been provided')
   }
   try {
-    const courseToCreate = await Course.fromJson(req.body)
-    const createdCourse = await courseToCreate.save()
+    const createdCourse = await createCourse(name)
 
     return sendDataResponse(res, 201, createdCourse)
   } catch (e) {

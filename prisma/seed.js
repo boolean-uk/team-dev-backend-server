@@ -142,17 +142,6 @@ async function createUser(
   return user
 }
 
-async function createCourse(name) {
-  const course = await prisma.course.create({
-    data: {
-      name
-    }
-  })
-  console.info('Course created', course)
-
-  return course
-}
-
 seed().catch(async (e) => {
   console.error(e)
   await prisma.$disconnect()
