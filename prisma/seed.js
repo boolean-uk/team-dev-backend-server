@@ -36,6 +36,8 @@ async function seed() {
   await createLikeOnPost(student.id, post1.id)
   await createLikeOnComment(student.id, comment1.id)
   await createLikeOnComment(teacher.id, comment2.id)
+
+  await createCourse()
   process.exit(0)
 }
 
@@ -138,6 +140,110 @@ async function createUser(
   console.info(`${role} created`, user)
 
   return user
+}
+
+async function createCourse() {
+  const course = await prisma.course.create({
+    data: {
+      name: 'Front-end',
+      modules: {
+        create: [
+          {
+            name: 'Module-1',
+            units: {
+              create: [
+                {
+                  name: 'Intro to JS',
+                  exercises: {
+                    create: [
+                      {
+                        name: 'Hello world!'
+                      },
+                      {
+                        name: 'JS fundementals'
+                      },
+                      {
+                        name: 'Basic Counter'
+                      }
+                    ]
+                  }
+                },
+                {
+                  name: 'Advanced JS',
+                  exercises: {
+                    create: [
+                      {
+                        name: 'Softplay'
+                      },
+                      {
+                        name: 'Scrabble Challange'
+                      },
+                      {
+                        name: 'JS problem solving'
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            name: 'Module-2',
+            units: {
+              create: [
+                {
+                  name: 'Intro to HTML',
+                  exercises: {
+                    create: [
+                      {
+                        name: 'HTML basics'
+                      },
+                      {
+                        name: 'Gymtastic'
+                      },
+                      {
+                        name: 'Intro to CSS'
+                      }
+                    ]
+                  }
+                },
+                {
+                  name: 'Building websites',
+                  exercises: {
+                    create: [
+                      {
+                        name: 'Gmail Layout'
+                      },
+                      {
+                        name: 'Twitter Challange'
+                      },
+                      {
+                        name: 'Spotify Challange'
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    include: {
+      modules: {
+        include: {
+          units: {
+            include: {
+              exercises: true
+            }
+          }
+        }
+      }
+    }
+  })
+  console.log(`Course created`, course)
+
+  return course
 }
 
 seed().catch(async (e) => {
