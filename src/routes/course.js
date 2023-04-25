@@ -1,9 +1,12 @@
 import { Router } from 'express'
-import { getAllCourses } from '../controllers/course.js'
-import { validateAuthentication } from '../middleware/auth.js'
+import { create } from '../controllers/course.js'
+import {
+  validateAuthentication,
+  validateTeacherRole
+} from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/', validateAuthentication, getAllCourses)
+router.post('/', validateAuthentication, validateTeacherRole, create)
 
 export default router
