@@ -10,6 +10,9 @@ export const getByModule = async (moduleId) => {
 
 export const getByUnitId = async (unitId) => {
   return await dbClient.unit.findUnique({
-    where: { id: unitId }
+    where: { id: unitId },
+    include: {
+      exercises: true
+    }
   })
 }
