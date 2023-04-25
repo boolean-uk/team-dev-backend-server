@@ -36,8 +36,6 @@ async function seed() {
   await createLikeOnPost(student.id, post1.id)
   await createLikeOnComment(student.id, comment1.id)
   await createLikeOnComment(teacher.id, comment2.id)
-  await createCourse('Front-End')
-  await createCourse('Back-end')
   process.exit(0)
 }
 
