@@ -6,7 +6,7 @@ import postRouter from './routes/post.js'
 import authRouter from './routes/auth.js'
 import cohortRouter from './routes/cohort.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
-import unitrouter from './routes/unit.js'
+import unitRouter from './routes/unit.js'
 
 const app = express()
 app.disable('x-powered-by')
@@ -18,7 +18,7 @@ app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/cohorts', cohortRouter)
 app.use('/logs', deliveryLogRouter)
-app.use('/units', unitrouter)
+app.use('/units', unitRouter)
 
 app.use('/', authRouter)
 

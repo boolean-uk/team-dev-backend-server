@@ -8,12 +8,6 @@ export const getByModule = async (moduleId) => {
   })
 }
 
-export const getModule = async (moduleId) => {
-  return await dbClient.module.findUnique({
-    where: { id: moduleId }
-  })
-}
-
 export const getByUnitId = async (unitId) => {
   return await dbClient.unit.findUnique({
     where: { id: unitId }

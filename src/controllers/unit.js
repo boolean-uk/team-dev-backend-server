@@ -1,12 +1,8 @@
-import {
-  sendDataResponse
-  // , sendMessageResponse
-} from '../utils/responses.js'
+import { sendDataResponse } from '../utils/responses.js'
 import { getModule, getByModule, getByUnitId } from '../domain/unit.js'
 
 export const getUnitById = async (req, res) => {
   const unitId = Number(req.params.unitId)
-  console.log('unitId', unitId)
   try {
     const unit = await getByUnitId(unitId)
     if (!unit) {
@@ -18,10 +14,8 @@ export const getUnitById = async (req, res) => {
   }
 }
 
-export const getUnitByModule = async (req, res) => {
+export const getUnitsByModule = async (req, res) => {
   const moduleId = Number(req.params.moduleId)
-  console.log('moduleId', moduleId)
-
   try {
     const module = await getModule(moduleId)
     const units = await getByModule(moduleId)
