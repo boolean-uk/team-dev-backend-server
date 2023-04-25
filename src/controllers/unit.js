@@ -25,6 +25,8 @@ export const getUnitById = async (req, res) => {
 
 export const getUnitByModule = async (req, res) => {
   const moduleId = Number(req.params.moduleId)
+  console.log('moduleId', moduleId)
+
   try {
     const units = await getByModule(moduleId)
     return sendDataResponse(res, 200, { units })
