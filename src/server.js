@@ -11,6 +11,7 @@ import courseRouter from './routes/course.js'
 import moduleRouter from './routes/module.js'
 
 const app = express()
+
 app.disable('x-powered-by')
 app.use(cors())
 app.use(express.json())
