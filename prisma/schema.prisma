@@ -25,19 +25,19 @@ enum Grade {
 }
 
 model User {
-  id              Int           @id @default(autoincrement())
-  email           String        @unique
-  password        String
-  role            Role          @default(STUDENT)
-  profile         Profile?
-  cohortId        Int?
-  cohort          Cohort?       @relation(fields: [cohortId], references: [id])
-  posts           Post[]
-  deliveryLogs    DeliveryLog[]
-  commments       Comment[]
-  likedPosts      LikePost[]
-  likedComments   LikeComment[]      
-  exercises       UserExercises[]
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  password      String
+  role          Role            @default(STUDENT)
+  profile       Profile?
+  cohortId      Int?
+  cohort        Cohort?         @relation(fields: [cohortId], references: [id])
+  posts         Post[]
+  deliveryLogs  DeliveryLog[]
+  commments     Comment[]
+  likedPosts    LikePost[]
+  likedComments LikeComment[]
+  exercises     UserExercises[]
 }
 
 model Profile {
@@ -59,14 +59,14 @@ model Cohort {
 }
 
 model Post {
-  id          Int           @id @default(autoincrement())
-  content     String
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  commments   Comment[]
-  likedPosts  LikePost[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id         Int        @id @default(autoincrement())
+  content    String
+  userId     Int
+  user       User       @relation(fields: [userId], references: [id])
+  commments  Comment[]
+  likedPosts LikePost[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model DeliveryLog {
@@ -88,83 +88,100 @@ model DeliveryLogLine {
 }
 
 model Comment {
-  id              Int             @id @default(autoincrement())
-  content         String
-  postId          Int
-  post            Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId          Int
-  user            User            @relation(fields: [userId], references: [id])
-  likedComments   LikeComment[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id            Int           @id @default(autoincrement())
+  content       String
+  postId        Int
+  post          Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  likedComments LikeComment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model LikePost {
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now())
-  postId      Int
-  post        Post      @relation(fields: [postId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+
   @@id([userId, postId])
 }
 
 model LikeComment {
-  userId      Int
-  user        User        @relation(fields: [userId], references: [id])
-  createdAt   DateTime    @default(now())
-  commentId   Int
-  comment     Comment     @relation(fields: [commentId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  commentId Int
+  comment   Comment  @relation(fields: [commentId], references: [id])
+
   @@id([userId, commentId])
 }
 
 model Course {
-  id          Int       @id @default(autoincrement())
-  name        String
-  cohorts     Cohort[]
-  modules     Module[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  cohorts   Cohort[]
+  modules   Module[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Module {
-  id          Int       @id @default(autoincrement())
-  name        String
-  courseId    Int
-  course      Course    @relation(fields: [courseId], references: [id])
-  units       Unit[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  units     Unit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Unit {
-  id          Int         @id @default(autoincrement())
-  name        String    
-  moduleId    Int
-  module      Module      @relation(fields: [moduleId], references: [id])
-  exercises   Exercise[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        Int        @id @default(autoincrement())
+  name      String
+  moduleId  Int
+  module    Module     @relation(fields: [moduleId], references: [id])
+  exercises Exercise[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Exercise {
-  id            Int       @id @default(autoincrement())
+  id            Int             @id @default(autoincrement())
   name          String
   unitId        Int
-  unit          Unit      @relation(fields: [unitId], references: [id])
+  unit          Unit            @relation(fields: [unitId], references: [id])
   userExercises UserExercises[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TagOnExercise TagOnExercise[]
+}
+
+model Tag {
+  id        Int             @id @default(autoincrement())
+  name      String          @unique
+  exercises TagOnExercise[]
+}
+
+model TagOnExercise {
+  id         Int      @id @default(autoincrement())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      Int
 }
 
 model UserExercises {
-  userId        Int
-  user          User      @relation(fields: [userId], references: [id])
-  exerciseId    Int
-  exercise      Exercise  @relation(fields: [exerciseId], references: [id])
-  isSubmitted   Boolean   @default(false)
-  grade         Grade     @default(NOT_SUBMITTED)  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  exerciseId  Int
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  isSubmitted Boolean  @default(false)
+  grade       Grade    @default(NOT_SUBMITTED)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@id([userId, exerciseId])
 }
