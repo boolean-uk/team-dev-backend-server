@@ -10,7 +10,7 @@ export const getAllByUnit = async (req, res) => {
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === 'P2003') {
-        return sendDataResponse(res, 404, { error: 'Exercises do not exist.' })
+        return sendDataResponse(res, 404, { error: 'Unit does not exist.' })
       }
     }
     return sendDataResponse(res, 500, { error: 'server error' })
