@@ -4,6 +4,9 @@ export const getByModule = async (moduleId) => {
   return await dbClient.unit.findMany({
     where: {
       moduleId
+    },
+    include: {
+      exercises: true
     }
   })
 }
