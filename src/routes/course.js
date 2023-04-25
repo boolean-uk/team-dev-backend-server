@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { create } from '../controllers/course.js'
+import { create, getAll, getById } from '../controllers/course.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -7,6 +7,8 @@ import {
 
 const router = Router()
 
+router.get('/', validateAuthentication, getAll)
+router.get('/:id', validateAuthentication, getById)
 router.post('/', validateAuthentication, validateTeacherRole, create)
 
 export default router
