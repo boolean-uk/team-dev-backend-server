@@ -7,3 +7,14 @@ export const getAll = async (unitId) => {
     }
   })
 }
+
+export const getAllForUser = async (userId) => {
+  return await dbClient.userExercises.findMany({
+    where: {
+      userId
+    },
+    include: {
+      exercise: true
+    }
+  })
+}
