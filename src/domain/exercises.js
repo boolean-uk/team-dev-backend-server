@@ -18,3 +18,15 @@ export const getAllForUser = async (userId) => {
     }
   })
 }
+
+export const getAllSubmitted = async (userId) => {
+  return await dbClient.userExercises.findMany({
+    where: {
+      userId,
+      isSubmitted: true
+    },
+    include: {
+      exercise: true
+    }
+  })
+}
