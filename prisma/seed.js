@@ -38,8 +38,9 @@ async function seed() {
   await createLikeOnComment(teacher.id, comment2.id)
 
   const course = await createCourse()
-  await addCourseTOCohort(cohort.id, course.id)
-  await assignUserExercise(student.id, 2)
+  await addCourseToCohort(cohort.id, course.id)
+  const exerciseId = course.modules[1].units[1].exercises[2].id
+  await assignUserExercise(student.id, exerciseId)
   process.exit(0)
 }
 
@@ -109,7 +110,7 @@ async function createCohort() {
   return cohort
 }
 
-async function addCourseTOCohort(cohortId, courseId) {
+async function addCourseToCohort(cohortId, courseId) {
   const cohort = await prisma.cohort.update({
     where: {
       id: cohortId
@@ -126,7 +127,7 @@ async function addCourseTOCohort(cohortId, courseId) {
   return cohort
 }
 
-async function assignUserExercise(exerciseId, userId) {
+async function assignUserExercise(userId, exerciseId) {
   const userExercise = await prisma.userExercises.create({
     data: {
       userId,

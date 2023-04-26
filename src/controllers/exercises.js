@@ -13,11 +13,11 @@ export const getAllByUnit = async (req, res) => {
         return sendDataResponse(res, 404, { error: 'Unit does not exist.' })
       }
     }
-    return sendDataResponse(res, 500, { error: 'server error' })
+    return sendDataResponse(res, 500, { error: e })
   }
 }
 
-export const getAllbyUserId = async (req, res) => {
+export const getAllByUserId = async (req, res) => {
   const userid = Number(req.params.id)
   try {
     const exercises = await getAllForUser(userid)
@@ -28,6 +28,6 @@ export const getAllbyUserId = async (req, res) => {
         return sendDataResponse(res, 404, { error: 'User does not exist.' })
       }
     }
-    return sendDataResponse(res, 500, { error: 'server error' })
+    return sendDataResponse(res, 500, { error: e })
   }
 }
