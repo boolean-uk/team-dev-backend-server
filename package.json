@@ -1,5 +1,5 @@
 {
-  "name": "team-dev-server",
+  "name": "team-dev-server-c10",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boolean-uk/team-dev-server.git"
+    "url": "git+https://github.com/boolean-uk/team-dev-server-c10.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "prettier": "@boolean-uk/boolean-prettier-config",
   "bugs": {
-    "url": "https://github.com/boolean-uk/team-dev-server/issues"
+    "url": "https://github.com/boolean-uk/team-dev-server-c10/issues"
   },
   "devDependencies": {
     "@boolean-uk/boolean-prettier-config": "^1.0.2",
