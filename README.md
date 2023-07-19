@@ -18,7 +18,7 @@ Once you have complete the above guide, continue to the steps below.
 
 ## API Spec
 
-[https://improved-journey-69de49d5.pages.github.io/](https://improved-journey-69de49d5.pages.github.io/)
+**INSERT API SPEC LINK HERE**
 
 ### Updating the API spec
 1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
@@ -26,10 +26,10 @@ Once you have complete the above guide, continue to the steps below.
 
 ```sh
 # install the redoc-cli utility library first
-$ npm install -g redoc-cli
+$ npm install @redocly/cli -g
 
 $ # then, build the html file
-$ redoc-cli build docs/openapi.yml -o ./docs/index.html
+$ npx @redocly/cli build-docs docs/openapi.yml -o ./docs/index.html
 ```
 
 3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
