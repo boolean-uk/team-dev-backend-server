@@ -17,8 +17,7 @@ Once you have complete the above guide, continue to the steps below.
 6. `npm run dev` to run the app
 
 ## API Spec
-
-**INSERT API SPEC LINK HERE**
+[Deployed API Spec](https://super-adventure-49w1mom.pages.github.io/)
 
 ### Updating the API spec
 1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
