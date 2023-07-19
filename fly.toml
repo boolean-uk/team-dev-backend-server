@@ -1,9 +1,16 @@
-# fly.toml file generated for team-dev-backend-api on 2022-11-30T11:30:34Z
+# fly.toml app configuration file generated for team-dev-server-c10 on 2023-07-18T13:30:28+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "team-dev-backend-api"
+app = "team-dev-server-c10"
 kill_signal = "SIGINT"
 kill_timeout = 5
+primary_region = "lhr"
 processes = []
+
+[deploy]
+  release_command = "npx prisma migrate deploy"
 
 [env]
   PORT = "8080"
@@ -11,9 +18,6 @@ processes = []
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
-
-[deploy]
-  release_command = "npx prisma migrate deploy"
 
 [[services]]
   http_checks = []
