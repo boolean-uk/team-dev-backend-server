@@ -43,20 +43,13 @@ export const getAll = async (req, res) => {
 
   if (firstName && lastName) {
     // Code to be implemented
-  }
-
-  if (firstName) {
+  } else if (firstName) {
     foundUsers = await User.findManyByName(firstName)
-  } else {
-    foundUsers = await User.findAll()
-  }
-
-  if (lastName) {
+  } else if (lastName) {
     foundUsers = await User.findManyByName(undefined, lastName)
   } else {
     foundUsers = await User.findAll()
   }
-  console.log(foundUsers)
 
   const formattedUsers = foundUsers.map((user) => {
     return {
