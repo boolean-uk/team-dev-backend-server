@@ -126,8 +126,12 @@ export default class User {
     return User._findByUnique('id', id)
   }
 
-  static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
+  static async findManyByName(firstName, lastName) {
+    if (firstName) {
+      return User._findMany('firstName', firstName)
+    } else {
+      return User._findMany('lastName', lastName)
+    }
   }
 
   static async findAll() {
@@ -169,8 +173,6 @@ export default class User {
     }
 
     const foundUsers = await dbClient.user.findMany(query)
-
-    console.log(query, key, value)
 
     return foundUsers.map((user) => User.fromDb(user))
   }
