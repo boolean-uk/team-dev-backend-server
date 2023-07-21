@@ -40,13 +40,17 @@ export const getAll = async (req, res) => {
   const { first_name: firstName, last_name: lastName } = req.query
 
   let foundUsers
-  
+
+  if (firstName && lastName) {
+    // Code to be implemented
+  }
+
   if (firstName) {
     foundUsers = await User.findManyByName(firstName)
   } else {
     foundUsers = await User.findAll()
   }
-  
+
   if (lastName) {
     foundUsers = await User.findManyByName(undefined, lastName)
   } else {
