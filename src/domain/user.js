@@ -127,8 +127,9 @@ export default class User {
   }
 
   static async findManyByName(firstName, lastName) {
-
-    if (firstName) {
+    if (firstName && lastName) {
+      return User._findMany(['firstName', 'lastName'], [firstName, lastName])
+    } else if (firstName) {
       return User._findMany('firstName', firstName)
     } else {
       return User._findMany('lastName', lastName)
@@ -162,8 +163,26 @@ export default class User {
         profile: true
       }
     }
+    console.log(key[0])
 
-    if (key !== undefined && value !== undefined) {
+    if (typeof key === 'object' && typeof value === 'object') {
+      query.where = {
+        profile: {
+          AND: [
+            {
+              [key[0]]: {
+                contains: value[0]
+              }
+            },
+            {
+              [key[1]]: {
+                contains: value[1]
+              }
+            }
+          ]
+        }
+      }
+    } else if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
           [key]: {
@@ -174,7 +193,7 @@ export default class User {
     }
 
     const foundUsers = await dbClient.user.findMany(query)
-    console.log(query, key, value)
+    console.log(query, foundUsers, key, value)
 
     return foundUsers.map((user) => User.fromDb(user))
   }
