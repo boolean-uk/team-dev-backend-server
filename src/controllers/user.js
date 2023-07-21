@@ -41,12 +41,8 @@ export const getAll = async (req, res) => {
 
   let foundUsers
 
-  if (firstName && lastName) {
+  if (firstName || lastName) {
     foundUsers = await User.findManyByName(firstName, lastName)
-  } else if (firstName) {
-    foundUsers = await User.findManyByName(firstName)
-  } else if (lastName) {
-    foundUsers = await User.findManyByName(undefined, lastName)
   } else {
     foundUsers = await User.findAll()
   }

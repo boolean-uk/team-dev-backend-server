@@ -127,13 +127,18 @@ export default class User {
   }
 
   static async findManyByName(firstName, lastName) {
-    if (firstName && lastName) {
-      return User._findMany(['firstName', 'lastName'], [firstName, lastName])
-    } else if (firstName) {
-      return User._findMany('firstName', firstName)
-    } else {
-      return User._findMany('lastName', lastName)
+    if (!firstName && !lastName) {
+      throw new Error('Must contain at least firstName or lastName.')
     }
+
+    const profileQueryObjects = []
+    if (firstName) {
+      profileQueryObjects.push({ key: 'firstName', value: firstName })
+    }
+    if (lastName) {
+      profileQueryObjects.push({ key: 'lastName', value: lastName })
+    }
+    return User._findMany(profileQueryObjects)
   }
 
   static async findAll() {
@@ -157,40 +162,31 @@ export default class User {
     return null
   }
 
-  static async _findMany(key, value) {
+  static async _findMany(keyValueList) {
     const query = {
       include: {
         profile: true
       }
     }
 
-    if (typeof key === 'object' && typeof value === 'object') {
-      query.where = {
-        profile: {
-          AND: [
-            {
-              [key[0]]: {
-                contains: value[0],
-                mode: 'insensitive'
-              }
-            },
-            {
-              [key[1]]: {
-                contains: value[1],
-                mode: 'insensitive'
-              }
-            }
-          ]
+    const profileQueryObjects = keyValueList.map(({ key, value }) => {
+      return {
+        [key]: {
+          contains: value,
+          mode: 'insensitive'
         }
       }
-    } else if (key !== undefined && value !== undefined) {
-      query.where = {
-        profile: {
-          [key]: {
-            contains: value,
-            mode: 'insensitive'
-          }
-        }
+    })
+
+    query.where = {
+      profile: {
+        AND: profileQueryObjects
+      }
+    }
+
+    if (profileQueryObjects.length === 1) {
+      query.where.profile = {
+        ...profileQueryObjects[0]
       }
     }
 
