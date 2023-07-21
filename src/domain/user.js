@@ -162,7 +162,7 @@ export default class User {
     return null
   }
 
-  static async _findMany(keyValueList) {
+  static async _findMany(keyValueList = []) {
     const query = {
       include: {
         profile: true
