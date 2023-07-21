@@ -163,7 +163,6 @@ export default class User {
         profile: true
       }
     }
-    console.log(key[0])
 
     if (typeof key === 'object' && typeof value === 'object') {
       query.where = {
@@ -171,12 +170,14 @@ export default class User {
           AND: [
             {
               [key[0]]: {
-                contains: value[0]
+                contains: value[0],
+                mode: 'insensitive'
               }
             },
             {
               [key[1]]: {
-                contains: value[1]
+                contains: value[1],
+                mode: 'insensitive'
               }
             }
           ]
@@ -186,14 +187,14 @@ export default class User {
       query.where = {
         profile: {
           [key]: {
-            contains: value
+            contains: value,
+            mode: 'insensitive'
           }
         }
       }
     }
 
     const foundUsers = await dbClient.user.findMany(query)
-    console.log(query, foundUsers, key, value)
 
     return foundUsers.map((user) => User.fromDb(user))
   }
