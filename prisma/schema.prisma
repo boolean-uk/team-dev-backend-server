@@ -25,6 +25,7 @@ model User {
   cohortId      Int?
   cohort        Cohort?   @relation(fields: [cohortId], references: [id])
   posts         Post[]
+  likes         Like[]
   deliveryLogs  DeliveryLog[]
 }
 
@@ -49,6 +50,19 @@ model Post {
   content String
   userId  Int
   user    User          @relation(fields: [userId], references: [id])
+  likes   Like[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Like {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id])
+  postId      Int
+  post        Post          @relation(fields: [postId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 model DeliveryLog {
