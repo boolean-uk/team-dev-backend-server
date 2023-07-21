@@ -26,6 +26,7 @@ model User {
   cohort        Cohort?   @relation(fields: [cohortId], references: [id])
   posts         Post[]
   deliveryLogs  DeliveryLog[]
+  notes         Note[]
 }
 
 model Profile {
@@ -66,4 +67,11 @@ model DeliveryLogLine {
   content   String
   logId     Int
   log       DeliveryLog   @relation(fields: [logId], references: [id])
+}
+
+model Note {
+id        Int       @id @default(autoincrement())
+content   String
+userId    Int
+user      User        @relation(fields: [userId], references: [id])
 }

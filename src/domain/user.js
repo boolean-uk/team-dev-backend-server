@@ -1,5 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
+import Note from './note.js'
 
 export default class User {
   /**
@@ -11,6 +12,12 @@ export default class User {
    * @returns {User}
    */
   static fromDb(user) {
+    let notes = null
+    if (user.notes) {
+      notes = user.notes.map(
+        (note) => new Note(note.id, note.content, note.userId)
+      )
+    }
     return new User(
       user.id,
       user.cohortId,
@@ -20,7 +27,8 @@ export default class User {
       user.profile?.bio,
       user.profile?.githubUrl,
       user.password,
-      user.role
+      user.role,
+      notes
     )
   }
 
@@ -51,7 +59,8 @@ export default class User {
     bio,
     githubUrl,
     passwordHash = null,
-    role = 'STUDENT'
+    role = 'STUDENT',
+    notes = null
   ) {
     this.id = id
     this.cohortId = cohortId
@@ -62,10 +71,11 @@ export default class User {
     this.githubUrl = githubUrl
     this.passwordHash = passwordHash
     this.role = role
+    this.notes = notes
   }
 
   toJSON() {
-    return {
+    const user = {
       user: {
         id: this.id,
         cohort_id: this.cohortId,
@@ -74,9 +84,14 @@ export default class User {
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        notes: this.notes
       }
     }
+    if (this.notes === null) {
+      delete user.user.notes
+    }
+    return user
   }
 
   /**
@@ -122,8 +137,12 @@ export default class User {
     return User._findByUnique('email', email)
   }
 
-  static async findById(id) {
-    return User._findByUnique('id', id)
+  static async findById(id, role) {
+    if (role === 'STUDENT') {
+      return User._findByUnique('id', id)
+    } else {
+      return User._findByUnique('id', id, true)
+    }
   }
 
   static async findManyByFirstName(firstName) {
@@ -134,13 +153,14 @@ export default class User {
     return User._findMany()
   }
 
-  static async _findByUnique(key, value) {
+  static async _findByUnique(key, value, notes = false) {
     const foundUser = await dbClient.user.findUnique({
       where: {
         [key]: value
       },
       include: {
-        profile: true
+        profile: true,
+        notes
       }
     })
 
