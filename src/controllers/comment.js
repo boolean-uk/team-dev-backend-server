@@ -9,7 +9,7 @@ export const createComment = async (req, res) => {
 
   if (typeof content !== 'string') {
     return sendDataResponse(res, 400, {
-      error: 'Please enter a valid text comment'
+      error: 'Comment must be a string'
     })
   }
 
