@@ -137,8 +137,8 @@ export default class User {
     return User._findByUnique('email', email)
   }
 
-  static async findById(id, role) {
-    if (role === 'STUDENT') {
+  static async findById(id, includeNotes) {
+    if (!includeNotes) {
       return User._findByUnique('id', id)
     } else {
       return User._findByUnique('id', id, true)

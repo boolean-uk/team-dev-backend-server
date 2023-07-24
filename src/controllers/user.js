@@ -22,7 +22,11 @@ export const create = async (req, res) => {
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)
   try {
-    const foundUser = await User.findById(id, req.user.role)
+    let includeNotes
+    if (req.user.role === 'TEACHER') {
+      includeNotes = true
+    } else includeNotes = false
+    const foundUser = await User.findById(id, includeNotes)
     if (!foundUser) {
       return sendDataResponse(res, 404, { id: 'User not found' })
     }

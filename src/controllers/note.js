@@ -18,7 +18,6 @@ export const create = async (req, res) => {
   }
   try {
     const newNote = await createNote(userId, content)
-    console.log('this is newNote: ', newNote)
     return sendDataResponse(res, 201, { note: newNote })
   } catch (error) {
     return sendDataResponse(res, 400, {
