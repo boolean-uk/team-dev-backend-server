@@ -62,7 +62,7 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users by first or last name, if provided. 
       description: ''
       operationId: getAllUsers
       security:
@@ -70,9 +70,15 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by first name if provided (exact string matches only)
           schema:
             type: string
+        - name: lastName
+          in: query
+          description: Search all users by last name if provided (exact string matches only)
+          schema:
+            type: string
+        
       responses:
         '200':
           description: successful operation

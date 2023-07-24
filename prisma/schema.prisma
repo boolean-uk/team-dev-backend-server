@@ -38,6 +38,7 @@ model User {
   posts         Post[]
   likes         Like[]
   deliveryLogs  DeliveryLog[]
+  notes         Note[]
   comments  Comment[]
 }
 
@@ -93,4 +94,11 @@ model DeliveryLogLine {
   content   String
   logId     Int
   log       DeliveryLog   @relation(fields: [logId], references: [id])
+}
+
+model Note {
+id        Int       @id @default(autoincrement())
+content   String
+userId    Int
+user      User        @relation(fields: [userId], references: [id])
 }
