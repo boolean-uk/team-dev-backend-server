@@ -11,7 +11,34 @@ tags:
   - name: post
   - name: cohort
   - name: log
+  - name: note
 paths:
+  /notes:
+    post:
+      tags:
+        - note
+      summary: Create note
+      description: Create new note
+      operationId: createNote
+      requestBody:
+        description: Note details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNote'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedNote'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /users:
     post:
       tags:
@@ -43,7 +70,7 @@ paths:
       parameters:
         - name: firstName
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by first name if provided (exact string matches only)
           schema:
             type: string
         - name: cohortId
@@ -51,6 +78,12 @@ paths:
           description: Search all users by cohortId if provided
           schema:
             type: string
+        - name: lastName
+          in: query
+          description: Search all users by last name if provided (exact string matches only)
+          schema:
+            type: string
+
       responses:
         '200':
           description: successful operation
@@ -311,6 +344,13 @@ components:
                   type: integer
                 content:
                   type: string
+    CreateNote:
+      type: object
+      properties:
+        content:
+          type: string
+        userId:
+          type: integer
 
     Cohort:
       type: object
@@ -435,6 +475,22 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
+    CreatedNote:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            note:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+                userId:
+                  type: integer
 
     CreatedUser:
       type: object
