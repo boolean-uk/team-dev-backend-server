@@ -44,6 +44,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "swagger-ui-express": "^5.0.0",
+    "yaml": "^2.3.1"
   }
 }
