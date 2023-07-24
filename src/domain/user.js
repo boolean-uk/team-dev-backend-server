@@ -36,6 +36,13 @@ export default class User {
     // eslint-disable-next-line camelcase
     const { firstName, lastName, email, biography, githubUrl, password } = json
 
+    if (password.length < 8) {
+      return {
+        status: 'error',
+        message: 'Password must be at least 8 characters long'
+      }
+    }
+
     const passwordHash = await bcrypt.hash(password, 8)
 
     return new User(

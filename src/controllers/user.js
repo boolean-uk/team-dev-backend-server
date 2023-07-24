@@ -5,6 +5,10 @@ export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
 
   try {
+    if (userToCreate.status === 'error') {
+      return sendMessageResponse(res, 400, userToCreate.message)
+    }
+
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
