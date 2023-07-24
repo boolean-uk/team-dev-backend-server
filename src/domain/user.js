@@ -145,8 +145,19 @@ export default class User {
     }
   }
 
-  static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
+  static async findManyByName(firstName, lastName) {
+    if (!firstName && !lastName) {
+      throw new Error('Must contain at least firstName or lastName.')
+    }
+
+    const profileQueryObjects = []
+    if (firstName) {
+      profileQueryObjects.push({ key: 'firstName', value: firstName })
+    }
+    if (lastName) {
+      profileQueryObjects.push({ key: 'lastName', value: lastName })
+    }
+    return User._findMany(profileQueryObjects)
   }
 
   static async findAll() {
@@ -171,18 +182,31 @@ export default class User {
     return null
   }
 
-  static async _findMany(key, value) {
+  static async _findMany(keyValueList = []) {
     const query = {
       include: {
         profile: true
       }
     }
 
-    if (key !== undefined && value !== undefined) {
-      query.where = {
-        profile: {
-          [key]: value
+    const profileQueryObjects = keyValueList.map(({ key, value }) => {
+      return {
+        [key]: {
+          contains: value,
+          mode: 'insensitive'
         }
+      }
+    })
+
+    query.where = {
+      profile: {
+        AND: profileQueryObjects
+      }
+    }
+
+    if (profileQueryObjects.length === 1) {
+      query.where.profile = {
+        ...profileQueryObjects[0]
       }
     }
 
