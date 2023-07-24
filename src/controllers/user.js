@@ -21,14 +21,12 @@ export const create = async (req, res) => {
 
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)
-
   try {
-    const foundUser = await User.findById(id)
-
+    const includeNotes = req.user.role === 'TEACHER'
+    const foundUser = await User.findById(id, includeNotes)
     if (!foundUser) {
       return sendDataResponse(res, 404, { id: 'User not found' })
     }
-
     return sendDataResponse(res, 200, foundUser)
   } catch (e) {
     return sendMessageResponse(res, 500, 'Unable to get user')
