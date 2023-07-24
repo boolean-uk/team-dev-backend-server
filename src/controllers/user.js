@@ -8,6 +8,10 @@ const validatePasswordLength = (password) => {
       message: 'Password must be at least 8 characters long'
     }
   }
+
+  return {
+    status: 'ok'
+  }
 }
 
 export const create = async (req, res) => {
