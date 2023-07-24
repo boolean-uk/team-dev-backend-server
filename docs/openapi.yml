@@ -437,26 +437,7 @@ components:
         status:
           type: string
           example: success
-        data:
-          properties:
-            user:
-              properties:
-                id:
-                  type: integer
-                email:
-                  type: string
-                cohortId:
-                  type: integer
-                role:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                bio:
-                  type: string
-                githubUrl:
-                  type: string
+
     login:
       type: object
       properties:

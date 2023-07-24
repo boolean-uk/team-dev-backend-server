@@ -11,9 +11,10 @@ export const create = async (req, res) => {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
 
-    const createdUser = await userToCreate.save()
+    await userToCreate.save()
+    // const createdUser = await userToCreate.save()
 
-    return sendDataResponse(res, 201, createdUser)
+    return sendDataResponse(res, 201)
   } catch (error) {
     return sendMessageResponse(res, 500, 'Unable to create new user')
   }
