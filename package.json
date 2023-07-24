@@ -8,7 +8,7 @@
     "start": "node src/index.js",
     "dev": "npx nodemon src/index.js",
     "prepare": "npx husky install",
-    "lint": "npx eslint"
+    "lint": "npx eslint src"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
