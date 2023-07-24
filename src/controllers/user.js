@@ -12,7 +12,6 @@ const validatePasswordLength = (password) => {
 
 export const create = async (req, res) => {
   const { password } = req.body
-  console.log('dddddddddddd', req.body)
   const passwordValidate = validatePasswordLength(password)
 
   const userToCreate = await User.fromJson(req.body)
