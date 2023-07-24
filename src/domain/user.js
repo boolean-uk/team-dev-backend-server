@@ -138,11 +138,7 @@ export default class User {
   }
 
   static async findById(id, includeNotes) {
-    if (!includeNotes) {
-      return User._findByUnique('id', id)
-    } else {
-      return User._findByUnique('id', id, true)
-    }
+    return User._findByUnique('id', id, includeNotes)
   }
 
   static async findManyByName(firstName, lastName) {
