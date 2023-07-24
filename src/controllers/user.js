@@ -1,12 +1,25 @@
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
+const validatePasswordLength = (password) => {
+  if (password.length < 8) {
+    return {
+      status: 'error',
+      message: 'Password must be at least 8 characters long'
+    }
+  }
+}
+
 export const create = async (req, res) => {
+  const { password } = req.body
+  console.log('dddddddddddd', req.body)
+  const passwordValidate = validatePasswordLength(password)
+
   const userToCreate = await User.fromJson(req.body)
 
   try {
-    if (userToCreate.status === 'error') {
-      return sendMessageResponse(res, 400, userToCreate.message)
+    if (passwordValidate.status === 'error') {
+      return sendMessageResponse(res, 400, passwordValidate.message)
     }
 
     const existingUser = await User.findByEmail(userToCreate.email)
