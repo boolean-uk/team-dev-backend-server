@@ -210,4 +210,17 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async updateUserDetails(entries, id) {
+    entries.map(async (entry) => {
+      await dbClient.user.update({
+        where: {
+          id
+        },
+        data: {
+          [entry[0]]: entry[1]
+        }
+      })
+    })
+  }
 }

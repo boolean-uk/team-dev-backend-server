@@ -1,4 +1,5 @@
 import User from '../domain/user.js'
+import dbClient from '../utils/dbClient.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -55,11 +56,14 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
-
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  const entries = Object.entries(req.body)
+  const id = Number(req.params.id)
+  const body = req.body
+  if (!entries[0]) {
+    return sendDataResponse(res, 400, {
+      Data: 'No / incorrect data has been provided.'
+    })
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  User.updateUserDetails(entries, id)
+  return sendDataResponse(res, 201, { user: body })
 }
