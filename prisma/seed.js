@@ -28,6 +28,11 @@ async function seed() {
   await createPost(student.id, 'My first post!')
   await createPost(teacher.id, 'Hello, students')
 
+  await createComment(student.id, 1, 'Student Comment on Student Post')
+  await createComment(student.id, 2, 'Student Comment on Teacher Post')
+  await createComment(teacher.id, 1, 'Teacher Comment on Student Post')
+  await createComment(teacher.id, 2, 'Teacher Comment on Teacher Post')
+
   process.exit(0)
 }
 
@@ -45,6 +50,23 @@ async function createPost(userId, content) {
   console.info('Post created', post)
 
   return post
+}
+
+async function createComment(userId, postId, content) {
+  const comment = await prisma.comment.create({
+    data: {
+      userId,
+      postId,
+      content
+    },
+    include: {
+      post: true
+    }
+  })
+
+  console.info('Comment Created', comment)
+
+  return comment
 }
 
 async function createCohort() {

@@ -9,6 +9,7 @@ servers:
 tags:
   - name: user
   - name: post
+  - name: comment
   - name: cohort
   - name: log
 paths:
@@ -216,6 +217,77 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{postId}/comments:
+    post:
+        tags:
+          - comment
+        summary: Create comment
+        description: This can only be done by the logged in user.
+        operationId: createComment
+        security:
+          - bearerAuth: []
+        requestBody:
+          description: Created comment object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  postId:
+                    type: integer
+                  userId:
+                    type: integer
+                  content:
+                    type: string
+        responses:
+          201:
+            description: success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Comment'
+          400:
+            description: Non-string comment, no comment, or comment > 240 characters provided
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+    delete:
+        tags:
+          - comment
+        summary: Delete a comment by id
+        description: Students can only delete their own comments. Teachers can delete comments by any user.
+        operationId: deleteComment
+        security:
+          - bearerAuth: []
+        requestBody:
+          description: Deleted comment object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commentId:
+                    type: integer
+        responses:
+          200:
+            description: success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Comment'
+          401:
+            description: user does not have permission to remove comment
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          404:
+            description: no comment with provided id was found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -250,7 +322,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-        '401':
+        401:
           description: Unauthorised
           content:
             application/json:
@@ -294,6 +366,19 @@ components:
       bearerFormat: JWT
   schemas:
     Post:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+    Comment:
       type: object
       properties:
         status:
