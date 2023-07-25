@@ -11,7 +11,34 @@ tags:
   - name: post
   - name: cohort
   - name: log
+  - name: note
 paths:
+  /notes:
+    post:
+      tags:
+        - note
+      summary: Create note
+      description: Create new note
+      operationId: createNote
+      requestBody: 
+        description: Note details
+        content: 
+           application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNote'
+      responses: 
+        '201':
+          description: success
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedNote'
+        '400':
+          description: fail
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /users:
     post:
       tags:
@@ -312,6 +339,13 @@ components:
                   type: integer
                 content:
                   type: string
+    CreateNote:
+      type: object
+      properties:
+        content: 
+          type: string
+        userId:
+          type: integer
 
     Cohort:
       type: object
@@ -436,6 +470,22 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
+    CreatedNote:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            note: 
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+                userId:
+                  type: integer
 
     CreatedUser:
       type: object
