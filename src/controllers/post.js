@@ -5,11 +5,8 @@ const prisma = new PrismaClient()
 export const create = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
-  const user = req.user
 
-  console.log(user)
-
-  if (!content || content === '') {
+  if (!content || content === '' || typeof content !== 'string') {
     return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
@@ -17,12 +14,15 @@ export const create = async (req, res) => {
     data: {
       content: content,
       userId: userId
+    },
+    select: {
+      id: true,
+      content: true
     }
   })
 
   return sendDataResponse(res, 201, {
-    post: createdPost,
-    user: user
+    post: createdPost
   })
 }
 
