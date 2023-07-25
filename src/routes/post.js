@@ -10,6 +10,6 @@ router.post('/', validateAuthentication, create)
 router.get('/', validateAuthentication, getAll)
 router.post('/:postId/comments', validateAuthentication, createComment)
 router.post('/:postId/like', validateAuthentication, togglePostLike)
-router.put('/', editPost)
+router.put('/:id', validateAuthentication, editPost)
 
 export default router

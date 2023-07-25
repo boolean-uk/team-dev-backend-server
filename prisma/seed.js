@@ -27,6 +27,7 @@ async function seed() {
 
   await createPost(student.id, 'My first post!')
   await createPost(teacher.id, 'Hello, students')
+  await editPost()
 
   process.exit(0)
 }
@@ -45,6 +46,22 @@ async function createPost(userId, content) {
   console.info('Post created', post)
 
   return post
+}
+async function editPost(userId, content, postId) {
+  const edited = await prisma.post.update({
+    data: {
+      userId,
+      content,
+      postId
+    },
+    include: {
+      user: true
+    }
+  })
+
+  console.info('Post edited', edited)
+
+  return edited
 }
 
 async function createCohort() {

@@ -2,9 +2,6 @@ import { sendDataResponse } from '../utils/responses.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-const { Prisma } = require('@prisma/client')
-const prisma = require('../utils/prisma')
-
 export const create = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
@@ -49,11 +46,28 @@ export const getAll = async (req, res) => {
 export const editPost = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
-  console.log('id', userId);
-  const edited = await prisma.post.update({
-    data: {
-      content: content
+  const postId = Number(req.params.id)
+
+  const userValidation = await prisma.post.findUnique({
+    where: {
+      id: postId
+    },
+    include: {
+      user: true
     }
   })
-  return sendDataResponse(res, 201, { post: edited })
+
+  if (userId === userValidation.user.id) {
+    const edited = await prisma.post.update({
+      data: {
+        content: content
+      },
+      where: {
+        id: postId
+      }
+    })
+    return sendDataResponse(res, 201, { post: edited })
+  } else {
+    return res.status(401).send('Missing Authorization')
+  }
 }
