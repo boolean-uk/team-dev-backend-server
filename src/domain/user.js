@@ -1,5 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 import bcrypt from 'bcrypt'
+import Note from './note.js'
 
 export default class User {
   /**
@@ -11,6 +12,12 @@ export default class User {
    * @returns {User}
    */
   static fromDb(user) {
+    let notes = null
+    if (user.notes) {
+      notes = user.notes.map(
+        (note) => new Note(note.id, note.content, note.userId)
+      )
+    }
     return new User(
       user.id,
       user.cohortId,
@@ -20,7 +27,8 @@ export default class User {
       user.profile?.bio,
       user.profile?.githubUrl,
       user.password,
-      user.role
+      user.role,
+      notes
     )
   }
 
@@ -51,7 +59,8 @@ export default class User {
     bio,
     githubUrl,
     passwordHash = null,
-    role = 'STUDENT'
+    role = 'STUDENT',
+    notes = null
   ) {
     this.id = id
     this.cohortId = cohortId
@@ -62,10 +71,11 @@ export default class User {
     this.githubUrl = githubUrl
     this.passwordHash = passwordHash
     this.role = role
+    this.notes = notes
   }
 
   toJSON() {
-    return {
+    const user = {
       user: {
         id: this.id,
         cohort_id: this.cohortId,
@@ -74,9 +84,14 @@ export default class User {
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        notes: this.notes
       }
     }
+    if (this.notes === null) {
+      delete user.user.notes
+    }
+    return user
   }
 
   /**
@@ -122,25 +137,37 @@ export default class User {
     return User._findByUnique('email', email)
   }
 
-  static async findById(id) {
-    return User._findByUnique('id', id)
+  static async findById(id, includeNotes) {
+    return User._findByUnique('id', id, includeNotes)
   }
 
-  static async findManyByFirstName(firstName) {
-    return User._findMany('firstName', firstName)
+  static async findManyByName(firstName, lastName) {
+    if (!firstName && !lastName) {
+      throw new Error('Must contain at least firstName or lastName.')
+    }
+
+    const profileQueryObjects = []
+    if (firstName) {
+      profileQueryObjects.push({ key: 'firstName', value: firstName })
+    }
+    if (lastName) {
+      profileQueryObjects.push({ key: 'lastName', value: lastName })
+    }
+    return User._findMany(profileQueryObjects)
   }
 
   static async findAll() {
     return User._findMany()
   }
 
-  static async _findByUnique(key, value) {
+  static async _findByUnique(key, value, notes = false) {
     const foundUser = await dbClient.user.findUnique({
       where: {
         [key]: value
       },
       include: {
-        profile: true
+        profile: true,
+        notes
       }
     })
 
@@ -151,18 +178,31 @@ export default class User {
     return null
   }
 
-  static async _findMany(key, value) {
+  static async _findMany(keyValueList = []) {
     const query = {
       include: {
         profile: true
       }
     }
 
-    if (key !== undefined && value !== undefined) {
-      query.where = {
-        profile: {
-          [key]: value
+    const profileQueryObjects = keyValueList.map(({ key, value }) => {
+      return {
+        [key]: {
+          contains: value,
+          mode: 'insensitive'
         }
+      }
+    })
+
+    query.where = {
+      profile: {
+        AND: profileQueryObjects
+      }
+    }
+
+    if (profileQueryObjects.length === 1) {
+      query.where.profile = {
+        ...profileQueryObjects[0]
       }
     }
 
