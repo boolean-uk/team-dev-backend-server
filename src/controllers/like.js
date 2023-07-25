@@ -7,6 +7,16 @@ export const togglePostLike = async (req, res) => {
   const userId = req.user.id
 
   try {
+    const existingPost = await prisma.post.findUnique({
+      where: {
+        id: postId
+      }
+    })
+
+    if (!existingPost) {
+      sendDataResponse(res, 404, { error: 'Post not found' })
+    }
+
     const existingLike = await prisma.like.findFirst({
       where: {
         userId,
@@ -31,7 +41,6 @@ export const togglePostLike = async (req, res) => {
       sendDataResponse(res, 201, { like, liked: true })
     }
   } catch (error) {
-    console.error('error toggling like')
     sendDataResponse(res, 500, { error: error.message })
   }
 }

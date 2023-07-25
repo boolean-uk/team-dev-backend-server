@@ -237,7 +237,7 @@ paths:
 
       responses:
         '200':
-          description: Success
+          description: Success, Like removed from post
           content:
             application/json:
               schema:
@@ -245,14 +245,19 @@ paths:
 
 
         '201':
-          description: Success (Created)
+          description: Success (Created), Like added to post
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LikedPost'
 
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-      
                 
   /logs:
     post:
