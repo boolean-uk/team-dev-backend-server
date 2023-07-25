@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "npx nodemon src/index.js",
-    "prepare": "npx husky install"
+    "prepare": "npx husky install",
+    "lint": "npx eslint src"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -43,6 +44,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "swagger-ui-express": "^5.0.0",
+    "yaml": "^2.3.1"
   }
 }
