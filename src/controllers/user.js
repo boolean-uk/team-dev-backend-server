@@ -54,25 +54,33 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
-export const updateById = async (req, res) => {
+const validateUpdateByIDRequest = (req) => {
   const keys = Object.keys(req.body)
   const validKeys = keys.find((key) => {
     return key !== 'role' && key !== 'email' && key !== 'cohortId'
   })
+  if (validKeys) {
+    return { Error: 'Invalid key provided!' }
+  }
   if (keys.includes('role') && typeof req.body.role !== 'string') {
-    return sendDataResponse(res, 400, { Error: 'Role must be a string!' })
+    return { Error: 'Role must be a string!' }
   }
   if (keys.includes('email') && typeof req.body.email !== 'string') {
-    return sendDataResponse(res, 400, { Error: 'Email must be a string!' })
+    return { Error: 'Email must be a string!' }
   }
   if (keys.includes('cohortId') && typeof req.body.cohortId !== 'number') {
-    return sendDataResponse(res, 400, { Error: 'CohortId must be a number!' })
+    return { Error: 'CohortId must be a number!' }
+  }
+  return null
+}
+
+export const updateById = async (req, res) => {
+  const validationError = validateUpdateByIDRequest(req, res)
+  if (validationError) {
+    return sendDataResponse(res, 400, validationError)
   }
   if (req.user.role !== 'TEACHER') {
     return sendDataResponse(res, 403, { Error: 'Permission denied!' })
-  }
-  if (validKeys) {
-    return sendDataResponse(res, 400, { Error: 'Invalid key provided!' })
   }
   try {
     await User.updateUserDetails(req)
