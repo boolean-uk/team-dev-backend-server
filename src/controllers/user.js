@@ -1,5 +1,6 @@
 import User from '../domain/user.js'
 import { emailValidation } from '../utils/emailValidation.js'
+import { passwordValidation } from '../utils/passwordValidation.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 const validatePasswordLength = (password) => {
@@ -34,6 +35,13 @@ export const create = async (req, res) => {
 
     if (!emailValidation(userToCreate.email)) {
       return sendDataResponse(res, 400, { email: 'Email not valid' })
+    }
+
+    if (!passwordValidation(password)) {
+      return sendDataResponse(res, 400, {
+        password:
+          'Password must contain at least one uppercase character, one lowercase character, one special character, and one number'
+      })
     }
 
     const createdUser = await userToCreate.save()
