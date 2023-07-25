@@ -5,9 +5,12 @@ const prisma = new PrismaClient()
 export const create = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
+  const user = req.user
 
-  if (!content) {
-    return sendDataResponse(res, 400, { content: 'Must provide content' })
+  console.log(user)
+
+  if (!content || content === '') {
+    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
   const createdPost = await prisma.post.create({
@@ -18,7 +21,8 @@ export const create = async (req, res) => {
   })
 
   return sendDataResponse(res, 201, {
-    post: createdPost
+    post: createdPost,
+    user: user
   })
 }
 
