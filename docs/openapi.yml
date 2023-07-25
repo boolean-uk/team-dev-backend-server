@@ -217,13 +217,19 @@ paths:
                   type: string
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
         400:
-          description: fail
+          description: Invalid Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Invalid Log in token
           content:
             application/json:
               schema:
