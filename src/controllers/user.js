@@ -79,12 +79,40 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
-export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
-
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+const validateUpdateByIDRequest = (req) => {
+  const keys = Object.keys(req.body)
+  const validKeys = keys.find((key) => {
+    return key !== 'role' && key !== 'email' && key !== 'cohortId'
+  })
+  if (validKeys) {
+    return { Error: 'Invalid key provided!' }
   }
+  if (keys.includes('role') && typeof req.body.role !== 'string') {
+    return { Error: 'Role must be a string!' }
+  }
+  if (keys.includes('email') && typeof req.body.email !== 'string') {
+    return { Error: 'Email must be a string!' }
+  }
+  if (keys.includes('cohortId') && typeof req.body.cohortId !== 'number') {
+    return { Error: 'CohortId must be a number!' }
+  }
+  return null
+}
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+export const updateById = async (req, res) => {
+  const validationError = validateUpdateByIDRequest(req, res)
+  if (validationError) {
+    return sendDataResponse(res, 400, validationError)
+  }
+  if (req.user.role !== 'TEACHER') {
+    return sendDataResponse(res, 403, { Error: 'Permission denied!' })
+  }
+  try {
+    await User.updateUserDetails(req)
+    return sendDataResponse(res, 200, { user: req.body })
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      Error: 'Unexpected Error!'
+    })
+  }
 }
