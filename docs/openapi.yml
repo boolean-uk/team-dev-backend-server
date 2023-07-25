@@ -216,6 +216,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+
+  /posts/{postId}/like:
+    post:
+      tags:
+        - post
+      summary: Toggle Post Like
+      description: Toggle like for a post. This can only be done by the logged-in user.
+      operationId: togglePostLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: ID of the post to toggle the like for.
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+
+
+        '201':
+          description: Success (Created)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+
+
+      
+                
   /logs:
     post:
       tags:
@@ -430,6 +468,31 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
+
+    LikedPost:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            like:
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  postId:
+                    type: integer
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    format: string
+            liked:
+              type: boolean
 
     CreatedUser:
       type: object
