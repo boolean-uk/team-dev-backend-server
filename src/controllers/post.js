@@ -48,6 +48,15 @@ export const editPost = async (req, res) => {
   const userId = req.user.id
   const postId = Number(req.params.id)
 
+  if (
+    !content ||
+    content.length <= 0 ||
+    content === ' ' ||
+    typeof content !== 'string'
+  ) {
+    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
+  }
+
   const userValidation = await prisma.post.findUnique({
     where: {
       id: postId
