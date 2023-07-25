@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Team Dev Frontend Server API
   description: |-
-  version: 0.2.4
+  version: 0.2.2
 
 servers:
   - url: https://team-dev-server-c10.fly.dev/
