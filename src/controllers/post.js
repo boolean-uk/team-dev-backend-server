@@ -32,6 +32,8 @@ export const getAll = async (req, res) => {
 
 export const editPost = async (req, res) => {
   const { content } = req.body
+  const userId = req.user.id
+  console.log('id', userId);
   const edited = await prisma.post.update({
     data: {
       content: content
