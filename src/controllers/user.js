@@ -1,4 +1,5 @@
 import User from '../domain/user.js'
+import { emailValidation } from '../utils/emailValidation.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -9,6 +10,10 @@ export const create = async (req, res) => {
 
     if (existingUser) {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
+    }
+
+    if (!emailValidation(userToCreate.email)) {
+      return sendDataResponse(res, 400, { email: 'Email not valid' })
     }
 
     const createdUser = await userToCreate.save()
