@@ -87,6 +87,20 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
+export const createProfile = async (req, res) => {
+  const id = req.params
+  const { firstName, lastName } = req.body
+  if (!firstName || !lastName) {
+    return sendMessageResponse(res, 400, 'First and Last names are required')
+  }
+  if (User.findById(id) !== this.user.id) {
+    return sendMessageResponse(res, 403, 'User may only create own profile')
+  }
+  const profileToCreate = await User.fromJson(req.body)
+  const createdProfile = await profileToCreate.save()
+  return sendDataResponse(res, 201, createdProfile)
+}
+
 const validateUpdateByIDRequest = (req) => {
   const keys = Object.keys(req.body)
   const validKeys = keys.find((key) => {
