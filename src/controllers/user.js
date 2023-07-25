@@ -1,5 +1,4 @@
 import User from '../domain/user.js'
-import dbClient from '../utils/dbClient.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -56,20 +55,31 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const entries = Object.entries(req.body)
-  const id = Number(req.params.id)
-  const body = req.body
-  if (!entries[0]) {
-    return sendDataResponse(res, 400, {
-      Error: 'No / incorrect data has been provided.'
-    })
+  const keys = Object.keys(req.body)
+  const validKeys = keys.find((key) => {
+    return key !== 'role' && key !== 'email' && key !== 'cohortId'
+  })
+  if (keys.includes('role') && typeof req.body.role !== 'string') {
+    return sendDataResponse(res, 400, { Error: 'Role must be a string!' })
   }
-  if (req.user.role === 'TEACHER') {
-    User.updateUserDetails(entries, id)
-    return sendDataResponse(res, 201, { user: body })
-  } else {
-    return sendDataResponse(res, 400, {
-      Error: 'User not authorised for this action.'
+  if (keys.includes('email') && typeof req.body.email !== 'string') {
+    return sendDataResponse(res, 400, { Error: 'Email must be a string!' })
+  }
+  if (keys.includes('cohortId') && typeof req.body.cohortId !== 'number') {
+    return sendDataResponse(res, 400, { Error: 'CohortId must be a number!' })
+  }
+  if (req.user.role !== 'TEACHER') {
+    return sendDataResponse(res, 403, { Error: 'Permission denied!' })
+  }
+  if (validKeys) {
+    return sendDataResponse(res, 400, { Error: 'Invalid key provided!' })
+  }
+  try {
+    await User.updateUserDetails(req)
+    return sendDataResponse(res, 200, { user: req.body })
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      Error: 'Unexpected Error!'
     })
   }
 }
