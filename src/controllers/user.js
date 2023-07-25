@@ -38,7 +38,6 @@ export const create = async (req, res) => {
     }
 
     if (!passwordValidation(password)) {
-      console.log(password)
       return sendDataResponse(res, 400, {
         password:
           'Password must contain at least one uppercase character, one lowercase character, one special character, and one number'
