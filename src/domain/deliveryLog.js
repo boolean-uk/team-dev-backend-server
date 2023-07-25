@@ -13,7 +13,7 @@ export default class DeliveryLog {
   toJSON() {
     return {
       id: this.id,
-      date: this.date.splice(0, 10),
+      date: this.date,
       title: this.title,
       cohortId: this.cohortId,
       userId: this.userId,
@@ -39,6 +39,19 @@ export async function createDeliveryLog(date, userId, title, cohortId, lines) {
       },
       lines: {
         create: lines.map((line) => ({ content: line.content }))
+      }
+    },
+    include: {
+      lines: true
+    }
+  })
+}
+
+export async function getDeliveryLog(cohortId) {
+  return await dbClient.deliveryLog.findMany({
+    where: {
+      cohort: {
+        id: cohortId
       }
     },
     include: {
