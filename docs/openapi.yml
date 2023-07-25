@@ -68,12 +68,12 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: first_name
+        - name: firstName
           in: query
           description: Search all users by first name if provided (exact string matches only)
           schema:
             type: string
-        - name: last_name
+        - name: lastName
           in: query
           description: Search all users by last name if provided (exact string matches only)
           schema:
