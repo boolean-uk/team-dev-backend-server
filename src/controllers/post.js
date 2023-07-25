@@ -42,3 +42,41 @@ export const getAll = async (req, res) => {
     ]
   })
 }
+
+export const editPost = async (req, res) => {
+  const { content } = req.body
+  const userId = req.user.id
+  const postId = Number(req.params.id)
+
+  if (
+    !content ||
+    content.length <= 0 ||
+    content === ' ' ||
+    typeof content !== 'string'
+  ) {
+    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
+  }
+
+  const userValidation = await prisma.post.findUnique({
+    where: {
+      id: postId
+    },
+    include: {
+      user: true
+    }
+  })
+
+  if (userId === userValidation.user.id) {
+    const edited = await prisma.post.update({
+      data: {
+        content: content
+      },
+      where: {
+        id: postId
+      }
+    })
+    return sendDataResponse(res, 201, { post: edited })
+  } else {
+    return res.status(401).send('Missing Authorization')
+  }
+}
