@@ -20,22 +20,22 @@ paths:
       summary: Create note
       description: Create new note
       operationId: createNote
-      requestBody: 
+      requestBody:
         description: Note details
-        content: 
-           application/json:
+        content:
+          application/json:
             schema:
               $ref: '#/components/schemas/CreateNote'
-      responses: 
+      responses:
         '201':
           description: success
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedNote'
         '400':
           description: fail
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
@@ -62,23 +62,23 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first or last name, if provided. 
+      summary: Get all users by first or last name, if provided.
       description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: first_name
           in: query
           description: Search all users by first name if provided (exact string matches only)
           schema:
             type: string
-        - name: lastName
+        - name: last_name
           in: query
           description: Search all users by last name if provided (exact string matches only)
           schema:
             type: string
-        
+
       responses:
         '200':
           description: successful operation
@@ -342,7 +342,7 @@ components:
     CreateNote:
       type: object
       properties:
-        content: 
+        content:
           type: string
         userId:
           type: integer
@@ -478,7 +478,7 @@ components:
           example: success
         data:
           properties:
-            note: 
+            note:
               properties:
                 id:
                   type: integer
