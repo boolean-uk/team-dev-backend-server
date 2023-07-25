@@ -19,4 +19,5 @@ jobs:
         - run: echo $DATABASE_URL >> .env
         - run: echo $JWT_SECRET >> .env
         - run: echo $JWT_EXPIRY >> .env
+        - run: cat .env
         - run: flyctl deploy --remote-only
