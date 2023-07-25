@@ -17,88 +17,89 @@ enum Role {
 }
 
 model Comment {
-  id  Int @id @default(autoincrement())
-  postId  Int
-  post  Post  @relation(fields: [postId], references: [id])
-  userId  Int
-  user  User  @relation(fields: [userId], references: [id])
-  content String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  password      String
-  role          Role      @default(STUDENT)
-  profile       Profile?
-  cohortId      Int?
-  cohort        Cohort?   @relation(fields: [cohortId], references: [id])
-  posts         Post[]
-  likes         Like[]
-  deliveryLogs  DeliveryLog[]
-  notes         Note[]
-  comments  Comment[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  role         Role          @default(STUDENT)
+  profile      Profile?
+  cohortId     Int?
+  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
+  posts        Post[]
+  deliveryLogs DeliveryLog[]
+  Comment      Comment[]
+  Like         Like[]
+  notes        Note[]
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  user      User    @relation(fields: [userId], references: [id])
+  firstName String
+  lastName  String
+  bio       String?
+  githubUrl String?
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  users        User[]
+  deliveryLogs DeliveryLog[]
 }
 
 model Post {
-  id      Int           @id @default(autoincrement())
-  content String
-  userId  Int
-  user    User          @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
   comments  Comment[]
-  likes   Like[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
-  id          Int           @id @default(autoincrement())
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  postId      Int
-  post        Post          @relation(fields: [postId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DeliveryLog {
-  id        Int           @id @default(autoincrement())
-  date      DateTime
-  userId    Int
-  user      User          @relation(fields: [userId], references: [id])
-  cohortId  Int
-  cohort    Cohort        @relation(fields: [cohortId], references: [id])
-  lines     DeliveryLogLine[]
+  id       Int               @id @default(autoincrement())
+  date     DateTime
+  userId   Int
+  title    String
+  user     User              @relation(fields: [userId], references: [id])
+  cohortId Int
+  cohort   Cohort            @relation(fields: [cohortId], references: [id])
+  lines    DeliveryLogLine[]
 }
 
 model DeliveryLogLine {
-  id        Int           @id @default(autoincrement())
-  content   String
-  logId     Int
-  log       DeliveryLog   @relation(fields: [logId], references: [id])
+  id      Int         @id @default(autoincrement())
+  content String
+  logId   Int
+  log     DeliveryLog @relation(fields: [logId], references: [id])
 }
 
 model Note {
-id        Int       @id @default(autoincrement())
-content   String
-userId    Int
-user      User        @relation(fields: [userId], references: [id])
+  id      Int    @id @default(autoincrement())
+  content String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
 }
