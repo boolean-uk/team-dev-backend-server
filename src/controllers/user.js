@@ -35,7 +35,7 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
-  const { first_name: firstName, last_name: lastName } = req.query
+  const { firstName, lastName } = req.query
 
   let foundUsers
 
