@@ -91,14 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: fail
+        '401':
+          description: Unauthorised request
           content:
             application/json:
               schema:
