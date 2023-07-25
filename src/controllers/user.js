@@ -61,9 +61,15 @@ export const updateById = async (req, res) => {
   const body = req.body
   if (!entries[0]) {
     return sendDataResponse(res, 400, {
-      Data: 'No / incorrect data has been provided.'
+      Error: 'No / incorrect data has been provided.'
     })
   }
-  User.updateUserDetails(entries, id)
-  return sendDataResponse(res, 201, { user: body })
+  if (req.user.role === 'TEACHER') {
+    User.updateUserDetails(entries, id)
+    return sendDataResponse(res, 201, { user: body })
+  } else {
+    return sendDataResponse(res, 400, {
+      Error: 'User not authorised for this action.'
+    })
+  }
 }
