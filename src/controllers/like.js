@@ -14,7 +14,7 @@ export const togglePostLike = async (req, res) => {
     })
 
     if (!existingPost) {
-      sendDataResponse(res, 404, { error: 'Post not found' })
+      return sendDataResponse(res, 404, { error: 'Post not found' })
     }
 
     const existingLike = await prisma.like.findFirst({
