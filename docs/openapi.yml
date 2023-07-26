@@ -321,7 +321,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-        401:
+        403:
           description: user does not have permission to remove comment
           content:
             application/json:
