@@ -320,7 +320,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-        401:
+
           description: user does not have permission to remove comment
           content:
             application/json:
@@ -416,7 +416,7 @@ paths:
         - log
       summary: Create delivery log
       description: This can only be done by an authorised teacher user.
-      operationId: createLog
+      operationId: createDeliveryLog
       security:
         - bearerAuth: []
       requestBody:
@@ -430,6 +430,8 @@ paths:
                   type: string
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 lines:
                   type: array
                   items:
@@ -446,6 +448,40 @@ paths:
                 $ref: '#/components/schemas/Log'
         401:
           description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logs/{cohortId}:
+    get:
+      tags:
+        - log
+      summary: Get all delivery logs for a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getDeliveryLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The cohorts logs that need to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Log'
+        404:
+          description: Cohort or delivery logs not Found
           content:
             application/json:
               schema:
@@ -474,6 +510,33 @@ paths:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
         400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/{cohortId}:
+    get:
+      tags:
+        - cohort
+      summary: Get a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cohort'
+        404:
           description: fail
           content:
             application/json:
@@ -783,6 +846,8 @@ components:
                   type: integer
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 date:
                   type: string
                 author:
