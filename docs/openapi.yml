@@ -9,6 +9,7 @@ servers:
 tags:
   - name: user
   - name: post
+  - name: comment
   - name: cohort
   - name: log
   - name: note
@@ -59,6 +60,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - user
@@ -216,13 +223,19 @@ paths:
                   type: string
       responses:
         201:
-          description: success
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
         400:
-          description: fail
+          description: Invalid Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Invalid Log in token
           content:
             application/json:
               schema:
@@ -248,6 +261,117 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{postId}/comments:
+    post:
+      tags:
+        - comment
+      summary: Create comment
+      description: This can only be done by the logged in user.
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Non-string comment, no comment, or comment > 240 characters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - comment
+      summary: Delete a comment by id
+      description: Students can only delete their own comments. Teachers can delete comments by any user.
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Deleted comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        401:
+          description: user does not have permission to remove comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: no comment with provided id was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{postId}/like:
+    post:
+      tags:
+        - post
+      summary: Toggle Post Like
+      description: Toggle like for a post. This can only be done by the logged-in user.
+      operationId: togglePostLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          description: ID of the post to toggle the like for.
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Success, Like removed from post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+
+        '201':
+          description: Success (Created), Like added to post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedPost'
+
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /logs:
     post:
       tags:
@@ -282,7 +406,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-        '401':
+        401:
           description: Unauthorised
           content:
             application/json:
@@ -326,6 +450,19 @@ components:
       bearerFormat: JWT
   schemas:
     Post:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+    Comment:
       type: object
       properties:
         status:
@@ -485,6 +622,31 @@ components:
                   type: string
                 userId:
                   type: integer
+
+    LikedPost:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            like:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                postId:
+                  type: integer
+                createdAt:
+                  type: string
+                  format: string
+                updatedAt:
+                  type: string
+                  format: string
+            liked:
+              type: boolean
 
     CreatedUser:
       type: object
