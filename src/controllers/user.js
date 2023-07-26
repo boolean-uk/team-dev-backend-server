@@ -88,17 +88,28 @@ export const getAll = async (req, res) => {
 }
 
 export const createProfile = async (req, res) => {
-  const id = req.params
-  const { firstName, lastName } = req.body
+  const id = Number(req.params)
+  const { firstName, lastName, bio, githubUrl } = req.body
+  const profile = {}
   if (!firstName || !lastName) {
     return sendMessageResponse(res, 400, 'First and Last names are required')
+  } else {
+    profile.firstName = firstName
+    profile.lastName = lastName
   }
-  if (User.findById(id) !== this.user.id) {
-    return sendMessageResponse(res, 403, 'User may only create own profile')
+  if (bio) {
+    profile.bio = bio
   }
-  const profileToCreate = await User.fromJson(req.body)
-  const createdProfile = await profileToCreate.save()
-  return sendDataResponse(res, 201, createdProfile)
+  if (githubUrl) {
+    profile.githubUrl = githubUrl
+  }
+
+  try {
+    const createdProfile = await User.createProfile(id, profile)
+    return sendDataResponse(res, 201, createdProfile)
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Unable to create profile')
+  }
 }
 
 const validateUpdateByIDRequest = (req) => {
