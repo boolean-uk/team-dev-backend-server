@@ -69,8 +69,8 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name, role and cohortID if it is provided
-      description: ''
+      summary: Get a list of users on the platform
+      description: 'Get all users by first name, role and cohortID if it is provided'
       operationId: getAllUsers
       security:
         - bearerAuth: []
