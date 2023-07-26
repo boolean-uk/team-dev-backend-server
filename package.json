@@ -6,9 +6,10 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "npx nodemon src/index.js",
+    "dev": "nodemon src/index.js",
     "prepare": "npx husky install",
-    "lint": "npx eslint src"
+    "lint": "eslint src",
+    "migrate": "prisma migrate deploy"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
