@@ -4,7 +4,6 @@ import { validateAuthentication } from '../middleware/auth.js'
 import { createComment, removeComment } from '../controllers/comment.js'
 import { togglePostLike, toggleCommentLike } from '../controllers/like.js'
 
-
 const router = Router()
 
 router.post('/', validateAuthentication, create)
