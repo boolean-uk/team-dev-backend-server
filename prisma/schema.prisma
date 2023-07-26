@@ -52,35 +52,34 @@ model Cohort {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  content   String
-  userId    Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id])
-  comments  Comment[]
-  likes     Like[]
+  id       Int       @id @default(autoincrement())
+  content  String
+  userId   Int
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+  likes    Like[]
 }
 
 model Like {
   id        Int      @id @default(autoincrement())
   userId    Int
-  postId    Int?
-  commentId Int?
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post?    @relation(fields: [postId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  comment   Comment? @relation(fields: [commentId], references: [id])
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }
 
 model DeliveryLog {
   id       Int               @id @default(autoincrement())
   date     DateTime
   userId   Int
+  title    String
+  user     User              @relation(fields: [userId], references: [id])
   cohortId Int
   cohort   Cohort            @relation(fields: [cohortId], references: [id])
-  user     User              @relation(fields: [userId], references: [id])
   lines    DeliveryLogLine[]
 }
 
@@ -102,93 +101,3 @@ enum Role {
   STUDENT
   TEACHER
 }
-<<<<<<< HEAD
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  postId    Int
-  post      Post     @relation(fields: [postId], references: [id])
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
-  role         Role          @default(STUDENT)
-  profile      Profile?
-  cohortId     Int?
-  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
-  posts        Post[]
-  likes        Like[]
-  deliveryLogs DeliveryLog[]
-  notes        Note[]
-  comments     Comment[]
-}
-
-model Profile {
-  id        Int     @id @default(autoincrement())
-  userId    Int     @unique
-  user      User    @relation(fields: [userId], references: [id])
-  firstName String
-  lastName  String
-  bio       String?
-  githubUrl String?
-}
-
-model Cohort {
-  id           Int           @id @default(autoincrement())
-  users        User[]
-  deliveryLogs DeliveryLog[]
-}
-
-model Post {
-  id        Int       @id @default(autoincrement())
-  content   String
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
-  comments  Comment[]
-  likes     Like[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model Like {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  postId    Int
-  post      Post     @relation(fields: [postId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model DeliveryLog {
-  id       Int               @id @default(autoincrement())
-  date     DateTime
-  userId   Int
-  user     User              @relation(fields: [userId], references: [id])
-  cohortId Int
-  cohort   Cohort            @relation(fields: [cohortId], references: [id])
-  lines    DeliveryLogLine[]
-}
-
-model DeliveryLogLine {
-  id      Int         @id @default(autoincrement())
-  content String
-  logId   Int
-  log     DeliveryLog @relation(fields: [logId], references: [id])
-}
-
-model Note {
-  id      Int    @id @default(autoincrement())
-  content String
-  userId  Int
-  user    User   @relation(fields: [userId], references: [id])
-}
-=======
->>>>>>> main
