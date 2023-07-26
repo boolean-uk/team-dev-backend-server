@@ -9,8 +9,7 @@ import {
 
 import {
   validateAuthentication,
-  validateTeacherRole,
-  validateUserId
+  validateTeacherRole
 } from '../middleware/auth.js'
 
 const router = Router()
@@ -19,6 +18,6 @@ router.post('/', create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
-router.put('/:id', validateAuthentication, validateUserId, createProfile)
+router.put('/:id', validateAuthentication, createProfile)
 
 export default router

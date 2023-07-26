@@ -16,6 +16,21 @@ const validatePasswordLength = (password) => {
   }
 }
 
+async function validateUserId(req, res) {
+  if (!req.user) {
+    return sendMessageResponse(res, 500, 'req.user is not populated')
+  }
+  const id = Number(req.params.id)
+
+  if (req.user.id !== id) {
+    return sendMessageResponse(
+      res,
+      403,
+      'User is not authorised to perform this action'
+    )
+  }
+}
+
 export const create = async (req, res) => {
   const { password } = req.body
   const passwordValidate = validatePasswordLength(password)
@@ -93,12 +108,12 @@ export const createProfile = async (req, res) => {
   const profile = {
     create: {}
   }
+  validateUserId(req, res)
   if (!firstName || !lastName) {
     return sendMessageResponse(res, 400, 'First and Last names are required')
-  } else {
-    profile.create.firstName = firstName
-    profile.create.lastName = lastName
   }
+  profile.create.firstName = firstName
+  profile.create.lastName = lastName
   if (bio) {
     profile.create.bio = bio
   }
@@ -109,7 +124,7 @@ export const createProfile = async (req, res) => {
     const createdProfile = await User.createProfile(id, profile)
     return sendDataResponse(res, 201, createdProfile)
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return sendMessageResponse(res, 500, 'Unable to create profile')
   }
 }
