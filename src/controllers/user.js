@@ -88,26 +88,28 @@ export const getAll = async (req, res) => {
 }
 
 export const createProfile = async (req, res) => {
-  const id = Number(req.params)
+  const id = parseInt(req.params.id)
   const { firstName, lastName, bio, githubUrl } = req.body
-  const profile = {}
+  const profile = {
+    create: {}
+  }
   if (!firstName || !lastName) {
     return sendMessageResponse(res, 400, 'First and Last names are required')
   } else {
-    profile.firstName = firstName
-    profile.lastName = lastName
+    profile.create.firstName = firstName
+    profile.create.lastName = lastName
   }
   if (bio) {
-    profile.bio = bio
+    profile.create.bio = bio
   }
   if (githubUrl) {
-    profile.githubUrl = githubUrl
+    profile.create.githubUrl = githubUrl
   }
-
   try {
     const createdProfile = await User.createProfile(id, profile)
     return sendDataResponse(res, 201, createdProfile)
   } catch (e) {
+    console.log(e)
     return sendMessageResponse(res, 500, 'Unable to create profile')
   }
 }
