@@ -18,6 +18,6 @@ router.post('/', create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
-router.put('/:id', validateAuthentication, createProfile)
+router.post('/:id', validateAuthentication, createProfile)
 
 export default router

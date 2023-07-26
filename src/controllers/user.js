@@ -122,9 +122,13 @@ export const createProfile = async (req, res) => {
   }
   try {
     const createdProfile = await User.createProfile(id, profile)
+    delete createdProfile.password
     return sendDataResponse(res, 201, createdProfile)
   } catch (e) {
     console.error(e)
+    if (e.code === 'P2014') {
+      return sendMessageResponse(res, 409, 'Profile already exists')
+    }
     return sendMessageResponse(res, 500, 'Unable to create profile')
   }
 }
