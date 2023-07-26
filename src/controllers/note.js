@@ -5,10 +5,10 @@ import User from '../domain/user.js'
 const validateCreateNoteFunctionInputs = (req) => {
   const { content, userId } = req.body
   const keys = Object.keys(req.body)
-  const validKeys = keys.find((key) => {
+  const invalidKeys = keys.find((key) => {
     return key !== 'content' && key !== 'userId'
   })
-  if (validKeys) {
+  if (invalidKeys) {
     return { Error: 'Invalid key provided!' }
   }
   if (keys.includes('content') && typeof req.body.content !== 'string') {
