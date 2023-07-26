@@ -29,6 +29,10 @@ export const createComment = async (req, res) => {
         postId,
         content,
         userId
+      },
+      select: {
+        id: true,
+        content: true
       }
     })
     return sendDataResponse(res, 201, { comment })
@@ -37,4 +41,43 @@ export const createComment = async (req, res) => {
   }
 }
 
-export const remove = async (req, res) => {}
+export const removeComment = async (req, res) => {
+  const commentId = Number(req.body.commentId)
+  const user = req.user
+
+  try {
+    const commentUser = await prisma.comment.findFirst({
+      where: {
+        id: commentId
+      },
+      select: {
+        userId: true
+      }
+    })
+
+    if (!commentUser) {
+      return sendDataResponse(res, 404, {
+        error: 'No comment with that id was found'
+      })
+    }
+
+    if (commentUser.userId !== user.id && user.role !== 'TEACHER') {
+      return sendDataResponse(res, 401, {
+        error: 'Students may only delete their own comments'
+      })
+    } else {
+      const deletedComment = await prisma.comment.delete({
+        where: {
+          id: commentId
+        },
+        select: {
+          id: true,
+          content: true
+        }
+      })
+      return sendDataResponse(res, 200, deletedComment)
+    }
+  } catch (e) {
+    return sendDataResponse(res, 500, { error: e.message })
+  }
+}

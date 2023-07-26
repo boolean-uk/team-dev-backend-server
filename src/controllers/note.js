@@ -8,12 +8,12 @@ export const create = async (req, res) => {
 
   if (!content) {
     return sendDataResponse(res, 400, {
-      content: 'Please provide content in your notes immediatley!'
+      error: 'Please provide content in your notes immediatley!'
     })
   }
   if (targetUser.role === 'TEACHER') {
     return sendDataResponse(res, 400, {
-      content: 'Can not add notes on teachers.'
+      error: 'Can not add notes on teachers.'
     })
   }
   try {
@@ -21,7 +21,7 @@ export const create = async (req, res) => {
     return sendDataResponse(res, 201, { note: newNote })
   } catch (error) {
     return sendDataResponse(res, 400, {
-      content: 'Please provide content in your notes immediatley!'
+      error: 'Please provide content in your notes immediatley!'
     })
   }
 }
