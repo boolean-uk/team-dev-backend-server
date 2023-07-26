@@ -77,6 +77,6 @@ export const editPost = async (req, res) => {
     })
     return sendDataResponse(res, 201, { post: edited })
   } else {
-    return res.status(401).send('Missing Authorization')
+    return res.status(403).send('Missing Authorization')
   }
 }
