@@ -15,7 +15,10 @@ export const get = async (req, res) => {
   const cohortId = parseInt(req.params.id)
   try {
     const gettingCohort = await getCohort(cohortId)
-    return sendDataResponse(res, 201, gettingCohort)
+    if (gettingCohort === null) {
+      return sendMessageResponse(res, 404, 'Cohort does not exist')
+    }
+    return sendDataResponse(res, 200, gettingCohort)
   } catch (error) {
     return sendMessageResponse(res, 500, 'Unable to get cohort')
   }
