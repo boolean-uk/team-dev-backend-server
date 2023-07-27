@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,94 +8,98 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-enum Role {
-  STUDENT
-  TEACHER
-}
-
 model Comment {
-  id  Int @id @default(autoincrement())
-  postId  Int
-  post  Post  @relation(fields: [postId], references: [id])
-  userId  Int
-  user  User  @relation(fields: [userId], references: [id])
-  content String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  likes     Like[]
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  password      String
-  role          Role      @default(STUDENT)
-  profile       Profile?
-  cohortId      Int?
-  cohort        Cohort?   @relation(fields: [cohortId], references: [id])
-  posts         Post[]
-  likes         Like[]
-  deliveryLogs  DeliveryLog[]
-  notes         Note[]
-  comments  Comment[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  cohortId     Int?
+  role         Role          @default(STUDENT)
+  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
+  comments     Comment[]
+  deliveryLogs DeliveryLog[]
+  likes        Like[]
+  notes        Note[]
+  posts        Post[]
+  profile      Profile?
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  firstName String
+  lastName  String
+  bio       String?
+  githubUrl String?
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  deliveryLogs DeliveryLog[]
+  users        User[]
 }
 
 model Post {
-  id      Int           @id @default(autoincrement())
-  content String
-  userId  Int
-  user    User          @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
   comments  Comment[]
-  likes   Like[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
-  id          Int           @id @default(autoincrement())
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  postId      Int
-  post        Post          @relation(fields: [postId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }
 
 model DeliveryLog {
-  id        Int           @id @default(autoincrement())
-  date      DateTime
-  userId    Int
-  user      User          @relation(fields: [userId], references: [id])
-  cohortId  Int
-  cohort    Cohort        @relation(fields: [cohortId], references: [id])
-  lines     DeliveryLogLine[]
+  id       Int               @id @default(autoincrement())
+  date     DateTime
+  userId   Int
+  title    String
+  user     User              @relation(fields: [userId], references: [id])
+  cohortId Int
+  cohort   Cohort            @relation(fields: [cohortId], references: [id])
+  lines    DeliveryLogLine[]
 }
 
 model DeliveryLogLine {
-  id        Int           @id @default(autoincrement())
-  content   String
-  logId     Int
-  log       DeliveryLog   @relation(fields: [logId], references: [id])
+  id      Int         @id @default(autoincrement())
+  content String
+  logId   Int
+  log     DeliveryLog @relation(fields: [logId], references: [id])
 }
 
 model Note {
-id        Int       @id @default(autoincrement())
-content   String
-userId    Int
-user      User        @relation(fields: [userId], references: [id])
+  id      Int    @id @default(autoincrement())
+  content String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  STUDENT
+  TEACHER
 }

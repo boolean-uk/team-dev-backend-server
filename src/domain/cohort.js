@@ -25,3 +25,11 @@ export class Cohort {
     }
   }
 }
+
+export async function getCohort(cohortId) {
+  return await dbClient.cohort.findUnique({
+    where: {
+      id: cohortId
+    }
+  })
+}
