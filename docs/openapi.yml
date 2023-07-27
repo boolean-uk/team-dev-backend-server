@@ -157,7 +157,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/User'
-
         '400':
           description: fail
           content:
@@ -204,6 +203,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - user
+      summary: Create profile
+      description: Create new profile
+      operationId: createProfile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id that is creating the profile'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The profile info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProfile'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedProfile'
+        '400':
+          description: Required fields not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Users can only create their own profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Only one profile can be created per user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
   /posts:
     post:
       tags:
@@ -696,6 +742,18 @@ components:
         githubUrl:
           type: string
 
+    CreateProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        bio:
+          type: string
+        githubUrl:
+          type: string
+
     Posts:
       type: object
       properties:
@@ -849,6 +907,34 @@ components:
                   type: string
                 githubUrl:
                   type: string
+
+    CreatedProfile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            user:
+              properties:
+                id:
+                  type: integer
+                email:
+                  type: string
+                cohortId:
+                  type: integer
+                role:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                bio:
+                  type: string
+                githubUrl:
+                  type: string
+
     login:
       type: object
       properties:
