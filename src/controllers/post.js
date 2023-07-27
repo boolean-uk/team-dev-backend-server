@@ -115,6 +115,8 @@ export const deletePost = async (req, res) => {
     })
     return sendDataResponse(res, 200, { post: deletion })
   } else {
-    return sendDataResponse(res, 403, { error: 'Missing Authorization' })
+    return sendDataResponse(res, 403, {
+      error: 'You are unauthorized to delete this post'
+    })
   }
 }
