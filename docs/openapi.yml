@@ -621,34 +621,16 @@ components:
           format: string
 
     AllCohorts:
-          type: object
-          properties:
-            id:
-              type: integer
-            users:
-              type: array
-              items:
-                type: object
-                properties:
-                  email: 
-                    type: string
-                  role: 
-                    type: string
-                  profile:
-                    type: object
-                    properties:
-                      id: 
-                        type: integer
-                      userId: 
-                        type: integer
-                      firstName: 
-                        type: string
-                      lastName: 
-                        type: string
-                      bio: 
-                        type: string
-                      githubUrl: 
-                        type: string
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
 
     AllUsers:
       type: object
