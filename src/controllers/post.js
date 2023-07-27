@@ -85,7 +85,7 @@ export const deletePost = async (req, res) => {
   const userId = req.user.id
   const postId = Number(req.params.id)
 
-  const userValidation = await prisma.post.findUnique({
+  const findPost = await prisma.post.findUnique({
     where: {
       id: postId
     },
@@ -95,7 +95,11 @@ export const deletePost = async (req, res) => {
     }
   })
 
-  if (userValidation.comments.length > 0) {
+  if (!findPost) {
+    return sendDataResponse(res, 404, { post: 'Not Found' })
+  }
+
+  if (findPost.comments.length > 0) {
     await prisma.comment.deleteMany({
       where: {
         postId: postId
@@ -103,7 +107,7 @@ export const deletePost = async (req, res) => {
     })
   }
 
-  if (userId === userValidation.user.id) {
+  if (userId === findPost.user.id) {
     const deletion = await prisma.post.delete({
       where: {
         id: postId
