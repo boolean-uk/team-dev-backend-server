@@ -210,4 +210,19 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async updateUserDetails(req) {
+    const entries = Object.entries(req.body)
+    const id = Number(req.params.id)
+    const data = {}
+    entries.forEach(([key, value]) => {
+      data[key] = value
+    })
+    return await dbClient.user.update({
+      where: {
+        id
+      },
+      data
+    })
+  }
 }
