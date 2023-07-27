@@ -14,6 +14,50 @@ tags:
   - name: log
   - name: note
 paths:
+  /comments/getComments:
+    get:
+      tags:
+        - comment
+      summary: Get comments by userId, postId or searchString
+      description: 'Search for any combination of userId, postId and searchString. Returns any comments matching all provided search parameters.'
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          description: Search for all comments for a given userId if provided
+          schema:
+            type: integer
+        - name: postId
+          in: query
+          description: Search for all comments for a given postId if provided
+          schema:
+            type: integer
+        - name: searchString
+          in: query
+          description: Search for all comments containing the provided searchString (case insensitive)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success - Comments Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllComments'
+        '400':
+          description: Failure - No search parameters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Failure - No comments found for given search parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /notes:
     post:
       tags:
@@ -929,3 +973,22 @@ components:
                         type: integer
                       content:
                         type: string
+    AllComments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  postId:
+                    type: integer
+                  userId:
+                    type: integer
+                  content:
+                    type: string
