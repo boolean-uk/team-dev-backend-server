@@ -1,6 +1,11 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Module {
+  /**
+   *
+   * @param {{id: int, module: String}}
+   * @returns {Module}
+   */
   constructor(id, module) {
     this.id = id
     this.module = module
