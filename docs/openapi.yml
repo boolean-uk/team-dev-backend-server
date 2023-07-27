@@ -262,6 +262,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /posts/{id}:
+    put:
+      tags:
+        - post
+      summary: Update post
+      description: The student can update only update their posts.
+      operationId: editPost
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditPost'
+        '403':
+          description: Missing authorisation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditError'
+        '400':
+          description: Invalid content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditError'
+
   /posts/{postId}/comments:
     post:
       tags:
@@ -376,7 +404,7 @@ paths:
   /posts/comments/{commentId}/like:
     post:
       tags:
-        - post
+        - comment
       summary: Toggle Comment Like
       description: Toggle like for a comment. This can only be done by the logged-in user.
       operationId: toggleCommentLike
@@ -411,6 +439,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
 
   /logs:
     post:
@@ -725,6 +754,29 @@ components:
                   type: string
                 userId:
                   type: integer
+    EditPost:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+
+    EditError:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            error:
+              type: string
 
     LikedPost:
       type: object
@@ -742,6 +794,13 @@ components:
                   type: integer
                 postId:
                   type: integer
+
+                createdAt:
+                  type: string
+                  format: string
+                updatedAt:
+                  type: string
+                  format: string
             liked:
               type: boolean
 
