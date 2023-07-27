@@ -47,3 +47,22 @@ export async function getAllCohorts() {
     }
   })
 }
+
+export async function addStudent(cohortId, userId) {
+  return await dbClient.cohort.update({
+    where: { id: cohortId },
+    data: {
+      users: { connect: { id: userId } }
+    },
+    include: {
+      users: {
+        select: {
+          id: true,
+          email: true,
+          cohortId: true,
+          role: true
+        }
+      }
+    }
+  })
+}
