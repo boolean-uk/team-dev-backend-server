@@ -114,8 +114,36 @@ export const getComments = async (req, res) => {
       where: searchParams,
       select: {
         id: true,
-        userId: true,
-        content: true
+        updatedAt: true,
+        content: true,
+        user: {
+          select: {
+            id: true,
+            cohortId: true,
+            role: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const formattedComments = comments.map((comment) => {
+      return {
+        id: comment.id,
+        updatedAt: comment.updatedAt,
+        content: comment.content,
+        author: {
+          id: comment.user.id,
+          cohortId: comment.user.cohortId,
+          role: comment.user.role,
+          firstName: comment.user.profile.firstName,
+          lastName: comment.user.profile.lastName
+        }
       }
     })
 
@@ -125,7 +153,7 @@ export const getComments = async (req, res) => {
       })
     }
 
-    return sendDataResponse(res, 200, comments)
+    return sendDataResponse(res, 200, formattedComments)
   } catch (e) {
     return sendDataResponse(res, 500, { error: e.message })
   }

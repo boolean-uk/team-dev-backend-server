@@ -1140,7 +1140,20 @@ components:
                 properties:
                   postId:
                     type: integer
-                  userId:
-                    type: integer
+                  updatedAt:
+                    type: string
                   content:
                     type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      cohortId:
+                        type: integer
+                      role:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
