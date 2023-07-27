@@ -27,5 +27,5 @@ export const get = async (req, res) => {
 export const getAll = async (req, res) => {
   const cohorts = await getAllCohorts()
 
-  return sendMessageResponse(res, 200, cohorts)
+  return sendDataResponse(res, 200, cohorts)
 }
