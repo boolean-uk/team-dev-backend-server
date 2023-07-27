@@ -80,3 +80,37 @@ export const editPost = async (req, res) => {
     return res.status(403).send('Missing Authorization')
   }
 }
+
+export const deletePost = async (req, res) => {
+  const userId = req.user.id
+  const postId = Number(req.params.id)
+
+  const userValidation = await prisma.post.findUnique({
+    where: {
+      id: postId
+    },
+    include: {
+      user: true,
+      comments: true
+    }
+  })
+
+  if (userValidation.comments.length > 0) {
+    await prisma.comment.deleteMany({
+      where: {
+        postId: postId
+      }
+    })
+  }
+
+  if (userId === userValidation.user.id) {
+    const deletion = await prisma.post.delete({
+      where: {
+        id: postId
+      }
+    })
+    return sendDataResponse(res, 200, { post: deletion })
+  } else {
+    return sendDataResponse(res, 403, { error: 'Missing Authorization' })
+  }
+}
