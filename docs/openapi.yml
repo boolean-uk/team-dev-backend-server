@@ -201,7 +201,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/User'
-
         '400':
           description: fail
           content:
@@ -248,6 +247,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - user
+      summary: Create profile
+      description: Create new profile
+      operationId: createProfile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id that is creating the profile'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The profile info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProfile'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedProfile'
+        '400':
+          description: Required fields not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Users can only create their own profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Only one profile can be created per user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
   /posts:
     post:
       tags:
@@ -306,7 +352,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /posts/{postId}:
+    delete:
+      tags:
+        - post
+      summary: Deletes Selected Post
+      description: Deletes Selected Post and Comments associated
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: User Not Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid Permission to delete post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts/{id}:
     put:
       tags:
@@ -333,7 +412,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EditError'
-
   /posts/{postId}/comments:
     post:
       tags:
@@ -584,12 +662,34 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
-        400:
+
+    get:
+      tags:
+        - cohort
+      summary: Get all available cohorts and their users 
+      description: This can only be done by an authorised teacher user.
+      operationId: getAllCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AllCohorts'
+        404:
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /cohorts/{cohortId}:
     get:
       tags:
@@ -671,6 +771,18 @@ components:
           type: string
           format: string
 
+    AllCohorts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
     AllUsers:
       type: object
       properties:
@@ -731,6 +843,18 @@ components:
           type: integer
         role:
           type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        bio:
+          type: string
+        githubUrl:
+          type: string
+
+    CreateProfile:
+      type: object
+      properties:
         firstName:
           type: string
         lastName:
@@ -893,6 +1017,34 @@ components:
                   type: string
                 githubUrl:
                   type: string
+
+    CreatedProfile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            user:
+              properties:
+                id:
+                  type: integer
+                email:
+                  type: string
+                cohortId:
+                  type: integer
+                role:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                bio:
+                  type: string
+                githubUrl:
+                  type: string
+
     login:
       type: object
       properties:

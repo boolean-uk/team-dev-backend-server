@@ -16,6 +16,21 @@ const validatePasswordLength = (password) => {
   }
 }
 
+async function validateUserId(req, res) {
+  if (!req.user) {
+    return sendMessageResponse(res, 500, 'req.user is not populated')
+  }
+  const id = Number(req.params.id)
+
+  if (req.user.id !== id) {
+    return sendMessageResponse(
+      res,
+      403,
+      'User is not authorised to perform this action'
+    )
+  }
+}
+
 export const create = async (req, res) => {
   const { password } = req.body
   const passwordValidate = validatePasswordLength(password)
@@ -85,6 +100,38 @@ export const getAll = async (req, res) => {
   })
 
   return sendDataResponse(res, 200, { users: formattedUsers })
+}
+
+export const createProfile = async (req, res) => {
+  const id = parseInt(req.params.id)
+  const { firstName, lastName, bio, githubUrl } = req.body
+  validateUserId(req, res)
+  if (!firstName || !lastName) {
+    return sendMessageResponse(res, 400, 'First and Last names are required')
+  }
+  const profile = {
+    create: {
+      firstName: firstName,
+      lastName: lastName
+    }
+  }
+  if (bio) {
+    profile.create.bio = bio
+  }
+  if (githubUrl) {
+    profile.create.githubUrl = githubUrl
+  }
+  try {
+    const createdProfile = await User.createProfile(id, profile)
+    delete createdProfile.password
+    return sendDataResponse(res, 201, createdProfile)
+  } catch (e) {
+    console.error(e)
+    if (e.code === 'P2014') {
+      return sendMessageResponse(res, 409, 'Profile already exists')
+    }
+    return sendMessageResponse(res, 500, 'Unable to create profile')
+  }
 }
 
 const validateUpdateByIDRequest = (req) => {
