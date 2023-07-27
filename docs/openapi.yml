@@ -473,7 +473,7 @@ components:
           type: string
         data:
           properties:
-            post:
+            comment:
               properties:
                 id:
                   type: integer
