@@ -308,7 +308,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /posts/{postId}:
+    delete:
+      tags:
+        - post
+      summary: Deletes Selected Post
+      description: Deletes Selected Post and Comments associated
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: User Not Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid Permission to delete post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts/{id}:
     put:
       tags:
@@ -335,7 +368,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EditError'
-
   /posts/{postId}/comments:
     post:
       tags:
