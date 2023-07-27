@@ -55,32 +55,33 @@ model Post {
   id        Int       @id @default(autoincrement())
   content   String
   userId    Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   user      User      @relation(fields: [userId], references: [id])
   comments  Comment[]
   likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
   id        Int      @id @default(autoincrement())
   userId    Int
-  postId    Int?
-  commentId Int?
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post?    @relation(fields: [postId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  comment   Comment? @relation(fields: [commentId], references: [id])
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }
 
 model DeliveryLog {
   id       Int               @id @default(autoincrement())
   date     DateTime
   userId   Int
+  title    String
+  user     User              @relation(fields: [userId], references: [id])
   cohortId Int
   cohort   Cohort            @relation(fields: [cohortId], references: [id])
-  user     User              @relation(fields: [userId], references: [id])
   lines    DeliveryLogLine[]
 }
 

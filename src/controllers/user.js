@@ -89,10 +89,10 @@ export const getAll = async (req, res) => {
 
 const validateUpdateByIDRequest = (req) => {
   const keys = Object.keys(req.body)
-  const validKeys = keys.find((key) => {
+  const invalidKeys = keys.find((key) => {
     return key !== 'role' && key !== 'email' && key !== 'cohortId'
   })
-  if (validKeys) {
+  if (invalidKeys) {
     return { Error: 'Invalid key provided!' }
   }
   if (keys.includes('role') && typeof req.body.role !== 'string') {

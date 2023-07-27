@@ -1,24 +1,45 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { createDeliveryLog, getDeliveryLog } from '../domain/deliveryLog.js'
+import { getCohort } from '../domain/cohort.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+
+export const getLogs = async (req, res) => {
+  const cohortId = parseInt(req.params.id)
+  try {
+    const foundCohort = await getCohort(cohortId)
+    if (!foundCohort) {
+      return sendDataResponse(res, 404, 'Cohort not found')
+    }
+    const gettingLogs = await getDeliveryLog(cohortId)
+    if (gettingLogs.length === 0) {
+      return sendMessageResponse(
+        res,
+        404,
+        'No delivery logs found for this cohort'
+      )
+    }
+    return sendDataResponse(res, 201, gettingLogs)
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to get delivery logs')
+  }
+}
 
 export const create = async (req, res) => {
-  const { date, cohort_id: cohortId, lines } = req.body
+  const { date, cohort_id: cohortId, lines, title } = req.body
+  const userId = req.user.id
 
-  return sendDataResponse(res, 201, {
-    log: {
-      id: 1,
-      cohort_id: cohortId,
-      date,
-      author: {
-        id: req.user.id,
-        first_name: req.user.firstName,
-        last_name: req.user.lastName
-      },
-      lines: lines.map((line, index) => {
-        return {
-          id: index + 1,
-          content: line.content
-        }
-      })
-    }
-  })
+  try {
+    const formatdDate = new Date(date)
+
+    const createdDeliveryLog = await createDeliveryLog(
+      formatdDate,
+      userId,
+      title,
+      cohortId,
+      lines
+    )
+
+    return sendDataResponse(res, 201, createdDeliveryLog)
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to create new delivery log')
+  }
 }

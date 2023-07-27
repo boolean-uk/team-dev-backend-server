@@ -296,78 +296,103 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{id}:
+    put:
+      tags:
+        - post
+      summary: Update post
+      description: The student can update only update their posts.
+      operationId: editPost
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditPost'
+        '403':
+          description: Missing authorisation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditError'
+        '400':
+          description: Invalid content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditError'
   /posts/{postId}/comments:
     post:
-        tags:
-          - comment
-        summary: Create comment
-        description: This can only be done by the logged in user.
-        operationId: createComment
-        security:
-          - bearerAuth: []
-        requestBody:
-          description: Created comment object
+      tags:
+        - comment
+      summary: Create comment
+      description: This can only be done by the logged in user.
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+      responses:
+        201:
+          description: success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  postId:
-                    type: integer
-                  userId:
-                    type: integer
-                  content:
-                    type: string
-        responses:
-          201:
-            description: success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Comment'
-          400:
-            description: Non-string comment, no comment, or comment > 240 characters provided
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Non-string comment, no comment, or comment > 240 characters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
-        tags:
-          - comment
-        summary: Delete a comment by id
-        description: Students can only delete their own comments. Teachers can delete comments by any user.
-        operationId: deleteComment
-        security:
-          - bearerAuth: []
-        requestBody:
-          description: Deleted comment object
+      tags:
+        - comment
+      summary: Delete a comment by id
+      description: Students can only delete their own comments. Teachers can delete comments by any user.
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Deleted comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: integer
+      responses:
+        200:
+          description: success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  commentId:
-                    type: integer
-        responses:
-          200:
-            description: success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Comment'
-          401:
-            description: user does not have permission to remove comment
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-          404:
-            description: no comment with provided id was found
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-
+                $ref: '#/components/schemas/Comment'
+        403:
+          description: user does not have permission to remove comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: no comment with provided id was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /posts/{postId}/like:
     post:
@@ -407,11 +432,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    
+
   /posts/comments/{commentId}/like:
     post:
       tags:
-        - post
+        - comment
       summary: Toggle Comment Like
       description: Toggle like for a comment. This can only be done by the logged-in user.
       operationId: toggleCommentLike
@@ -447,13 +472,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+
   /logs:
     post:
       tags:
         - log
       summary: Create delivery log
       description: This can only be done by an authorised teacher user.
-      operationId: createLog
+      operationId: createDeliveryLog
       security:
         - bearerAuth: []
       requestBody:
@@ -467,6 +493,8 @@ paths:
                   type: string
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 lines:
                   type: array
                   items:
@@ -483,6 +511,40 @@ paths:
                 $ref: '#/components/schemas/Log'
         401:
           description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logs/{cohortId}:
+    get:
+      tags:
+        - log
+      summary: Get all delivery logs for a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getDeliveryLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The cohorts logs that need to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Log'
+        404:
+          description: Cohort or delivery logs not Found
           content:
             application/json:
               schema:
@@ -511,6 +573,33 @@ paths:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
         400:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/{cohortId}:
+    get:
+      tags:
+        - cohort
+      summary: Get a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cohort'
+        404:
           description: fail
           content:
             application/json:
@@ -697,6 +786,29 @@ components:
                   type: string
                 userId:
                   type: integer
+    EditPost:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            post:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+
+    EditError:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            error:
+              type: string
 
     LikedPost:
       type: object
@@ -707,13 +819,20 @@ components:
           type: object
           properties:
             like:
-                properties:
-                  id:
-                    type: integer
-                  userId:
-                    type: integer
-                  postId:
-                    type: integer
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                postId:
+                  type: integer
+
+                createdAt:
+                  type: string
+                  format: string
+                updatedAt:
+                  type: string
+                  format: string
             liked:
               type: boolean
 
@@ -726,13 +845,13 @@ components:
           type: object
           properties:
             like:
-                properties:
-                  id:
-                    type: integer
-                  userId:
-                    type: integer
-                  commentId:
-                    type: integer
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                commentId:
+                  type: integer
             liked:
               type: boolean
 
@@ -820,6 +939,8 @@ components:
                   type: integer
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 date:
                   type: string
                 author:
