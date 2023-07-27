@@ -99,11 +99,10 @@ model Note {
   user    User   @relation(fields: [userId], references: [id])
 }
 
-model modules {
+model module {
   id         Int         @id @default(autoincrement())
   module     String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  
 }
 
 enum Role {
