@@ -20,17 +20,11 @@ Once you have complete the above guide, continue to the steps below.
 
 [Deployed API Spec](https://team-dev-server-c10.fly.dev/api-docs)
 
-### Updating the API spec
+The API Spec is hosted by the server itself (i.e. this project), and the view/page is generated automatically by the SwaggerUI libraryi.
 
-1. update the `/docs/openapi.yml` file whenever the behaviour of the API changes
-2. rebuild the html file that represents the user-facing view
+To view it locally, you can just go to: [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
 
-```sh
-# install the redoc-cli utility library first
-$ npm install @redocly/cli -g
-
-$ # then, build the html file
-$ npx @redocly/cli build-docs docs/openapi.yml -o ./docs/index.html
-```
-
-3. Stage and commit the change alongside any commits that include work that changes the behaviour of the API
+Whenever you make any change to the API (e.g. adding a new route, changing the payload for an existing route, adding a new error), you must update the API Spec accordingly. To do this, you just need to update the `openapi.yaml` file -- guidance on the basic structure of the `openapi.yaml` file can be found [here](https://swagger.io/docs/specification/about/).
+- **You should always verify these changes locally before committing your work.**
+- If your server is already running when you changed the `openapi.yaml` file, you will need to stop and restart your server.
+- Once verified, stage and commit the changes on the same branch where you changed the behaviour of the API.
