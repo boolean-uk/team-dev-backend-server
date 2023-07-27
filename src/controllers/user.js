@@ -105,15 +105,16 @@ export const getAll = async (req, res) => {
 export const createProfile = async (req, res) => {
   const id = parseInt(req.params.id)
   const { firstName, lastName, bio, githubUrl } = req.body
-  const profile = {
-    create: {}
-  }
   validateUserId(req, res)
   if (!firstName || !lastName) {
     return sendMessageResponse(res, 400, 'First and Last names are required')
   }
-  profile.create.firstName = firstName
-  profile.create.lastName = lastName
+  const profile = {
+    create: {
+      firstName: firstName,
+      lastName: lastName
+    }
+  }
   if (bio) {
     profile.create.bio = bio
   }
