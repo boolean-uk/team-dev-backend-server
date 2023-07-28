@@ -293,7 +293,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    
+
   /posts:
     post:
       tags:
@@ -562,7 +562,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-
   /logs:
     post:
       tags:
@@ -666,7 +665,7 @@ paths:
     get:
       tags:
         - cohort
-      summary: Get all available cohorts and their users 
+      summary: Get all available cohorts and their users
       description: This can only be done by an authorised teacher user.
       operationId: getAllCohorts
       security:
@@ -717,6 +716,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /cohorts/student/add:
+    post:
+      tags:
+        - cohort
+      summary: Add a user to a specific cohort
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: addStudent
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'
 
 components:
   securitySchemes:
@@ -772,16 +794,16 @@ components:
           format: string
 
     AllCohorts:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              users:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          users:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
 
     AllUsers:
       type: object

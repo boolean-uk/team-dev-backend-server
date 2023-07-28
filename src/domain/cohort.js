@@ -30,6 +30,15 @@ export async function getCohort(cohortId) {
   return await dbClient.cohort.findUnique({
     where: {
       id: cohortId
+    },
+    include: {
+      users: {
+        select: {
+          email: true,
+          role: true,
+          profile: true
+        }
+      }
     }
   })
 }
