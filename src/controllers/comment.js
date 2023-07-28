@@ -1,3 +1,4 @@
+// import send from 'send'
 import { sendDataResponse } from '../utils/responses.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
@@ -77,6 +78,82 @@ export const removeComment = async (req, res) => {
       })
       return sendDataResponse(res, 200, deletedComment)
     }
+  } catch (e) {
+    return sendDataResponse(res, 500, { error: e.message })
+  }
+}
+
+export const getComments = async (req, res) => {
+  const { userId, postId, searchString } = req.query
+
+  const searchParams = {}
+
+  if (userId) {
+    searchParams.userId = Number(userId)
+  }
+
+  if (postId) {
+    searchParams.postId = Number(postId)
+  }
+
+  if (searchString) {
+    searchParams.content = {
+      contains: searchString,
+      mode: 'insensitive'
+    }
+  }
+
+  if (Object.keys(searchParams).length === 0) {
+    return sendDataResponse(res, 400, {
+      error: 'A userId, postId or searchString must be provided'
+    })
+  }
+
+  try {
+    const comments = await prisma.comment.findMany({
+      where: searchParams,
+      select: {
+        id: true,
+        updatedAt: true,
+        content: true,
+        user: {
+          select: {
+            id: true,
+            cohortId: true,
+            role: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const formattedComments = comments.map((comment) => {
+      return {
+        id: comment.id,
+        updatedAt: comment.updatedAt,
+        content: comment.content,
+        author: {
+          id: comment.user.id,
+          cohortId: comment.user.cohortId,
+          role: comment.user.role,
+          firstName: comment.user.profile.firstName,
+          lastName: comment.user.profile.lastName
+        }
+      }
+    })
+
+    if (comments.length === 0) {
+      return sendDataResponse(res, 404, {
+        error: 'No comments found for the given search parameters'
+      })
+    }
+
+    return sendDataResponse(res, 200, formattedComments)
   } catch (e) {
     return sendDataResponse(res, 500, { error: e.message })
   }

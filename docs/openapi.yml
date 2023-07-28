@@ -14,6 +14,50 @@ tags:
   - name: log
   - name: note
 paths:
+  /comments/getComments:
+    get:
+      tags:
+        - comment
+      summary: Get comments by userId, postId or searchString
+      description: 'Search for any combination of userId, postId and searchString. Returns any comments matching all provided search parameters.'
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          description: Search for all comments for a given userId if provided
+          schema:
+            type: integer
+        - name: postId
+          in: query
+          description: Search for all comments for a given postId if provided
+          schema:
+            type: integer
+        - name: searchString
+          in: query
+          description: Search for all comments containing the provided searchString (case insensitive)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success - Comments Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllComments'
+        '400':
+          description: Failure - No search parameters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Failure - No comments found for given search parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /notes:
     post:
       tags:
@@ -620,12 +664,34 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
-        400:
+
+    get:
+      tags:
+        - cohort
+      summary: Get all available cohorts and their users 
+      description: This can only be done by an authorised teacher user.
+      operationId: getAllCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AllCohorts'
+        404:
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /cohorts/{cohortId}:
     get:
       tags:
@@ -681,7 +747,7 @@ components:
           type: string
         data:
           properties:
-            post:
+            comment:
               properties:
                 id:
                   type: integer
@@ -706,6 +772,18 @@ components:
         updatedAt:
           type: string
           format: string
+
+    AllCohorts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
 
     AllUsers:
       type: object
@@ -1048,4 +1126,36 @@ components:
                       id:
                         type: integer
                       content:
+                        type: string
+    AllComments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  postId:
+                    type: integer
+                  updatedAt:
+                    type: string
+                  content:
+                    type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      cohortId:
+                        type: integer
+                      role:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
                         type: string
