@@ -1,4 +1,4 @@
-
+import { Router } from 'express'
 import { create, getAll, get, addUser } from '../controllers/cohort.js'
 
 import {
