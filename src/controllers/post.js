@@ -99,7 +99,7 @@ export const deletePost = async (req, res) => {
     return sendDataResponse(res, 404, { post: 'Not Found' })
   }
 
-  if (findPost.comments.length > 0) {
+  if (userId === findPost.user.id && findPost.comments.length > 0) {
     await prisma.comment.deleteMany({
       where: {
         postId: postId
