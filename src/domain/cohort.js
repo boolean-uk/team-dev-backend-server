@@ -25,3 +25,25 @@ export class Cohort {
     }
   }
 }
+
+export async function getCohort(cohortId) {
+  return await dbClient.cohort.findUnique({
+    where: {
+      id: cohortId
+    }
+  })
+}
+
+export async function getAllCohorts() {
+  return await dbClient.cohort.findMany({
+    include: {
+      users: {
+        select: {
+          email: true,
+          role: true,
+          profile: true
+        }
+      }
+    }
+  })
+}

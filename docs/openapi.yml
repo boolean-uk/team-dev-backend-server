@@ -9,10 +9,55 @@ servers:
 tags:
   - name: user
   - name: post
+  - name: comment
   - name: cohort
   - name: log
   - name: note
 paths:
+  /comments/getComments:
+    get:
+      tags:
+        - comment
+      summary: Get comments by userId, postId or searchString
+      description: 'Search for any combination of userId, postId and searchString. Returns any comments matching all provided search parameters.'
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          description: Search for all comments for a given userId if provided
+          schema:
+            type: integer
+        - name: postId
+          in: query
+          description: Search for all comments for a given postId if provided
+          schema:
+            type: integer
+        - name: searchString
+          in: query
+          description: Search for all comments containing the provided searchString (case insensitive)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success - Comments Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllComments'
+        '400':
+          description: Failure - No search parameters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Failure - No comments found for given search parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /notes:
     post:
       tags:
@@ -59,6 +104,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - user
@@ -150,7 +201,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/User'
-
         '400':
           description: fail
           content:
@@ -197,6 +247,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - user
+      summary: Create profile
+      description: Create new profile
+      operationId: createProfile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id that is creating the profile'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The profile info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProfile'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedProfile'
+        '400':
+          description: Required fields not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Users can only create their own profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Only one profile can be created per user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
   /posts:
     post:
       tags:
@@ -255,6 +352,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{postId}:
+    delete:
+      tags:
+        - post
+      summary: Deletes Selected Post
+      description: Deletes Selected Post and Comments associated
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: User Not Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid Permission to delete post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts/{id}:
     put:
       tags:
@@ -281,6 +412,77 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EditError'
+  /posts/{postId}/comments:
+    post:
+      tags:
+        - comment
+      summary: Create comment
+      description: This can only be done by the logged in user.
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: integer
+                userId:
+                  type: integer
+                content:
+                  type: string
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: Non-string comment, no comment, or comment > 240 characters provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - comment
+      summary: Delete a comment by id
+      description: Students can only delete their own comments. Teachers can delete comments by any user.
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Deleted comment object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        403:
+          description: user does not have permission to remove comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: no comment with provided id was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /posts/{postId}/like:
     post:
@@ -321,13 +523,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /posts/comments/{commentId}/like:
+    post:
+      tags:
+        - comment
+      summary: Toggle Comment Like
+      description: Toggle like for a comment. This can only be done by the logged-in user.
+      operationId: toggleCommentLike
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          description: ID of the comment to toggle the like for.
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Success, Like removed from comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedComment'
+
+        '201':
+          description: Success (Created), Like added to comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikedComment'
+
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
   /logs:
     post:
       tags:
         - log
       summary: Create delivery log
       description: This can only be done by an authorised teacher user.
-      operationId: createLog
+      operationId: createDeliveryLog
       security:
         - bearerAuth: []
       requestBody:
@@ -341,6 +583,8 @@ paths:
                   type: string
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 lines:
                   type: array
                   items:
@@ -355,8 +599,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-        '401':
+        401:
           description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logs/{cohortId}:
+    get:
+      tags:
+        - log
+      summary: Get all delivery logs for a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getDeliveryLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The cohorts logs that need to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Log'
+        404:
+          description: Cohort or delivery logs not Found
           content:
             application/json:
               schema:
@@ -384,7 +662,56 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
-        400:
+
+    get:
+      tags:
+        - cohort
+      summary: Get all available cohorts and their users 
+      description: This can only be done by an authorised teacher user.
+      operationId: getAllCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AllCohorts'
+        404:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cohorts/{cohortId}:
+    get:
+      tags:
+        - cohort
+      summary: Get a specific cohort by id
+      description: This can only be done by an authorised teacher user.
+      operationId: getCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cohort'
+        404:
           description: fail
           content:
             application/json:
@@ -411,6 +738,19 @@ components:
                   type: integer
                 content:
                   type: string
+    Comment:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          properties:
+            comment:
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
     CreateNote:
       type: object
       properties:
@@ -430,6 +770,18 @@ components:
         updatedAt:
           type: string
           format: string
+
+    AllCohorts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
 
     AllUsers:
       type: object
@@ -491,6 +843,18 @@ components:
           type: integer
         role:
           type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        bio:
+          type: string
+        githubUrl:
+          type: string
+
+    CreateProfile:
+      type: object
+      properties:
         firstName:
           type: string
         lastName:
@@ -598,12 +962,32 @@ components:
                   type: integer
                 postId:
                   type: integer
+
                 createdAt:
                   type: string
                   format: string
                 updatedAt:
                   type: string
                   format: string
+            liked:
+              type: boolean
+
+    LikedComment:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            like:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                commentId:
+                  type: integer
             liked:
               type: boolean
 
@@ -633,6 +1017,34 @@ components:
                   type: string
                 githubUrl:
                   type: string
+
+    CreatedProfile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            user:
+              properties:
+                id:
+                  type: integer
+                email:
+                  type: string
+                cohortId:
+                  type: integer
+                role:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                bio:
+                  type: string
+                githubUrl:
+                  type: string
+
     login:
       type: object
       properties:
@@ -691,6 +1103,8 @@ components:
                   type: integer
                 cohortId:
                   type: integer
+                title:
+                  type: string
                 date:
                   type: string
                 author:
@@ -710,4 +1124,36 @@ components:
                       id:
                         type: integer
                       content:
+                        type: string
+    AllComments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  postId:
+                    type: integer
+                  updatedAt:
+                    type: string
+                  content:
+                    type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      cohortId:
+                        type: integer
+                      role:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
                         type: string

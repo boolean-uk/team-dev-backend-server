@@ -210,4 +210,35 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async createProfile(id, profile) {
+    const query = {
+      where: {
+        id
+      },
+      data: {
+        profile
+      },
+      include: {
+        profile: true
+      }
+    }
+    const createdProfile = await dbClient.user.update(query)
+    return createdProfile
+  }
+
+  static async updateUserDetails(req) {
+    const entries = Object.entries(req.body)
+    const id = Number(req.params.id)
+    const data = {}
+    entries.forEach(([key, value]) => {
+      data[key] = value
+    })
+    return await dbClient.user.update({
+      where: {
+        id
+      },
+      data
+    })
+  }
 }
