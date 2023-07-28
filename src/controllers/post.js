@@ -70,18 +70,11 @@ export const editPost = async (req, res) => {
     return sendDataResponse(res, 404, { post: 'Not Found' })
   }
 
-  if (userRole !== 'TEACHER') {
-    if (userId === userValidation.user.id) {
-      const edited = editExistingPost(content, postId)
-      return sendDataResponse(res, 201, { post: edited })
-    } else {
-      return sendDataResponse(res, 403, { error: 'Missing Authorization' })
-    }
+  if (userRole !== 'TEACHER' && userId !== userValidation.user.id) {
+    return sendDataResponse(res, 403, { error: 'Missing Authorization' })
   }
-  if (userRole === 'TEACHER') {
-    const edited = editExistingPost(content, postId)
-    return sendDataResponse(res, 201, { post: edited })
-  }
+  const edited = editExistingPost(content, postId)
+  return sendDataResponse(res, 200, { post: edited })
 }
 
 export const deletePost = async (req, res) => {
@@ -95,24 +88,15 @@ export const deletePost = async (req, res) => {
     return sendDataResponse(res, 404, { post: 'Not Found' })
   }
 
-  if (userRole !== 'TEACHER') {
-    if (userId === findPost.user.id && findPost.comments.length > 0) {
-      clearComments(postId)
-    }
-    if (userId === findPost.user.id) {
-      const deletion = deletePost(postId)
-      return sendDataResponse(res, 200, { post: deletion })
-    } else {
-      return sendDataResponse(res, 403, {
-        error: 'You are unauthorized to delete this post'
-      })
-    }
+  if (userRole !== 'TEACHER' && userId !== findPost.user.id) {
+    return sendDataResponse(res, 403, {
+      error: 'You are unauthorized to delete this post'
+    })
   }
-  if (userRole === 'TEACHER') {
-    if (findPost.comments.length > 0) {
-      clearComments(postId)
-    }
-    const deletion = deletePost(postId)
-    return sendDataResponse(res, 200, { post: deletion })
+
+  if (findPost.comments.length > 0) {
+    clearComments(postId)
   }
+  const deletion = deletePost(postId)
+  return sendDataResponse(res, 200, { post: deletion })
 }
