@@ -120,3 +120,27 @@ export const deletePost = async (req, res) => {
     })
   }
 }
+
+export const editPostTeacher = async (req, res) => {
+  const { content } = req.body
+  const postId = Number(req.params.id)
+
+  if (
+    !content ||
+    content.length <= 0 ||
+    content === ' ' ||
+    typeof content !== 'string'
+  ) {
+    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
+  }
+
+  const edited = await prisma.post.update({
+    data: {
+      content: content
+    },
+    where: {
+      id: postId
+    }
+  })
+  return sendDataResponse(res, 201, { post: edited })
+}

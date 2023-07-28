@@ -1,6 +1,15 @@
 import { Router } from 'express'
-import { create, getAll, editPost, deletePost } from '../controllers/post.js'
-import { validateAuthentication } from '../middleware/auth.js'
+import {
+  create,
+  getAll,
+  editPost,
+  deletePost,
+  editPostTeacher
+} from '../controllers/post.js'
+import {
+  validateAuthentication,
+  validateTeacherRole
+} from '../middleware/auth.js'
 import { createComment, removeComment } from '../controllers/comment.js'
 import { togglePostLike, toggleCommentLike } from '../controllers/like.js'
 
@@ -18,5 +27,6 @@ router.post(
 )
 router.put('/:id', validateAuthentication, editPost)
 router.delete('/:id', validateAuthentication, deletePost)
+router.put('/teacher/:id', validateTeacherRole, editPostTeacher)
 
 export default router
