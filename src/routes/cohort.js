@@ -1,5 +1,5 @@
-import { Router } from 'express'
-import { create, get, getAll, addUser } from '../controllers/cohort.js'
+
+import { create, getAll, get, addUser } from '../controllers/cohort.js'
 
 import {
   validateAuthentication,

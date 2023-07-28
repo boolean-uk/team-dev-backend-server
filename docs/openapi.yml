@@ -129,7 +129,9 @@ paths:
           description: Search all users by last name if provided (exact string matches only)
           schema:
             type: string
-
+              - name: cohortId
+          in: query
+          
       responses:
         '200':
           description: successful operation

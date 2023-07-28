@@ -1,4 +1,10 @@
 import { sendDataResponse } from '../utils/responses.js'
+import {
+  clearComments,
+  findPost,
+  findPostWithComments,
+  editExistingPost
+} from '../domain/post.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -47,6 +53,7 @@ export const editPost = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
   const postId = Number(req.params.id)
+  const userRole = req.user.role
 
   if (
     !content ||
@@ -57,66 +64,39 @@ export const editPost = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
-  const userValidation = await prisma.post.findUnique({
-    where: {
-      id: postId
-    },
-    include: {
-      user: true
-    }
-  })
+  const userValidation = findPost(postId)
 
-  if (userId === userValidation.user.id) {
-    const edited = await prisma.post.update({
-      data: {
-        content: content
-      },
-      where: {
-        id: postId
-      }
-    })
-    return sendDataResponse(res, 201, { post: edited })
-  } else {
-    return res.status(403).send('Missing Authorization')
+  if (!userValidation) {
+    return sendDataResponse(res, 404, { post: 'Not Found' })
   }
+
+  if (userRole !== 'TEACHER' && userId !== userValidation.user.id) {
+    return sendDataResponse(res, 403, { error: 'Missing Authorization' })
+  }
+  const edited = editExistingPost(content, postId)
+  return sendDataResponse(res, 200, { post: edited })
 }
 
 export const deletePost = async (req, res) => {
   const userId = req.user.id
   const postId = Number(req.params.id)
+  const userRole = req.user.role
 
-  const findPost = await prisma.post.findUnique({
-    where: {
-      id: postId
-    },
-    include: {
-      user: true,
-      comments: true
-    }
-  })
+  const findPost = findPostWithComments(postId)
 
   if (!findPost) {
     return sendDataResponse(res, 404, { post: 'Not Found' })
   }
 
-  if (userId === findPost.user.id && findPost.comments.length > 0) {
-    await prisma.comment.deleteMany({
-      where: {
-        postId: postId
-      }
-    })
-  }
-
-  if (userId === findPost.user.id) {
-    const deletion = await prisma.post.delete({
-      where: {
-        id: postId
-      }
-    })
-    return sendDataResponse(res, 200, { post: deletion })
-  } else {
+  if (userRole !== 'TEACHER' && userId !== findPost.user.id) {
     return sendDataResponse(res, 403, {
       error: 'You are unauthorized to delete this post'
     })
   }
+
+  if (findPost.comments.length > 0) {
+    clearComments(postId)
+  }
+  const deletion = deletePost(postId)
+  return sendDataResponse(res, 200, { post: deletion })
 }
