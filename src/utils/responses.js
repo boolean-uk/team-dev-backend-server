@@ -5,7 +5,8 @@ const STATUS_MESSAGES = {
   401: 'fail',
   403: 'fail',
   404: 'fail',
-  500: 'error'
+  500: 'error',
+  409: 'fail'
 }
 
 export function sendDataResponse(res, statusCode, payload) {
