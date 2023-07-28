@@ -41,7 +41,7 @@ export const addUser = async (req, res) => {
   try {
     const existingUser = await User.findById(userId)
     if (!existingUser) {
-      return sendMessageResponse(res, 404, 'Student does not exist')
+      return sendMessageResponse(res, 404, 'User does not exist')
     }
     const foundCohort = await getCohort(cohortId)
     if (!foundCohort) {

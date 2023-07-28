@@ -9,12 +9,7 @@ import {
 const router = Router()
 
 router.post('/', validateAuthentication, validateTeacherRole, create)
-router.post(
-  '/student/add',
-  validateAuthentication,
-  validateTeacherRole,
-  addUser
-)
+router.post('/user/add', validateAuthentication, validateTeacherRole, addUser)
 
 router.get('/:id', validateAuthentication, get)
 router.get('/', validateAuthentication, validateTeacherRole, getAll)
