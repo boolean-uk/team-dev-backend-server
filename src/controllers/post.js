@@ -1,4 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
+import { clearComments, findPost, findPostWithComments } from '../domain/post.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -57,14 +58,7 @@ export const editPost = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
-  const userValidation = await prisma.post.findUnique({
-    where: {
-      id: postId
-    },
-    include: {
-      user: true
-    }
-  })
+  const userValidation = findPost(postId)
 
   if (userId === userValidation.user.id) {
     const edited = await prisma.post.update({
@@ -84,40 +78,33 @@ export const editPost = async (req, res) => {
 export const deletePost = async (req, res) => {
   const userId = req.user.id
   const postId = Number(req.params.id)
+  const userRole = req.user.role
 
-  const findPost = await prisma.post.findUnique({
-    where: {
-      id: postId
-    },
-    include: {
-      user: true,
-      comments: true
-    }
-  })
+  const findPost = findPostWithComments(postId)
 
   if (!findPost) {
     return sendDataResponse(res, 404, { post: 'Not Found' })
   }
 
-  if (findPost.comments.length > 0) {
-    await prisma.comment.deleteMany({
-      where: {
-        postId: postId
-      }
-    })
+  if (userRole !== 'TEACHER') {
+    if (userId === findPost.user.id && findPost.comments.length > 0) {
+      clearComments(postId)
+    }
+    if (userId === findPost.user.id) {
+      const deletion = deletePost(postId)
+      return sendDataResponse(res, 200, { post: deletion })
+    } else {
+      return sendDataResponse(res, 403, {
+        error: 'You are unauthorized to delete this post'
+      })
+    }
   }
-
-  if (userId === findPost.user.id) {
-    const deletion = await prisma.post.delete({
-      where: {
-        id: postId
-      }
-    })
+  if (userRole === 'TEACHER') {
+    if (findPost.comments.length > 0) {
+      clearComments(postId)
+    }
+    const deletion = deletePost(postId)
     return sendDataResponse(res, 200, { post: deletion })
-  } else {
-    return sendDataResponse(res, 403, {
-      error: 'You are unauthorized to delete this post'
-    })
   }
 }
 
