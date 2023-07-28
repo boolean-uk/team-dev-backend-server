@@ -1,5 +1,10 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { clearComments, findPost, findPostWithComments } from '../domain/post.js'
+import {
+  clearComments,
+  findPost,
+  findPostWithComments,
+  editExistingPost
+} from '../domain/post.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -48,6 +53,7 @@ export const editPost = async (req, res) => {
   const { content } = req.body
   const userId = req.user.id
   const postId = Number(req.params.id)
+  const userRole = req.user.role
 
   if (
     !content ||
@@ -60,18 +66,21 @@ export const editPost = async (req, res) => {
 
   const userValidation = findPost(postId)
 
-  if (userId === userValidation.user.id) {
-    const edited = await prisma.post.update({
-      data: {
-        content: content
-      },
-      where: {
-        id: postId
-      }
-    })
+  if (!userValidation) {
+    return sendDataResponse(res, 404, { post: 'Not Found' })
+  }
+
+  if (userRole !== 'TEACHER') {
+    if (userId === userValidation.user.id) {
+      const edited = editExistingPost(content, postId)
+      return sendDataResponse(res, 201, { post: edited })
+    } else {
+      return sendDataResponse(res, 403, { error: 'Missing Authorization' })
+    }
+  }
+  if (userRole === 'TEACHER') {
+    const edited = editExistingPost(content, postId)
     return sendDataResponse(res, 201, { post: edited })
-  } else {
-    return res.status(403).send('Missing Authorization')
   }
 }
 
@@ -106,28 +115,4 @@ export const deletePost = async (req, res) => {
     const deletion = deletePost(postId)
     return sendDataResponse(res, 200, { post: deletion })
   }
-}
-
-export const editPostTeacher = async (req, res) => {
-  const { content } = req.body
-  const postId = Number(req.params.id)
-
-  if (
-    !content ||
-    content.length <= 0 ||
-    content === ' ' ||
-    typeof content !== 'string'
-  ) {
-    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
-  }
-
-  const edited = await prisma.post.update({
-    data: {
-      content: content
-    },
-    where: {
-      id: postId
-    }
-  })
-  return sendDataResponse(res, 201, { post: edited })
 }

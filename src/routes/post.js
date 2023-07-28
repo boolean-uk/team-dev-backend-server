@@ -27,6 +27,5 @@ router.post(
 )
 router.put('/:id', validateAuthentication, editPost)
 router.delete('/:id', validateAuthentication, deletePost)
-router.put('/teacher/:id', validateTeacherRole, editPostTeacher)
 
 export default router
