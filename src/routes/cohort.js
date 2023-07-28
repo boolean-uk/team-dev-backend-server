@@ -16,7 +16,7 @@ router.post(
   addUser
 )
 
-router.get('/:id', validateAuthentication, validateTeacherRole, get)
+router.get('/:id', validateAuthentication, get)
 router.get('/', validateAuthentication, validateTeacherRole, getAll)
 
 export default router
