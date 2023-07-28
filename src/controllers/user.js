@@ -75,7 +75,13 @@ export const getById = async (req, res) => {
     if (!foundUser) {
       return sendDataResponse(res, 404, { id: 'User not found' })
     }
-    return sendDataResponse(res, 200, foundUser)
+    if (req.originalUrl.includes('profile')) {
+      const { firstName, lastName, bio, githubUrl } = foundUser
+      const userProfile = { firstName, lastName, bio, githubUrl }
+      return sendDataResponse(res, 200, userProfile)
+    } else {
+      return sendDataResponse(res, 200, foundUser)
+    }
   } catch (e) {
     return sendMessageResponse(res, 500, 'Unable to get user')
   }
