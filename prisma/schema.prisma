@@ -49,6 +49,7 @@ model Cohort {
   id           Int           @id @default(autoincrement())
   deliveryLogs DeliveryLog[]
   users        User[]
+  courses      Course[]
 }
 
 model Post {
@@ -97,6 +98,14 @@ model Note {
   content String
   userId  Int
   user    User   @relation(fields: [userId], references: [id])
+}
+
+model Course {
+  id         Int      @id @default(autoincrement())
+  courseName String
+  cohorts    Cohort[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
 }
 
 enum Role {
