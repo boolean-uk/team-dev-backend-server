@@ -101,23 +101,44 @@ model Note {
 }
 
 
-model Module {
-  id             Int         @id @default(autoincrement())
-  moduleName     String      @unique
-  courses        Course[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt()
-}
 
 model Course {
-  id         Int      @id @default(autoincrement())
-  courseName String
-  modules    Module[]
-  cohorts    Cohort[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt()
-
+  id        Int      @id @default(autoincrement())
+  name      String
+  cohorts   Cohort[]
+  module    Module[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 }
+
+model Module {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  courses   Course[]
+  units     Unit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+model Unit {
+  id        Int        @id @default(autoincrement())
+  name      String
+  moduleId  Int
+  module    Module     @relation(fields: [moduleId], references: [id])
+  exercises Exercise[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt()
+}
+
+model Exercise {
+  id        Int      @id @default(autoincrement())
+  name      String
+  unitId    Int
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
 
 enum Role {
   STUDENT
