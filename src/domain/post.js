@@ -31,7 +31,7 @@ export async function clearComments(postId) {
   })
 }
 
-export async function editPost(content, postId) {
+export async function editExistingPost(content, postId) {
   return await dbClient.post.update({
     data: {
       content: content
