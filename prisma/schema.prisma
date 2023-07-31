@@ -104,9 +104,40 @@ model Course {
   id         Int      @id @default(autoincrement())
   courseName String
   cohorts    Cohort[]
+  module     Module   @relation(fields: [moduleId], references: [id])
+  moduleId   Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt()
 }
+
+model Module {
+  id         Int      @id @default(autoincrement())
+  moduleName String
+  courses    Course[]
+  units      Unit[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
+}
+
+model Unit {
+  id         Int      @id @default(autoincrement())
+  unitName   String
+  moduleId   Int
+  module     Module   @relation(fields: [moduleId], references: [id])
+  excersies  Excersie[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
+}
+
+model Excersie {
+  id           Int      @id @default(autoincrement())
+  excersieName String
+  unitId       Int
+  unit         Unit     @relation(fields: [unitId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt()
+}
+
 
 enum Role {
   STUDENT
