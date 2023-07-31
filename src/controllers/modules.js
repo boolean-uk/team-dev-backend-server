@@ -1,9 +1,10 @@
-import { createModule } from '../domain/modules.js'
+import Module, { createModule } from '../domain/modules.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
   const { moduleName, courseId } = req.body
   const keys = Object.keys(req.body)
+
   const invalidKeys = keys.find((key) => {
     return key !== 'moduleName' && key !== 'courseId'
   })
@@ -34,6 +35,11 @@ export const addModule = async (req, res) => {
   const validationError = validateModuleFunctionInputs(req)
   if (validationError) {
     return sendDataResponse(res, 400, validationError)
+  }
+  const existingModule = await Module.findByModuleName(moduleName)
+
+  if (existingModule) {
+    return sendDataResponse(res, 400, 'Module already exists!')
   }
   try {
     const resModule = await createModule(moduleName, courseId)
