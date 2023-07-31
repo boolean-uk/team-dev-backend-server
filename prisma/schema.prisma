@@ -100,18 +100,20 @@ model Note {
   user    User   @relation(fields: [userId], references: [id])
 }
 
+
+
 model Course {
-  id        Int      @id @default(autoincrement())
-  name      String
-  cohorts   Cohort[]
-  module    Module[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  modules    Module[]
+  cohorts    Cohort[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
 }
 
 model Module {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   courses   Course[]
   units     Unit[]
   createdAt DateTime @default(now())

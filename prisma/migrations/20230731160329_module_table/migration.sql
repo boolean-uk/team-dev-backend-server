@@ -2,12 +2,17 @@
   Warnings:
 
   - You are about to drop the column `courseName` on the `Course` table. All the data in the column will be lost.
+  - You are about to drop the `module` table. If the table is not empty, all the data it contains will be lost.
+  - A unique constraint covering the columns `[name]` on the table `Course` will be added. If there are existing duplicate values, this will fail.
   - Added the required column `name` to the `Course` table without a default value. This is not possible if the table is not empty.
 
 */
 -- AlterTable
 ALTER TABLE "Course" DROP COLUMN "courseName",
 ADD COLUMN     "name" TEXT NOT NULL;
+
+-- DropTable
+DROP TABLE "module";
 
 -- CreateTable
 CREATE TABLE "Module" (
@@ -48,10 +53,16 @@ CREATE TABLE "_CourseToModule" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Module_name_key" ON "Module"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_CourseToModule_AB_unique" ON "_CourseToModule"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_CourseToModule_B_index" ON "_CourseToModule"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Course_name_key" ON "Course"("name");
 
 -- AddForeignKey
 ALTER TABLE "Unit" ADD CONSTRAINT "Unit_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
