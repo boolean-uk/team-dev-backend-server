@@ -39,7 +39,7 @@ export const addModule = async (req, res) => {
   const existingModule = await Module.findByModuleName(name)
 
   if (existingModule) {
-    return sendDataResponse(res, 400, 'Module already exists!')
+    return sendDataResponse(res, 409, 'Module already exists!')
   }
   try {
     const resModule = await createModule(name, courseId)
