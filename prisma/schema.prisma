@@ -104,8 +104,7 @@ model Course {
   id         Int      @id @default(autoincrement())
   courseName String
   cohorts    Cohort[]
-  module     Module   @relation(fields: [moduleId], references: [id])
-  moduleId   Int
+  module     Module[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt()
 }
