@@ -19,10 +19,21 @@ export default class Module {
   }
 }
 
-export async function createModule(module) {
+export async function createModule(moduleName, courseId) {
   return await dbClient.module.create({
     data: {
-      module
+      moduleName,
+      courses: {
+        connectOrCreate: {
+          create: {
+            id: courseId,
+            courseName: 'Software Development'
+          },
+          where: {
+            id: courseId
+          }
+        }
+      }
     }
   })
 }

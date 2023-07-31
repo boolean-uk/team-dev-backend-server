@@ -3,7 +3,7 @@ import {
   clearComments,
   findPost,
   findPostWithComments,
-  editExistingPost
+  editPost as editPostDomain // change this import
 } from '../domain/post.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
@@ -73,7 +73,7 @@ export const editPost = async (req, res) => {
   if (userRole !== 'TEACHER' && userId !== userValidation.user.id) {
     return sendDataResponse(res, 403, { error: 'Missing Authorization' })
   }
-  const edited = editExistingPost(content, postId)
+  const edited = editPostDomain(content, postId) // Change this before commiting
   return sendDataResponse(res, 200, { post: edited })
 }
 
