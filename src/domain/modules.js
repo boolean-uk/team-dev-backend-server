@@ -6,15 +6,15 @@ export default class Module {
    * @param {{id: int, module: String}}
    * @returns {Module}
    */
-  constructor(id, module) {
+  constructor(id, moduleName) {
     this.id = id
-    this.module = module
+    this.moduleName = moduleName
   }
 
   toJSON() {
     return {
       id: this.id,
-      content: this.content
+      moduleName: this.moduleName
     }
   }
 }
