@@ -3,10 +3,10 @@ import {
   clearComments,
   findPost,
   findPostWithComments,
-  editExistingPost
+  editExistingPost,
+  createPost,
+  deleteExistingPost
 } from '../domain/post.js'
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -16,16 +16,7 @@ export const create = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
-  const createdPost = await prisma.post.create({
-    data: {
-      content: content,
-      userId: userId
-    },
-    select: {
-      id: true,
-      content: true
-    }
-  })
+  const createdPost = await createPost(content, userId)
 
   return sendDataResponse(res, 201, {
     post: createdPost
@@ -64,7 +55,7 @@ export const editPost = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide valid content' })
   }
 
-  const userValidation = findPost(postId)
+  const userValidation = await findPost(postId)
 
   if (!userValidation) {
     return sendDataResponse(res, 404, { post: 'Not Found' })
@@ -73,16 +64,16 @@ export const editPost = async (req, res) => {
   if (userRole !== 'TEACHER' && userId !== userValidation.user.id) {
     return sendDataResponse(res, 403, { error: 'Missing Authorization' })
   }
-  const edited = editExistingPost(content, postId)
+  const edited = await editExistingPost(content, postId)
   return sendDataResponse(res, 200, { post: edited })
 }
 
 export const deletePost = async (req, res) => {
-  const userId = req.user.id
   const postId = Number(req.params.id)
   const userRole = req.user.role
+  const userId = req.user.id
 
-  const findPost = findPostWithComments(postId)
+  const findPost = await findPostWithComments(postId)
 
   if (!findPost) {
     return sendDataResponse(res, 404, { post: 'Not Found' })
@@ -94,9 +85,9 @@ export const deletePost = async (req, res) => {
     })
   }
 
-  if (findPost.comments.length > 0) {
-    clearComments(postId)
+  if (findPost?.comments.length > 0) {
+    await clearComments(postId)
   }
-  const deletion = deletePost(postId)
+  const deletion = await deleteExistingPost(postId)
   return sendDataResponse(res, 200, { post: deletion })
 }
