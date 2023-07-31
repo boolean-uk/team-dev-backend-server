@@ -129,7 +129,7 @@ paths:
           description: Search all users by last name if provided (exact string matches only)
           schema:
             type: string
-              - name: cohortId
+        - name: cohortId
           in: query
           
       responses:
