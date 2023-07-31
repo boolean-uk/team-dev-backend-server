@@ -123,7 +123,7 @@ model Unit {
   name   String
   moduleId   Int
   module     Module   @relation(fields: [moduleId], references: [id])
-  exercises  Exercises[]
+  exercises  Exercise[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt()
 }
