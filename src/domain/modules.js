@@ -6,7 +6,7 @@ export default class Module {
    * @param {{id: int, module: String}}
    * @returns {Module}
    */
-  constructor(id, name, courseId, moduleId) {
+  constructor(id, name, courseId) {
     this.id = id
     this.name = name
     this.courseId = courseId
@@ -65,6 +65,20 @@ export async function createModule(name, courseId) {
             id: courseId
           }
         }
+      }
+    }
+  })
+}
+
+export async function editModule(moduleId, name, courseId) {
+  return await dbClient.module.findUnique({
+    where: {
+      id: moduleId
+    },
+    data: {
+      name,
+      courses: {
+        connect: { id: courseId }
       }
     }
   })
