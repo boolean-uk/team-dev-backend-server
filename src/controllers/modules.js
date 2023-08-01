@@ -49,7 +49,6 @@ export const addModule = async (req, res) => {
     const resModule = await createModule(name, courseId)
     return sendDataResponse(res, 201, { module: resModule })
   } catch (err) {
-    console.log(err)
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
