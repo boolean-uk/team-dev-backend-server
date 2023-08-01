@@ -25,10 +25,10 @@ export default class Module {
     return null
   }
 
-  static async _findByUnique(name) {
+  static async _findByUnique(key, value) {
     const foundModule = await dbClient.module.findUnique({
       where: {
-        name
+        [key]: value
       }
     })
 
@@ -40,7 +40,7 @@ export default class Module {
   }
 
   static async findByModuleName(name) {
-    return await Module._findByUnique(name)
+    return await Module._findByUnique('name', name)
   }
 
   toJSON() {
