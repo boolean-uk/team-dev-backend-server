@@ -121,7 +121,7 @@ model Module {
 
 model Unit {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   moduleId  Int
   module    Module     @relation(fields: [moduleId], references: [id])
   exercises Exercise[]

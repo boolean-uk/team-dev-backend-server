@@ -12,6 +12,19 @@ export default class Module {
     this.courseId = courseId
   }
 
+  static async _findModule(moduleId) {
+    const foundModule = await dbClient.module.findUnique({
+      where: {
+        id: moduleId
+      }
+    })
+
+    if (foundModule) {
+      return foundModule
+    }
+    return null
+  }
+
   static async _findByUnique(name) {
     const foundModule = await dbClient.module.findUnique({
       where: {
