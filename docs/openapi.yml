@@ -115,7 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/ModuleError'
+                $ref: '#components/schemas/Error'
         '500':
           description: fail
           content:
@@ -1178,15 +1178,6 @@ components:
           properties:
             error:
               type: string
-
-    ModuleError:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: string
-
     Log:
       type: object
       properties:
