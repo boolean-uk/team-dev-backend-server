@@ -62,6 +62,7 @@ export const getAll = async (req, res) => {
 
     return sendDataResponse(res, 200, modules)
   } catch (error) {
+    console.error(error)
     return sendDataResponse(res, 500, 'Unable to get modules')
   }
 }
