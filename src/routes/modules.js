@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { addModule, getAll } from '../controllers/modules.js'
+import { addModule, getAll, editModules } from '../controllers/modules.js'
 import {
   validateAuthentication,
   validateTeacherRole
@@ -8,4 +8,5 @@ import {
 const router = Router()
 router.post('/', validateAuthentication, validateTeacherRole, addModule)
 router.get('/:id', validateAuthentication, getAll)
+router.put('/:id', validateAuthentication, validateTeacherRole, editModules)
 export default router
