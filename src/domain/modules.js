@@ -70,8 +70,8 @@ export async function createModule(name, courseId) {
   })
 }
 
-export async function editModule(moduleId, name, courseId) {
-  return await dbClient.module.findUnique({
+export async function updateModuleDetails(moduleId, name, courseId) {
+  return await dbClient.module.update({
     where: {
       id: moduleId
     },

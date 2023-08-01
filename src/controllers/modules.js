@@ -1,4 +1,8 @@
-import Module, { createModule, getModulesById } from '../domain/modules.js'
+import Module, {
+  createModule,
+  getModulesById,
+  updateModuleDetails
+} from '../domain/modules.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
@@ -44,6 +48,30 @@ export const addModule = async (req, res) => {
   try {
     const resModule = await createModule(name, courseId)
     return sendDataResponse(res, 201, { module: resModule })
+  } catch (err) {
+    return sendDataResponse(res, 500, {
+      Error: 'Unexpected Error!'
+    })
+  }
+}
+
+export const editModules = async (req, res) => {
+  const { name, courseId } = req.body
+  const moduleId = Number(req.params.body)
+  const validationError = validateModuleFunctionInputs(req)
+  if (validationError) {
+    return sendDataResponse(res, 400, validationError)
+  }
+
+  const existingModule = await Module.findByModuleName(name)
+
+  if (existingModule) {
+    return sendDataResponse(res, 409, { Error: 'Module already exists!' })
+  }
+
+  try {
+    const resModule = await updateModuleDetails(moduleId, name, courseId)
+    return sendDataResponse(res, 200, { module: resModule })
   } catch (err) {
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
