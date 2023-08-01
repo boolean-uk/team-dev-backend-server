@@ -37,7 +37,6 @@ app.use('/comments', commentRouter)
 app.use('/units', unitRouter)
 app.use('/exercises', exercisesRouter)
 
-
 app.get('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
