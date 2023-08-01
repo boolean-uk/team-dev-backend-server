@@ -64,12 +64,6 @@ export const editModules = async (req, res) => {
     return sendDataResponse(res, 400, validationError)
   }
 
-  const existingModule = await Module.findByModuleName(name)
-
-  if (existingModule) {
-    return sendDataResponse(res, 409, { Error: 'Module already exists!' })
-  }
-
   try {
     const resModule = await updateModuleDetails(moduleId, name, courseId)
     return sendDataResponse(res, 200, { module: resModule })
@@ -77,7 +71,7 @@ export const editModules = async (req, res) => {
     if (err.code === 'P2025') {
       return sendDataResponse(res, 409, {
         Error:
-          'The course to which the module is being mdofiied does not exist.'
+          'The course to which the module is being modified does not exist.'
       })
     }
     return sendDataResponse(res, 500, {

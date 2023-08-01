@@ -51,6 +51,7 @@ export default class Module {
   }
 }
 
+// THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
   return await dbClient.module.create({
     data: {
@@ -69,6 +70,7 @@ export async function createModule(name, courseId) {
     }
   })
 }
+// ------------------------------------
 
 export async function updateModuleDetails(moduleId, name, courseId) {
   return await dbClient.module.update({
