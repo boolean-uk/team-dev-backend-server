@@ -87,7 +87,7 @@ paths:
   /modules:
     post:
       tags:
-        -module
+        - module
       summary: Create / add module
       description: Create and add a module to a course.
       operationId: createAddModule
