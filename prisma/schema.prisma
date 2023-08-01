@@ -104,7 +104,7 @@ model Note {
 model Course {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  modules   CourseToModule[]
+  modules   Module[]
   cohorts   Cohort[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -113,19 +113,10 @@ model Course {
 model Module {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  courses   CourseToModule[]
+  courses   Course[]
   units     Unit[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-}
-
-model CourseToModule {
-  courseId     Int
-  course       Course    @relation(fields: [courseId], references: [id])
-  moduleId     Int
-  module       Module    @relation(fields: [moduleId], references: [id])
-
-  @@id([courseId, moduleId])
 }
 
 model Unit {

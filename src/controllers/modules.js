@@ -49,6 +49,7 @@ export const addModule = async (req, res) => {
     const resModule = await createModule(name, courseId)
     return sendDataResponse(res, 201, { module: resModule })
   } catch (err) {
+    console.log(err)
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
@@ -58,7 +59,6 @@ export const addModule = async (req, res) => {
 export const editModules = async (req, res) => {
   const { name, courseId } = req.body
   const moduleId = Number(req.params.id)
-  console.log('This is the moduleId', moduleId)
   const validationError = validateModuleFunctionInputs(req)
   if (validationError) {
     return sendDataResponse(res, 400, validationError)
@@ -77,7 +77,7 @@ export const editModules = async (req, res) => {
     if (err.code === 'P2025') {
       return sendDataResponse(res, 409, {
         Error:
-          'The course for which the module is being changed does not exist.'
+          'The course to which the module is being mdofiied does not exist.'
       })
     }
     return sendDataResponse(res, 500, {
