@@ -53,7 +53,8 @@ export const addModule = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const modules = await getModulesById()
+    const moduleId = parseInt(req.params.id, 10)
+    const modules = await getModulesById(moduleId)
 
     if (!modules) {
       return sendDataResponse(res, 404, 'Modules not found')
@@ -61,6 +62,6 @@ export const getAll = async (req, res) => {
 
     return sendDataResponse(res, 200, modules)
   } catch (error) {
-    return sendDataResponse(res, 500, 'Unable to get delivery logs')
+    return sendDataResponse(res, 500, 'Unable to get modules')
   }
 }

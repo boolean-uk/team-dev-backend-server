@@ -6,7 +6,7 @@ export default class Module {
    * @param {{id: int, module: String}}
    * @returns {Module}
    */
-  constructor(id, name, courseId) {
+  constructor(id, name, courseId, moduleId) {
     this.id = id
     this.name = name
     this.courseId = courseId
