@@ -84,45 +84,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /modules:
-    post:
-      tags:
-        - module
-      summary: Create / add module
-      description: Create and add a module to a course.
-      operationId: createAddModule
-      requestBody:
-        description: The name of the module and the course Id. The course Id corresponds to the desired course that the module is to be added to.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateModule'
-      responses:
-        '201':
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreatedModule'
-        '400':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#components/schemas/Error'
-        '409':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#components/schemas/ModuleError'
-        '500':
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#components/schemas/Error'
-          
   /users:
     post:
       tags:
