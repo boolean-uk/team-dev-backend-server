@@ -3,10 +3,10 @@ import {
   validateAuthentication,
   validateTeacherRole
 } from '../middleware/auth.js'
-import { createUnit } from '../controllers/note.js'
+import { addUnit } from '../controllers/units.js'
 
 const router = Router()
 
-router.post('/', validateAuthentication, validateTeacherRole, createUnit)
+router.post('/', validateAuthentication, validateTeacherRole, addUnit)
 
 export default router
