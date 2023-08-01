@@ -56,3 +56,19 @@ export async function createModule(name, courseId) {
     }
   })
 }
+
+export async function getModulesById(moduleId) {
+  return await dbClient.module.findUnique({
+    where: {
+      id: moduleId
+    },
+    include: {
+      units: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  })
+}

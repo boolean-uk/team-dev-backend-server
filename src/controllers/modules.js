@@ -1,4 +1,4 @@
-import Module, { createModule } from '../domain/modules.js'
+import Module, { createModule, getModulesById } from '../domain/modules.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
@@ -48,5 +48,19 @@ export const addModule = async (req, res) => {
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
+  }
+}
+
+export const getAll = async (req, res) => {
+  try {
+    const modules = await getModulesById()
+
+    if (!modules) {
+      return sendDataResponse(res, 404, 'Modules not found')
+    }
+
+    return sendDataResponse(res, 200, modules)
+  } catch (error) {
+    return sendDataResponse(res, 500, 'Unable to get delivery logs')
   }
 }
