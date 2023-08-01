@@ -49,6 +49,7 @@ export const addUnit = async (req, res) => {
     const newUnit = await createUnit(name, moduleId)
     return sendDataResponse(res, 201, { unit: newUnit })
   } catch (err) {
+    console.error(err)
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
