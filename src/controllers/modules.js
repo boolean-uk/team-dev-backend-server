@@ -1,4 +1,4 @@
-import Module, { createModule } from '../domain/modules.js'
+import Module, { createModule, getModulesById } from '../domain/modules.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
@@ -39,7 +39,7 @@ export const addModule = async (req, res) => {
   const existingModule = await Module.findByModuleName(name)
 
   if (existingModule) {
-    return sendDataResponse(res, 409, 'Module already exists!')
+    return sendDataResponse(res, 409, { Error: 'Module already exists!' })
   }
   try {
     const resModule = await createModule(name, courseId)
@@ -48,5 +48,21 @@ export const addModule = async (req, res) => {
     return sendDataResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
+  }
+}
+
+export const getAll = async (req, res) => {
+  try {
+    const moduleId = parseInt(req.params.id, 10)
+    const modules = await getModulesById(moduleId)
+
+    if (!modules) {
+      return sendDataResponse(res, 404, 'Modules not found')
+    }
+
+    return sendDataResponse(res, 200, modules)
+  } catch (error) {
+    console.error(error)
+    return sendDataResponse(res, 500, 'Unable to get modules')
   }
 }

@@ -6,10 +6,23 @@ export default class Module {
    * @param {{id: int, module: String}}
    * @returns {Module}
    */
-  constructor(id, name, courseId) {
+  constructor(id, name, courseId, moduleId) {
     this.id = id
     this.name = name
     this.courseId = courseId
+  }
+
+  static async _findModule(moduleId) {
+    const foundModule = await dbClient.module.findUnique({
+      where: {
+        id: moduleId
+      }
+    })
+
+    if (foundModule) {
+      return foundModule
+    }
+    return null
   }
 
   static async _findByUnique(name) {
@@ -51,6 +64,22 @@ export async function createModule(name, courseId) {
           where: {
             id: courseId
           }
+        }
+      }
+    }
+  })
+}
+
+export async function getModulesById(moduleId) {
+  return await dbClient.module.findUnique({
+    where: {
+      id: moduleId
+    },
+    include: {
+      units: {
+        select: {
+          id: true,
+          name: true
         }
       }
     }
