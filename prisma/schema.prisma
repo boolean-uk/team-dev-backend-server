@@ -145,7 +145,7 @@ model Video {
   unitId      Int
   unit        Unit     @relation(fields: [unitId], references: [id])
   name        String
-  URL         String
+  url         String
   videoLength Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt()
