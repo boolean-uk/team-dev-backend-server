@@ -88,13 +88,13 @@ export const updateModule = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     const moduleId = parseInt(req.params.id, 10)
-    const modules = await getModuleById(moduleId)
+    const module = await getModuleById(moduleId)
 
-    if (!modules) {
+    if (!module) {
       return sendDataResponse(res, 404, 'Modules not found')
     }
 
-    return sendDataResponse(res, 200, modules)
+    return sendDataResponse(res, 200, module)
   } catch (error) {
     console.error(error)
     return sendDataResponse(res, 500, 'Unable to get modules')
