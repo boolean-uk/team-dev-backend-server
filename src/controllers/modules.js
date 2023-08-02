@@ -1,6 +1,6 @@
 import Module, {
   createModule,
-  getModulesById,
+  getModuleById,
   updateModuleDetails
 } from '../domain/modules.js'
 import { sendDataResponse } from '../utils/responses.js'
@@ -55,7 +55,7 @@ export const addModule = async (req, res) => {
   }
 }
 
-export const editModules = async (req, res) => {
+export const updateModule = async (req, res) => {
   const { name, courseId } = req.body
   const moduleId = Number(req.params.id)
   const validationError = validateModuleFunctionInputs(req)
@@ -68,7 +68,7 @@ export const editModules = async (req, res) => {
     return sendDataResponse(res, 200, { module: resModule })
   } catch (err) {
     if (err.code === 'P2025') {
-      return sendDataResponse(res, 409, {
+      return sendDataResponse(res, 404, {
         Error:
           'The course to which the module is being modified does not exist.'
       })
@@ -82,7 +82,7 @@ export const editModules = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     const moduleId = parseInt(req.params.id, 10)
-    const modules = await getModulesById(moduleId)
+    const modules = await getModuleById(moduleId)
 
     if (!modules) {
       return sendDataResponse(res, 404, 'Modules not found')

@@ -12,19 +12,6 @@ export default class Module {
     this.courseId = courseId
   }
 
-  static async _findModule(moduleId) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        id: moduleId
-      }
-    })
-
-    if (foundModule) {
-      return foundModule
-    }
-    return null
-  }
-
   static async _findByUnique(key, value) {
     const foundModule = await dbClient.module.findUnique({
       where: {
@@ -41,6 +28,19 @@ export default class Module {
 
   static async findByModuleName(name) {
     return await Module._findByUnique('name', name)
+  }
+
+  static async _findModule(key, value) {
+    const foundModule = await dbClient.module.findUnique({
+      where: {
+        [key]: value
+      }
+    })
+
+    if (foundModule) {
+      return foundModule
+    }
+    return null
   }
 
   toJSON() {
@@ -86,7 +86,7 @@ export async function updateModuleDetails(moduleId, name, courseId) {
   })
 }
 
-export async function getModulesById(moduleId) {
+export async function getModuleById(moduleId) {
   return await dbClient.module.findUnique({
     where: {
       id: moduleId
