@@ -22,3 +22,7 @@ sgMail
   .catch((error) => {
     console.error(error)
   })
+
+export const generateEmail = (typeOfNotification) => {
+  sgMail()
+}
