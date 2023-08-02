@@ -1,12 +1,12 @@
 import sgMail from '@sendgrid/mail'
-import SENDER_EMAIL from '../utils/config'
+import SENDER_EMAIL from '../utils/senderEmail.js'
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 let newEmail = {
   to: '',
   from: `${SENDER_EMAIL}`,
   subject: '',
-  text: 'Cohort 10 Team Dev Sim Server message',
+  text: '',
   html: ''
 }
 
@@ -29,9 +29,12 @@ export const generateEmail = async (content) => {
   if (!content.subject) {
     return console.log('please provide subject of the notification')
   }
-  if (!content.html) {
+  if (!content.text) {
     return console.log('please provide the message content of the notification')
   }
+
+  newEmail.html = convertToHTML(content.text)
+
   if (content.subject === 'cohortChange') {
     cohortChangeMessage(messageContent)
   }
@@ -48,8 +51,7 @@ const cohortChangeMessage = async (content) => {
     ...newEmail,
     to: content.to,
     subject: 'There has been a change to your cohort!',
-    text: content.text,
-    html: content.html
+    text: content.text
   }
 }
 
@@ -59,6 +61,11 @@ const newPostMessage = async (content) => {
     ...newEmail,
     to: content.to,
     subject: 'There is a new post!',
-    html: content.html
+    text: content.text
   }
+}
+
+const convertToHTML = (text) => {
+  const html = `<div>${text}</div>`
+  return html
 }
