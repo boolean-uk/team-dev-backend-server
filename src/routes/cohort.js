@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { create, getAll, get, addUser } from '../controllers/cohort.js'
+import { getVideos } from '../controllers/videos.js'
 
 import {
   validateAuthentication,
@@ -14,6 +15,6 @@ router.post('/user/add', validateAuthentication, validateTeacherRole, addUser)
 router.get('/:id', validateAuthentication, get)
 router.get('/', validateAuthentication, validateTeacherRole, getAll)
 
-// router.get('/:id/videos', validateAuthentication, getVideos)
+router.get('/:id/videos', validateAuthentication, getVideos)
 
 export default router
