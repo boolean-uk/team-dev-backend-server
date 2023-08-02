@@ -14,7 +14,7 @@ const sendEmail = () => {
   sgMail
     .send(newEmail)
     .then(() => {
-      console.log(`Email sent to ${newEmail.to}`)
+      console.info(`Email sent to ${newEmail.to}`)
     })
     .catch((error) => {
       console.error(error)
@@ -24,13 +24,13 @@ const sendEmail = () => {
 export const generateEmail = async (content) => {
   const messageContent = content
   if (!content.to) {
-    return console.log('please provide recipient of the notification')
+    throw new Error('please provide recipient of the notification')
   }
   if (!content.subject) {
-    return console.log('please provide subject of the notification')
+    throw new Error('please provide subject of the notification')
   }
   if (!content.text) {
-    return console.log('please provide the message content of the notification')
+    throw new Error('please provide message content of the notification')
   }
 
   newEmail.html = convertToHTML(content.text)
@@ -42,11 +42,10 @@ export const generateEmail = async (content) => {
     newPostMessage(messageContent)
   }
   sendEmail()
-  return console.log(`email sent: `, newEmail)
+  return console.info(`email sent: `, newEmail)
 }
 
 const cohortChangeMessage = async (content) => {
-  console.log('cohort changing')
   newEmail = {
     ...newEmail,
     to: content.to,
@@ -56,7 +55,6 @@ const cohortChangeMessage = async (content) => {
 }
 
 const newPostMessage = async (content) => {
-  console.log('new post')
   newEmail = {
     ...newEmail,
     to: content.to,
