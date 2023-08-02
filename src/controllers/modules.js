@@ -1,5 +1,10 @@
-import Module, { createModule, getModulesById } from '../domain/modules.js'
-import { sendDataResponse } from '../utils/responses.js'
+import {
+  createModule,
+  getModuleById,
+  updateModuleDetails,
+  findByModuleName
+} from '../domain/modules.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
   const { name, courseId } = req.body
@@ -36,7 +41,7 @@ export const addModule = async (req, res) => {
   if (validationError) {
     return sendDataResponse(res, 400, validationError)
   }
-  const existingModule = await Module.findByModuleName(name)
+  const existingModule = await findByModuleName(name)
 
   if (existingModule) {
     return sendDataResponse(res, 409, { Error: 'Module already exists!' })
@@ -51,16 +56,45 @@ export const addModule = async (req, res) => {
   }
 }
 
+export const updateModule = async (req, res) => {
+  const { name, courseId } = req.body
+  const moduleId = Number(req.params.id)
+  const validationError = validateModuleFunctionInputs(req)
+  if (validationError) {
+    return sendDataResponse(res, 400, validationError)
+  }
+
+  try {
+    const resModule = await updateModuleDetails(moduleId, name, courseId)
+    return sendDataResponse(res, 200, { module: resModule })
+  } catch (err) {
+    if (err.code === 'P2025') {
+      return sendMessageResponse(
+        res,
+        409,
+        'The course to which the module is being modified does not exist.'
+      )
+    }
+    if (err.code === 'P2016') {
+      return sendMessageResponse(
+        res,
+        404,
+        'The module being modified does not exist.'
+      )
+    }
+  }
+}
+
 export const getAll = async (req, res) => {
   try {
     const moduleId = parseInt(req.params.id, 10)
-    const modules = await getModulesById(moduleId)
+    const module = await getModuleById(moduleId)
 
-    if (!modules) {
+    if (!module) {
       return sendDataResponse(res, 404, 'Modules not found')
     }
 
-    return sendDataResponse(res, 200, modules)
+    return sendDataResponse(res, 200, module)
   } catch (error) {
     console.error(error)
     return sendDataResponse(res, 500, 'Unable to get modules')
