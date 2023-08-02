@@ -1,6 +1,5 @@
 import { getUnitById } from '../domain/unit.js'
 import { sendDataResponse } from '../utils/responses.js'
-import { validateAuthentication } from '../middleware/auth.js'
 
 export const getAll = async (req, res) => {
   try {
@@ -10,12 +9,6 @@ export const getAll = async (req, res) => {
     if (!units) {
       return sendDataResponse(res, 404, 'Units not found')
     }
-    if (validateAuthentication) {
-      return sendDataResponse(res, 401, {
-        authorization: 'Missing Authorization header'
-      })
-    }
-
     return sendDataResponse(res, 200, units)
   } catch (error) {
     console.error(error)
