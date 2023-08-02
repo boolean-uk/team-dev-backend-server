@@ -61,11 +61,3 @@ const newPostMessage = async (content) => {
     html: content.html
   }
 }
-
-const testMessage = {
-  to: 'dev.iangrantham@gmail.com',
-  subject: 'newMessage',
-  html: '<strong>testing again</strong>'
-}
-
-generateEmail(testMessage)
