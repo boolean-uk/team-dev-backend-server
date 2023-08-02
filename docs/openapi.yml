@@ -5,7 +5,7 @@ info:
   version: 0.2.2
 
 servers:
-  - url: https://team-dev-server-c10.fly.dev/
+  - url: https://team-dev-server-c10.fly.dev/api-docs/#/
 tags:
   - name: user
   - name: post
@@ -174,7 +174,7 @@ paths:
         - module
       summary: Edit module
       description: Edit an existing module
-      operationId: editUser
+      operationId: editModule
       requestBody:
         description: The information that is needed to make changes to the module
         content:
@@ -268,6 +268,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
           description: fail
           content:
             application/json:
