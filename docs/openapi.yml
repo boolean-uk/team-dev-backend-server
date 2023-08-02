@@ -13,6 +13,7 @@ tags:
   - name: cohort
   - name: log
   - name: note
+  - name: module
 paths:
   /comments/getComments:
     get:
@@ -122,6 +123,23 @@ paths:
             application/json:
               schema:
                 $ref: '#components/schemas/Error'
+  /modules/{id}:
+    put:
+      tags:
+        - module
+      summary: Edit module
+      description: Edit an existing module
+      operationId: editUser
+      requestBody:
+        description: The information that is needed to make changes to the module
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/EditModule'
+      responses:
+        '200'
+# BOOKMARK
+        
   /users:
     post:
       tags:
@@ -828,7 +846,14 @@ components:
           type: string
         courseId:
           type: integer
-        
+
+    EditModule:
+      type: object
+      properties:
+        name:
+          type: string
+        courseId:
+          type: integer
 
     Cohort:
       type: object
