@@ -5,18 +5,20 @@ let newEmail = {
   to: '',
   from: 'cohort10.boolean@gmail.com',
   subject: '',
-  text: '',
+  text: 'Cohort 10 Team Dev Sim Server message',
   html: ''
 }
 
-sgMail
-  .send()
-  .then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+const sendEmail = () => {
+  sgMail
+    .send(newEmail)
+    .then(() => {
+      console.log(`Email sent to ${newEmail.to}`)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
 
 export const generateEmail = async (content) => {
   const messageContent = content
@@ -26,20 +28,20 @@ export const generateEmail = async (content) => {
   if (!content.subject) {
     return console.log('please provide subject of the notification')
   }
-  if (!content.text) {
-    return console.log('please provide the messageontent of the notification')
+  if (!content.html) {
+    return console.log('please provide the message content of the notification')
   }
-  if (content.subject === 'Cohort Change') {
+  if (content.subject === 'cohortChange') {
     cohortChangeMessage(messageContent)
   }
-  if (content.subject === 'New Message') {
+  if (content.subject === 'newMessage') {
     newPostMessage(messageContent)
   }
-  sgMail(newEmail)
-  return console.log(`email sent to ${newEmail.to}: `, newEmail)
+  sendEmail()
+  return console.log(`email sent: `, newEmail)
 }
 
-const cohortChangeMessage = (content) => {
+const cohortChangeMessage = async (content) => {
   console.log('cohort changing')
   newEmail = {
     ...newEmail,
@@ -50,13 +52,20 @@ const cohortChangeMessage = (content) => {
   }
 }
 
-const newPostMessage = (content) => {
+const newPostMessage = async (content) => {
   console.log('new post')
   newEmail = {
     ...newEmail,
     to: content.to,
     subject: 'There is a new post!',
-    text: content.text,
     html: content.html
   }
 }
+
+const testMessage = {
+  to: 'dev.iangrantham@gmail.com',
+  subject: 'newMessage',
+  html: '<strong>testing again</strong>'
+}
+
+generateEmail(testMessage)
