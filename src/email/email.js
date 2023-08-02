@@ -1,9 +1,10 @@
 import sgMail from '@sendgrid/mail'
+import SENDER_EMAIL from '../utils/config'
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 let newEmail = {
   to: '',
-  from: 'cohort10.boolean@gmail.com',
+  from: `${SENDER_EMAIL}`,
   subject: '',
   text: 'Cohort 10 Team Dev Sim Server message',
   html: ''
