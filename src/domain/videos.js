@@ -1,8 +1,7 @@
-import dbClient from '../utils/dbClient.js'
+// import dbClient from '../utils/dbClient.js'
 
-export async function getVideos(name, url, videoLength) {
-  const response = await dbClient..create({
-    data: {}
-  })
-
-}
+// export async function getVideos(name, url, videoLength) {
+//   const response = await dbClient.cohort.create({
+//     data: {}
+//   })
+// }
