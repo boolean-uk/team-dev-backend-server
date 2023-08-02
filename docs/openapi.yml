@@ -1276,10 +1276,8 @@ components:
       properties:
         status:
           type: string
-        data:
-          properties:
-            error:
-              type: string
+        error:
+          type: string
     Log:
       type: object
       properties:
