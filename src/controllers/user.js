@@ -1,7 +1,7 @@
 import User from '../domain/user.js'
 import { emailValidation } from '../utils/emailValidation.js'
 import { passwordValidation } from '../utils/passwordValidation.js'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 
 const validatePasswordLength = (password) => {
   if (password.length < 8) {
@@ -18,12 +18,12 @@ const validatePasswordLength = (password) => {
 
 async function validateUserId(req, res) {
   if (!req.user) {
-    return sendMessageResponse(res, 500, 'req.user is not populated')
+    return sendErrorResponse(res, 500, 'req.user is not populated')
   }
   const id = Number(req.params.id)
 
   if (req.user.id !== id) {
-    return sendMessageResponse(
+    return sendErrorResponse(
       res,
       403,
       'User is not authorised to perform this action'
@@ -39,7 +39,7 @@ export const create = async (req, res) => {
 
   try {
     if (passwordValidate.status === 'error') {
-      return sendMessageResponse(res, 400, passwordValidate.message)
+      return sendErrorResponse(res, 400, passwordValidate.message)
     }
 
     const existingUser = await User.findByEmail(userToCreate.email)
@@ -63,7 +63,7 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to create new user')
+    return sendErrorResponse(res, 500, 'Unable to create new user')
   }
 }
 
@@ -77,7 +77,7 @@ export const getById = async (req, res) => {
     }
     return sendDataResponse(res, 200, foundUser)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to get user')
+    return sendErrorResponse(res, 500, 'Unable to get user')
   }
 }
 
@@ -107,7 +107,7 @@ export const createProfile = async (req, res) => {
   const { firstName, lastName, bio, githubUrl } = req.body
   validateUserId(req, res)
   if (!firstName || !lastName) {
-    return sendMessageResponse(res, 400, 'First and Last names are required')
+    return sendErrorResponse(res, 400, 'First and Last names are required')
   }
   const profile = {
     create: {
@@ -128,9 +128,9 @@ export const createProfile = async (req, res) => {
   } catch (e) {
     console.error(e)
     if (e.code === 'P2014') {
-      return sendMessageResponse(res, 409, 'Profile already exists')
+      return sendErrorResponse(res, 409, 'Profile already exists')
     }
-    return sendMessageResponse(res, 500, 'Unable to create profile')
+    return sendErrorResponse(res, 500, 'Unable to create profile')
   }
 }
 
