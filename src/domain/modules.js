@@ -26,10 +26,6 @@ export default class Module {
     return null
   }
 
-  static async findByModuleName(name) {
-    return await Module._findByUnique('name', name)
-  }
-
   static async _findModule(key, value) {
     const foundModule = await dbClient.module.findUnique({
       where: {
@@ -51,6 +47,9 @@ export default class Module {
   }
 }
 
+export async function findByModuleName(name) {
+  return await Module._findByUnique('name', name)
+}
 // THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
   return await dbClient.module.create({

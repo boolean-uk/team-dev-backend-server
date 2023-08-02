@@ -1,9 +1,10 @@
-import Module, {
+import {
   createModule,
   getModuleById,
-  updateModuleDetails
+  updateModuleDetails,
+  findByModuleName
 } from '../domain/modules.js'
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
   const { name, courseId } = req.body
@@ -40,7 +41,7 @@ export const addModule = async (req, res) => {
   if (validationError) {
     return sendDataResponse(res, 400, validationError)
   }
-  const existingModule = await Module.findByModuleName(name)
+  const existingModule = await findByModuleName(name)
 
   if (existingModule) {
     return sendDataResponse(res, 409, { Error: 'Module already exists!' })
@@ -68,14 +69,19 @@ export const updateModule = async (req, res) => {
     return sendDataResponse(res, 200, { module: resModule })
   } catch (err) {
     if (err.code === 'P2025') {
-      return sendDataResponse(res, 404, {
-        Error:
-          'The course to which the module is being modified does not exist.'
-      })
+      return sendMessageResponse(
+        res,
+        404,
+        'The course to which the module is being modified does not exist.'
+      )
     }
-    return sendDataResponse(res, 500, {
-      Error: 'Unexpected Error!'
-    })
+    if (err.code === 'P2016') {
+      return sendMessageResponse(
+        res,
+        404,
+        'The module being modified does not exist.'
+      )
+    }
   }
 }
 
