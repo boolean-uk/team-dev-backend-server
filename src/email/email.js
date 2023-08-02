@@ -1,4 +1,3 @@
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import sgMail from '@sendgrid/mail'
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -11,35 +10,22 @@ sgMail
     console.error(error)
   })
 
-export const generateEmail = async (req, res) => {
-  const { to, subject, text, html } = req.body
+export const generateEmail = async (recipient, subject, text, html) => {
   const newEmail = {
-    to: to,
+    to: recipient,
     from: 'cohort10.boolean@gmail.com',
     subject: subject,
     text: text,
     html: html
   }
   if (!newEmail.to) {
-    return sendMessageResponse(
-      res,
-      400,
-      'please provide recipient of the notification'
-    )
+    return console.log('please provide recipient of the notification')
   }
   if (!newEmail.subject) {
-    return sendMessageResponse(
-      res,
-      400,
-      'please provide subject of the notification'
-    )
+    return console.log('please provide subject of the notification')
   }
   if (!newEmail.text) {
-    return sendMessageResponse(
-      res,
-      400,
-      'please provide the messageontent of the notification'
-    )
+    return console.log('please provide the messageontent of the notification')
   }
   if (subject === 'Cohort Change') {
     cohortChangeMessage()
@@ -48,7 +34,7 @@ export const generateEmail = async (req, res) => {
     newPostMessage()
   }
   sgMail(newEmail)
-  return sendDataResponse(res, 200, `email sent to ${newEmail.to}: `, newEmail)
+  return console.log(`email sent to ${newEmail.to}: `, newEmail)
 }
 
 const cohortChangeMessage = () => {
