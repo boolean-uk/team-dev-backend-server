@@ -199,13 +199,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schema/Error'
+                $ref: '#components/schemas/Error'
         '409':
           description: fail
           content:
             application/json:
               schema:
-                $ref: '#components/schema/Error'
+                $ref: '#components/schemas/Error'
   /users:
     post:
       tags:
