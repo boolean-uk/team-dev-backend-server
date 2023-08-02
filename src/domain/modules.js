@@ -6,29 +6,16 @@ export default class Module {
    * @param {{id: int, module: String}}
    * @returns {Module}
    */
-  constructor(id, name, courseId, moduleId) {
+  constructor(id, name, courseId) {
     this.id = id
     this.name = name
     this.courseId = courseId
   }
 
-  static async _findModule(moduleId) {
+  static async _findByUnique(key, value) {
     const foundModule = await dbClient.module.findUnique({
       where: {
-        id: moduleId
-      }
-    })
-
-    if (foundModule) {
-      return foundModule
-    }
-    return null
-  }
-
-  static async _findByUnique(name) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        name
+        [key]: value
       }
     })
 
@@ -39,8 +26,17 @@ export default class Module {
     return null
   }
 
-  static async findByModuleName(name) {
-    return await Module._findByUnique(name)
+  static async _findModule(key, value) {
+    const foundModule = await dbClient.module.findUnique({
+      where: {
+        [key]: value
+      }
+    })
+
+    if (foundModule) {
+      return foundModule
+    }
+    return null
   }
 
   toJSON() {
@@ -51,6 +47,10 @@ export default class Module {
   }
 }
 
+export async function findByModuleName(name) {
+  return await Module._findByUnique('name', name)
+}
+// THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
   return await dbClient.module.create({
     data: {
@@ -69,8 +69,23 @@ export async function createModule(name, courseId) {
     }
   })
 }
+// ------------------------------------
 
-export async function getModulesById(moduleId) {
+export async function updateModuleDetails(moduleId, name, courseId) {
+  return await dbClient.module.update({
+    where: {
+      id: moduleId
+    },
+    data: {
+      name,
+      courses: {
+        connect: { id: courseId }
+      }
+    }
+  })
+}
+
+export async function getModuleById(moduleId) {
   return await dbClient.module.findUnique({
     where: {
       id: moduleId

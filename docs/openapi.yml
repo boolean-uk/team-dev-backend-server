@@ -14,6 +14,7 @@ tags:
   - name: log
   - name: note
   - name: module
+  - name: unit
 paths:
   /comments/getComments:
     get:
@@ -85,6 +86,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /units:
+    post:
+      tags:
+        - unit
+      summary: Create/Add Unit
+      description: Create and add a unit to a module.
+      operationId: CreateUnit
+      requestBody:
+        description: The name of the unit and the module Id. The module Id corresponds to the desired module that the unit is to be added to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUnit'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUnit'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
   /modules:
     post:
       tags:
@@ -846,8 +891,13 @@ components:
           type: string
         courseId:
           type: integer
+<<<<<<< HEAD
 
     EditModule:
+=======
+        
+    CreateUnit:
+>>>>>>> 751a23a7bf60418d0a2d36b65fa227333b446b23
       type: object
       properties:
         name:
@@ -1027,6 +1077,25 @@ components:
         data:
           properties:
             module:
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+
+    CreatedUnit:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            unit:
               properties:
                 id:
                   type: integer
