@@ -82,6 +82,7 @@ export const updateModule = async (req, res) => {
         'The module being modified does not exist.'
       )
     }
+    return sendErrorResponse(res, 500, 'Unexpected Error')
   }
 }
 
