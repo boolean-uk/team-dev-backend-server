@@ -142,14 +142,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateModule'
+              $ref: '#/components/schemas/ModuleReq'
       responses:
         '201':
           description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedModule'
+                $ref: '#/components/schemas/Module'
         '400':
           description: fail
           content:
@@ -180,11 +180,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/schemas/EditModule'
+              $ref: '#components/schemas/ModuleReq'
       responses:
-        '200'
-# BOOKMARK
-        
+        '200':
+          description: success
+          content: 
+            application/json:
+              schema:
+                $ref: '#components/schemas/Module'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schema/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schema/Error'
   /users:
     post:
       tags:
@@ -884,20 +905,7 @@ components:
         userId:
           type: integer
     
-    CreateModule:
-      type: object
-      properties:
-        name:
-          type: string
-        courseId:
-          type: integer
-<<<<<<< HEAD
-
-    EditModule:
-=======
-        
-    CreateUnit:
->>>>>>> 751a23a7bf60418d0a2d36b65fa227333b446b23
+    ModuleReq:
       type: object
       properties:
         name:
@@ -1068,7 +1076,7 @@ components:
                   type: string
                 userId:
                   type: integer
-    CreatedModule:
+    Module:
       type: object
       properties:
         status:
