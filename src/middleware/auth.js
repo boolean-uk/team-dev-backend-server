@@ -1,11 +1,11 @@
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
 
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
-    return sendMessageResponse(res, 500, 'Unable to verify user')
+    return sendErrorResponse(res, 500, 'Unable to verify user')
   }
 
   if (req.user.role !== 'TEACHER') {
