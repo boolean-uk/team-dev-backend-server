@@ -71,7 +71,7 @@ export const updateModule = async (req, res) => {
     if (err.code === 'P2025') {
       return sendMessageResponse(
         res,
-        404,
+        409,
         'The course to which the module is being modified does not exist.'
       )
     }
