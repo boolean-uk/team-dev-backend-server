@@ -4,7 +4,7 @@ import {
   getAllCohorts,
   addStudent
 } from '../domain/cohort.js'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import User from '../domain/user.js'
 
 export const create = async (req, res) => {
@@ -13,7 +13,7 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdCohort)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to create cohort')
+    return sendErrorResponse(res, 500, 'Unable to create cohort')
   }
 }
 
@@ -22,11 +22,11 @@ export const get = async (req, res) => {
   try {
     const gettingCohort = await getCohort(cohortId)
     if (gettingCohort === null) {
-      return sendMessageResponse(res, 404, 'Cohort does not exist')
+      return sendErrorResponse(res, 404, 'Cohort does not exist')
     }
     return sendDataResponse(res, 200, gettingCohort)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to get cohort')
+    return sendErrorResponse(res, 500, 'Unable to get cohort')
   }
 }
 
@@ -41,7 +41,7 @@ export const addUser = async (req, res) => {
   try {
     const existingUser = await User.findById(userId)
     if (!existingUser) {
-      return sendMessageResponse(res, 404, 'User does not exist')
+      return sendErrorResponse(res, 404, 'User does not exist')
     }
     const foundCohort = await getCohort(cohortId)
     if (!foundCohort) {
@@ -53,6 +53,6 @@ export const addUser = async (req, res) => {
     const student = await addStudent(cohortId, userId)
     return sendDataResponse(res, 201, student)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to get cohort')
+    return sendErrorResponse(res, 500, 'Unable to get cohort')
   }
 }
