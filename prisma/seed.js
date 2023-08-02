@@ -33,6 +33,8 @@ async function seed() {
   await createComment(teacher.id, 1, 'Teacher Comment on Student Post')
   await createComment(teacher.id, 2, 'Teacher Comment on Teacher Post')
 
+  await createCourse()
+
   process.exit(0)
 }
 
@@ -77,6 +79,20 @@ async function createCohort() {
   console.info('Cohort created', cohort)
 
   return cohort
+}
+
+async function createCourse() {
+  const course = await prisma.course.create({
+    data: {
+      name: 'Software Development',
+      cohorts: {
+        connect: {
+          id: 1
+        }
+      }
+    }
+  })
+  return course
 }
 
 async function createUser(
