@@ -892,12 +892,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Video'
-        404:
-          description: fail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
 
   /cohorts/:id/videos:
     get:
