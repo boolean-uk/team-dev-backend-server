@@ -45,10 +45,10 @@ export const addUser = async (req, res) => {
     }
     const foundCohort = await getCohort(cohortId)
     if (!foundCohort) {
-      return sendDataResponse(res, 404, 'Cohort not found')
+      return sendErrorResponse(res, 404, 'Cohort not found')
     }
     if (existingUser.role === 'TEACHER') {
-      return sendDataResponse(res, 409, `Teacher can't be assigned to cohorts`)
+      return sendErrorResponse(res, 409, `Teacher can't be assigned to cohorts`)
     }
     const student = await addStudent(cohortId, userId)
     return sendDataResponse(res, 201, student)
