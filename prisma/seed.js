@@ -33,6 +33,16 @@ async function seed() {
   await createComment(teacher.id, 1, 'Teacher Comment on Student Post')
   await createComment(teacher.id, 2, 'Teacher Comment on Teacher Post')
 
+  await createCourse('Software Development', 1)
+  await createModule('Programming Fundamentals', 'Software Development')
+  await createUnit('Arrays', 'Programming Fundamentals')
+  await createVideo(
+    'Arrays part 1',
+    'http://www.booleanvideos.com/arrayspt1',
+    120,
+    'Arrays'
+  )
+
   process.exit(0)
 }
 
@@ -77,6 +87,80 @@ async function createCohort() {
   console.info('Cohort created', cohort)
 
   return cohort
+}
+
+async function createCourse(courseName, cohortId) {
+  const course = await prisma.course.create({
+    data: {
+      name: courseName,
+      cohorts: {
+        connect: {
+          id: cohortId
+        }
+      }
+    },
+    include: {
+      cohorts: true
+    }
+  })
+  console.info('Course created', course)
+  return course
+}
+
+async function createModule(moduleName, courseName) {
+  const module = await prisma.module.create({
+    data: {
+      name: moduleName,
+      courses: {
+        connect: {
+          name: courseName
+        }
+      }
+    },
+    include: {
+      courses: true
+    }
+  })
+  console.info('Module created', module)
+  return module
+}
+
+async function createUnit(unitName, moduleName) {
+  const unit = await prisma.unit.create({
+    data: {
+      name: unitName,
+      module: {
+        connect: {
+          name: moduleName
+        }
+      }
+    },
+    include: {
+      module: true
+    }
+  })
+  console.info('Unit created', unit)
+  return unit
+}
+
+async function createVideo(videoName, url, videoLength, unitName) {
+  const video = await prisma.video.create({
+    data: {
+      name: videoName,
+      url,
+      videoLength,
+      unit: {
+        connect: {
+          name: unitName
+        }
+      }
+    },
+    include: {
+      unit: true
+    }
+  })
+  console.info('Video created', video)
+  return video
 }
 
 async function createUser(

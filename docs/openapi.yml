@@ -257,9 +257,9 @@ paths:
           description: Search all users by last name if provided (exact string matches only)
           schema:
             type: string
-        - name: cohortId 
+        - name: cohortId
           in: query
-          
+
       responses:
         '200':
           description: successful operation
@@ -869,6 +869,105 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
+  /videos:
+    get:
+      tags:
+        - video
+      summary: Get all videos
+      description: This can be done by a logged in user.
+      operationId: getVideos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Video'
+
+  /cohorts/:id/videos:
+    get:
+      tags:
+        - cohort
+      summary: Get all videos by cohort
+      description: This can be done by a logged in user.
+      operationId: getVideosByCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      courses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            createdAt:
+                              type: string
+                            updatedAt:
+                              type: string
+                            modules:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                  name:
+                                    type: string
+                                  createdAt:
+                                    type: string
+                                  updatedAt:
+                                    type: string
+                                  units:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: integer
+                                        name:
+                                          type: string
+                                        moduleId:
+                                          type: integer
+                                        createdAt:
+                                          type: string
+                                        updatedAt:
+                                          type: string
+                                        videos:
+                                          type: array
+                                          items:
+                                            $ref: '#/components/schemas/Video'
+        404:
+          description: Cohort does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -910,7 +1009,6 @@ components:
           type: string
         userId:
           type: integer
-    
     ModuleReq:
       type: object
       properties:
@@ -942,6 +1040,24 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/User'
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+        unitId:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        videoLength:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
 
     AllUsers:
       type: object
