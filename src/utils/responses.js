@@ -16,9 +16,9 @@ export function sendDataResponse(res, statusCode, payload) {
   })
 }
 
-export function sendMessageResponse(res, statusCode, message) {
+export function sendErrorResponse(res, statusCode, message) {
   return res.status(statusCode).json({
     status: STATUS_MESSAGES[statusCode],
-    message
+    error: message
   })
 }

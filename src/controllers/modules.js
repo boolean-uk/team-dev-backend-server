@@ -4,7 +4,7 @@ import {
   updateModuleDetails,
   findByModuleName
 } from '../domain/modules.js'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 
 const validateModuleFunctionInputs = (req) => {
   const { name, courseId } = req.body
@@ -69,19 +69,20 @@ export const updateModule = async (req, res) => {
     return sendDataResponse(res, 200, { module: resModule })
   } catch (err) {
     if (err.code === 'P2025') {
-      return sendMessageResponse(
+      return sendErrorResponse(
         res,
         409,
         'The course to which the module is being modified does not exist.'
       )
     }
     if (err.code === 'P2016') {
-      return sendMessageResponse(
+      return sendErrorResponse(
         res,
         404,
         'The module being modified does not exist.'
       )
     }
+    return sendErrorResponse(res, 500, 'Unexpected Error')
   }
 }
 
