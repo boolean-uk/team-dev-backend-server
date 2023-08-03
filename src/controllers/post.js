@@ -1,4 +1,4 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import {
   clearComments,
   findPost,
@@ -13,7 +13,7 @@ export const create = async (req, res) => {
   const userId = req.user.id
 
   if (!content || content === '' || typeof content !== 'string') {
-    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
+    return sendErrorResponse(res, 400, 'Must provide valid content')
   }
 
   const createdPost = await createPost(content, userId)
@@ -52,17 +52,17 @@ export const editPost = async (req, res) => {
     content === ' ' ||
     typeof content !== 'string'
   ) {
-    return sendDataResponse(res, 400, { content: 'Must provide valid content' })
+    return sendErrorResponse(res, 400, 'Must provide valid content')
   }
 
   const userValidation = await findPost(postId)
 
   if (!userValidation) {
-    return sendDataResponse(res, 404, { post: 'Not Found' })
+    return sendErrorResponse(res, 404, 'Post not found')
   }
 
   if (userRole !== 'TEACHER' && userId !== userValidation.user.id) {
-    return sendDataResponse(res, 403, { error: 'Missing Authorization' })
+    return sendErrorResponse(res, 403, 'Missing Authorization')
   }
   const edited = await editExistingPost(content, postId)
   return sendDataResponse(res, 200, { post: edited })
@@ -76,13 +76,15 @@ export const deletePost = async (req, res) => {
   const findPost = await findPostWithComments(postId)
 
   if (!findPost) {
-    return sendDataResponse(res, 404, { post: 'Not Found' })
+    return sendErrorResponse(res, 404, 'Post not found')
   }
 
   if (userRole !== 'TEACHER' && userId !== findPost.user.id) {
-    return sendDataResponse(res, 403, {
-      error: 'You are unauthorized to delete this post'
-    })
+    return sendErrorResponse(
+      res,
+      403,
+      'You are unauthorized to delete this post'
+    )
   }
 
   if (findPost?.comments.length > 0) {
