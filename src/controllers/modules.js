@@ -38,21 +38,20 @@ export const addModule = async (req, res) => {
   const { name, courseId } = req.body
 
   const validationError = validateModuleFunctionInputs(req)
+
   if (validationError) {
-    return sendDataResponse(res, 400, validationError)
+    return sendErrorResponse(res, 400, validationError.Error)
   }
   const existingModule = await findByModuleName(name)
 
   if (existingModule) {
-    return sendDataResponse(res, 409, { Error: 'Module already exists!' })
+    return sendErrorResponse(res, 409, 'Module already exists!')
   }
   try {
     const resModule = await createModule(name, courseId)
     return sendDataResponse(res, 201, { module: resModule })
   } catch (err) {
-    return sendDataResponse(res, 500, {
-      Error: 'Unexpected Error!'
-    })
+    return sendErrorResponse(res, 500, 'Unexpected Error!')
   }
 }
 
@@ -61,7 +60,7 @@ export const updateModule = async (req, res) => {
   const moduleId = Number(req.params.id)
   const validationError = validateModuleFunctionInputs(req)
   if (validationError) {
-    return sendDataResponse(res, 400, validationError)
+    return sendErrorResponse(res, 400, validationError.Error)
   }
 
   try {
@@ -92,12 +91,11 @@ export const getAll = async (req, res) => {
     const module = await getModuleById(moduleId)
 
     if (!module) {
-      return sendDataResponse(res, 404, 'Modules not found')
+      return sendErrorResponse(res, 404, 'Modules not found')
     }
 
     return sendDataResponse(res, 200, module)
   } catch (error) {
-    console.error(error)
-    return sendDataResponse(res, 500, 'Unable to get modules')
+    return sendErrorResponse(res, 500, 'Unable to get modules')
   }
 }
