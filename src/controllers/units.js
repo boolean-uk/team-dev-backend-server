@@ -2,7 +2,8 @@ import {
   createUnit,
   getUnitById,
   findByUnitName,
-  findByModuleId
+  findByModuleId,
+  updateUnitDetails
 } from '../domain/units.js'
 import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 
@@ -58,6 +59,36 @@ export const addUnit = async (req, res) => {
     return sendErrorResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
+  }
+}
+export const updateUnit = async (req, res) => {
+  const { name, moduleId } = req.body
+  const unitId = Number(req.params.id)
+  const validationError = validateUnitFunctionInputs(req)
+  if (validationError) {
+    return sendErrorResponse(res, 400, validationError)
+  }
+
+  try {
+    const resUnit = await updateUnitDetails(unitId, name, moduleId)
+    return sendDataResponse(res, 200, { unit: resUnit })
+  } catch (err) {
+    console.error(err)
+    if (err.code === 'P2025') {
+      return sendErrorResponse(
+        res,
+        409,
+        'The module to which the unit is being modified does not exist.'
+      )
+    }
+    if (err.code === 'P2016') {
+      return sendErrorResponse(
+        res,
+        404,
+        'The Unit being modified does not exist.'
+      )
+    }
+    return sendErrorResponse(res, 500, 'Unexpected Error')
   }
 }
 

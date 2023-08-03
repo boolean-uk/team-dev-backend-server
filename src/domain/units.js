@@ -51,3 +51,16 @@ export async function getUnitById(unitId, name) {
     }
   })
 }
+export async function updateUnitDetails(unitId, name, moduleId) {
+  return await dbClient.unit.update({
+    where: {
+      id: unitId
+    },
+    data: {
+      name,
+      module: {
+        connect: { id: moduleId }
+      }
+    }
+  })
+}
