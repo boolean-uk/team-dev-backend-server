@@ -1,4 +1,5 @@
 import dbClient from '../utils/dbClient.js'
+import { getCohort } from './cohort.js'
 
 async function _findByUnique(name) {
   const foundCourse = await dbClient.course.findUnique({
@@ -14,6 +15,9 @@ async function _findByUnique(name) {
 }
 export async function findByCourseName(name) {
   return await _findByUnique(name)
+}
+export async function findByCohortId(cohortId) {
+  return await getCohort(cohortId)
 }
 
 export async function createCourse(name, cohortId) {
