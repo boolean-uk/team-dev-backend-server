@@ -1,6 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 
-export async function _findModule(key, value) {
+export async function findModule(key, value) {
   const foundModule = await dbClient.module.findUnique({
     where: {
       [key]: value
@@ -10,25 +10,11 @@ export async function _findModule(key, value) {
   if (foundModule) {
     return foundModule
   }
-  return null
-}
-
-export async function _findByUnique(key, value) {
-  const foundModule = await dbClient.module.findUnique({
-    where: {
-      [key]: value
-    }
-  })
-
-  if (foundModule) {
-    return foundModule
-  }
-
   return null
 }
 
 export async function findByModuleName(name) {
-  return await _findByUnique('name', name)
+  return await findModule('name', name)
 }
 // THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {

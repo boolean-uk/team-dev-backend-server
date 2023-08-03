@@ -1,5 +1,5 @@
 import dbClient from '../utils/dbClient.js'
-import { _findModule } from '../domain/modules.js'
+import { findModule } from '../domain/modules.js'
 
 export default class Unit {
   constructor(id, name, moduleId) {
@@ -26,7 +26,7 @@ export default class Unit {
   }
 
   static async findByModuleId(moduleId) {
-    return await _findModule('id', moduleId)
+    return await findModule('id', moduleId)
   }
 
   toJSON() {
