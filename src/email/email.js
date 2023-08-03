@@ -1,6 +1,6 @@
 import sgMail from '@sendgrid/mail'
-import SENDER_EMAIL from '../utils/senderEmail.js'
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+import { SENDER_EMAIL, SENDGRID_API_KEY } from '../utils/senderEmail.js'
+sgMail.setApiKey(SENDGRID_API_KEY)
 
 let newEmail = {
   to: '',
