@@ -1,54 +1,34 @@
 import dbClient from '../utils/dbClient.js'
 
-export default class Module {
-  /**
-   *
-   * @param {{id: int, module: String}}
-   * @returns {Module}
-   */
-  constructor(id, name, courseId) {
-    this.id = id
-    this.name = name
-    this.courseId = courseId
-  }
-
-  static async _findByUnique(key, value) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        [key]: value
-      }
-    })
-
-    if (foundModule) {
-      return foundModule
+export async function _findModule(key, value) {
+  const foundModule = await dbClient.module.findUnique({
+    where: {
+      [key]: value
     }
+  })
 
-    return null
+  if (foundModule) {
+    return foundModule
   }
+  return null
+}
 
-  static async _findModule(key, value) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        [key]: value
-      }
-    })
-
-    if (foundModule) {
-      return foundModule
+export async function _findByUnique(key, value) {
+  const foundModule = await dbClient.module.findUnique({
+    where: {
+      [key]: value
     }
-    return null
+  })
+
+  if (foundModule) {
+    return foundModule
   }
 
-  toJSON() {
-    return {
-      id: this.id,
-      name: this.name
-    }
-  }
+  return null
 }
 
 export async function findByModuleName(name) {
-  return await Module._findByUnique('name', name)
+  return await _findByUnique('name', name)
 }
 // THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
