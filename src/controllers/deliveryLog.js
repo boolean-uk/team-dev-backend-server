@@ -7,7 +7,7 @@ export const getLogs = async (req, res) => {
   try {
     const foundCohort = await getCohort(cohortId)
     if (!foundCohort) {
-      return sendDataResponse(res, 404, 'Cohort not found')
+      return sendErrorResponse(res, 404, 'Cohort not found')
     }
     const gettingLogs = await getDeliveryLog(cohortId)
     if (gettingLogs.length === 0) {
