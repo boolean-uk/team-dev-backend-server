@@ -15,6 +15,7 @@ import commentRouter from './routes/comment.js'
 import unitRouter from './routes/units.js'
 import exercisesRouter from './routes/exercises.js'
 import videoRouter from './routes/videos.js'
+import courseRouter from './routes/course.js'
 
 const app = express()
 app.disable('x-powered-by')
@@ -38,6 +39,7 @@ app.use('/comments', commentRouter)
 app.use('/units', unitRouter)
 app.use('/exercises', exercisesRouter)
 app.use('/videos', videoRouter)
+app.use('/courses', courseRouter)
 
 app.get('*', (req, res) => {
   res.status(404).json({
