@@ -55,7 +55,6 @@ export const addUnit = async (req, res) => {
     const newUnit = await createUnit(name, moduleId)
     return sendDataResponse(res, 201, { unit: newUnit })
   } catch (err) {
-    console.error(err)
     return sendErrorResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
@@ -102,7 +101,6 @@ export const getAll = async (req, res) => {
     }
     return sendDataResponse(res, 200, units)
   } catch (error) {
-    console.error(error)
     return sendErrorResponse(res, 500, 'Unable to get Units')
   }
 }
