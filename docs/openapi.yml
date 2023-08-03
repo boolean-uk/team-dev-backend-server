@@ -853,6 +853,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /cohorts/:id/videos:
+    get:
+      tags:
+        - cohort
+      summary: Get all videos by cohort
+      description: This can be done by a logged in user.
+      operationId: getVideosByCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      courses:
+                        type: array
+                        items:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          createdAt:
+                            type: string
+                          updatedAt:
+                            type: string
+                          modules:
+                            type: array
+                            items:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+                              createdAt:
+                                type: string
+                              updatedAt:
+                                type: string
+                              units:
+                                type: array
+                                items:
+                                  id:
+                                    type: integer
+                                  name:
+                                    type: string
+                                  moduleId:
+                                    type: integer
+                                  createdAt:
+                                    type: string
+                                  updatedAt:
+                                    type: string
+                                  videos:
+                                    type: array
+                                    items:
+                                      $ref: '#/components/schemas/Video'
+        404:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
