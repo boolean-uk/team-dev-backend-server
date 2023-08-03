@@ -853,6 +853,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /cohorts/:id/videos:
     get:
       tags:
@@ -923,11 +924,12 @@ paths:
                                           items:
                                             $ref: '#/components/schemas/Video'
         404:
-          description: fail
+          description: Cohort does not exist
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     bearerAuth:
