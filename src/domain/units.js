@@ -26,7 +26,7 @@ export default class Unit {
   }
 
   static async findByModuleId(moduleId) {
-    return await getModuleById('id', moduleId)
+    return await getModuleById(moduleId)
   }
 
   toJSON() {

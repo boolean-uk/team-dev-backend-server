@@ -67,6 +67,6 @@ export async function updateModuleDetails(moduleId, name, courseId) {
   })
 }
 
-export async function getModuleById(key, moduleId) {
-  return await _findModule(key, moduleId)
+export async function getModuleById(moduleId) {
+  return await _findModule('id', moduleId)
 }
