@@ -24,9 +24,5 @@ export async function getAllCohortVideos(id) {
 }
 
 export async function getAllVideos() {
-  return await dbClient.video.findMany({
-    include: {
-      unit: true
-    }
-  })
+  return await dbClient.video.findMany({})
 }

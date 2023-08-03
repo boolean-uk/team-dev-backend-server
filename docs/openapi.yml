@@ -844,7 +844,9 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: '#/components/schemas/AllVideos'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Video'
         404:
           description: fail
           content:
@@ -932,17 +934,24 @@ components:
             items:
               $ref: '#/components/schemas/User'
 
-    AllVideos:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: integer
-          videos:
-            type: array
-            items:
-              $ref: '#/components/schemas/Video'
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+        unitId:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        videoLength:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
     AllUsers:
       type: object
       properties:
