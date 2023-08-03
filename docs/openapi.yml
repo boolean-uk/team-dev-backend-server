@@ -212,9 +212,9 @@ paths:
           description: Search all users by last name if provided (exact string matches only)
           schema:
             type: string
-        - name: cohortId 
+        - name: cohortId
           in: query
-          
+
       responses:
         '200':
           description: successful operation
@@ -824,7 +824,33 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
-
+  /videos:
+    get:
+      tags:
+        - video
+      summary: Get all videos
+      description: This can be done by a logged in user.
+      operationId: getVideos
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AllVideos'
+        404:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
@@ -865,7 +891,7 @@ components:
           type: string
         userId:
           type: integer
-    
+
     CreateModule:
       type: object
       properties:
@@ -873,7 +899,7 @@ components:
           type: string
         courseId:
           type: integer
-        
+
     CreateUnit:
       type: object
       properties:
@@ -906,6 +932,17 @@ components:
             items:
               $ref: '#/components/schemas/User'
 
+    AllVideos:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          videos:
+            type: array
+            items:
+              $ref: '#/components/schemas/Video'
     AllUsers:
       type: object
       properties:
