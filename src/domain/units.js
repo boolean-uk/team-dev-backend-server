@@ -1,41 +1,27 @@
 import dbClient from '../utils/dbClient.js'
 import { getModuleById } from '../domain/modules.js'
 
-export default class Unit {
-  constructor(id, name, moduleId) {
-    this.id = id
-    this.name = name
-    this.moduleId = moduleId
-  }
-
-  static async _findByUnique(name) {
-    const foundUnit = await dbClient.unit.findUnique({
-      where: {
-        name
-      }
-    })
-
-    if (foundUnit) {
-      return foundUnit
+async function _findByUnique(name) {
+  const foundUnit = await dbClient.unit.findUnique({
+    where: {
+      name
     }
-    return null
-  }
+  })
 
-  static async findByUnitName(name) {
-    return await Unit._findByUnique(name)
+  if (foundUnit) {
+    return foundUnit
   }
-
-  static async findByModuleId(moduleId) {
-    return await getModuleById(moduleId)
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      name: this.name
-    }
-  }
+  return null
 }
+
+export async function findByUnitName(name) {
+  return await _findByUnique(name)
+}
+
+export async function findByModuleId(moduleId) {
+  return await getModuleById(moduleId)
+}
+
 export async function createUnit(name, moduleId) {
   return await dbClient.unit.create({
     data: {

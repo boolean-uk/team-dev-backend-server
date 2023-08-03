@@ -1,5 +1,10 @@
-import Unit, { createUnit, getUnitById } from '../domain/units.js'
-import { sendDataResponse } from '../utils/responses.js'
+import {
+  createUnit,
+  getUnitById,
+  findByUnitName,
+  findByModuleId
+} from '../domain/units.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 
 const validateUnitFunctionInputs = (req) => {
   const { name, moduleId } = req.body
@@ -34,23 +39,23 @@ export const addUnit = async (req, res) => {
 
   const validationError = validateUnitFunctionInputs(req)
   if (validationError) {
-    return sendDataResponse(res, 400, validationError)
+    return sendErrorResponse(res, 400, validationError)
   }
-  const existingUnit = await Unit.findByUnitName(name)
-  const existingModule = await Unit.findByModuleId(moduleId)
+  const existingUnit = await findByUnitName(name)
+  const existingModule = await findByModuleId(moduleId)
 
   if (existingUnit) {
-    return sendDataResponse(res, 409, 'Unit already exists!')
+    return sendErrorResponse(res, 409, 'Unit already exists!')
   }
   if (!existingModule) {
-    return sendDataResponse(res, 404, 'Module does not exist!')
+    return sendErrorResponse(res, 404, 'Module does not exist!')
   }
   try {
     const newUnit = await createUnit(name, moduleId)
     return sendDataResponse(res, 201, { unit: newUnit })
   } catch (err) {
     console.error(err)
-    return sendDataResponse(res, 500, {
+    return sendErrorResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
   }
@@ -62,11 +67,11 @@ export const getAll = async (req, res) => {
     const units = await getUnitById(unitId)
 
     if (!units) {
-      return sendDataResponse(res, 404, 'Units not found')
+      return sendErrorResponse(res, 404, 'Units not found')
     }
     return sendDataResponse(res, 200, units)
   } catch (error) {
     console.error(error)
-    return sendDataResponse(res, 500, 'Unable to get Units')
+    return sendErrorResponse(res, 500, 'Unable to get Units')
   }
 }
