@@ -24,20 +24,13 @@ async function _findModule(key, value) {
 export async function findByModuleName(name) {
   return await _findModule('name', name)
 }
-// THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
   return await dbClient.module.create({
     data: {
       name,
       courses: {
-        connectOrCreate: {
-          create: {
-            id: courseId,
-            name: 'Software Development'
-          },
-          where: {
-            id: courseId
-          }
+        connect: {
+          id: courseId
         }
       }
     },
@@ -51,7 +44,6 @@ export async function createModule(name, courseId) {
     }
   })
 }
-// ------------------------------------
 
 export async function updateModuleDetails(moduleId, name, courseId) {
   return await dbClient.module.update({
