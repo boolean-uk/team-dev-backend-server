@@ -67,14 +67,3 @@ const convertToHTML = (text) => {
   const html = `<div>${text}</div>`
   return html
 }
-
-const testData = {
-  to: 'dev.iangrantham@gmail.com',
-  from: `${SENDER_EMAIL}`,
-  subject: 'newMessage',
-  text: 'This is further testing of API key handling'
-}
-
-generateEmail(testData)
-console.log(SENDER_EMAIL)
-console.log(SENDGRID_API_KEY)
