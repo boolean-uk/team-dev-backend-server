@@ -1,5 +1,5 @@
 // import send from 'send'
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -9,18 +9,18 @@ export const createComment = async (req, res) => {
   const userId = req.user.id
 
   if (typeof content !== 'string') {
-    return sendDataResponse(res, 400, {
-      error: 'Comment must be a string'
-    })
+    return sendErrorResponse(res, 400, 'Comment must be a string')
   }
 
   if (content.length <= 0 || content.length > 240) {
     if (content.length <= 0) {
-      return sendDataResponse(res, 400, { error: 'Comment cannot be empty' })
+      return sendErrorResponse(res, 400, 'Comment cannot be empty')
     } else {
-      return sendDataResponse(res, 400, {
-        error: 'Comment must be 240 characters or fewer'
-      })
+      return sendErrorResponse(
+        res,
+        400,
+        'Comment must be 240 characters or fewer'
+      )
     }
   }
 
@@ -38,7 +38,7 @@ export const createComment = async (req, res) => {
     })
     return sendDataResponse(res, 201, { comment })
   } catch (e) {
-    return sendDataResponse(res, 500, { error: e.message })
+    return sendErrorResponse(res, 500, e.message)
   }
 }
 
@@ -57,15 +57,15 @@ export const removeComment = async (req, res) => {
     })
 
     if (!commentUser) {
-      return sendDataResponse(res, 404, {
-        error: 'No comment with that id was found'
-      })
+      return sendErrorResponse(res, 404, 'No comment with that id was found')
     }
 
     if (commentUser.userId !== user.id && user.role !== 'TEACHER') {
-      return sendDataResponse(res, 401, {
-        error: 'Students may only delete their own comments'
-      })
+      return sendErrorResponse(
+        res,
+        401,
+        'Students may only delete their own comments'
+      )
     } else {
       const deletedComment = await prisma.comment.delete({
         where: {
@@ -79,7 +79,7 @@ export const removeComment = async (req, res) => {
       return sendDataResponse(res, 200, deletedComment)
     }
   } catch (e) {
-    return sendDataResponse(res, 500, { error: e.message })
+    return sendErrorResponse(res, 500, e.message)
   }
 }
 
@@ -104,9 +104,11 @@ export const getComments = async (req, res) => {
   }
 
   if (Object.keys(searchParams).length === 0) {
-    return sendDataResponse(res, 400, {
-      error: 'A userId, postId or searchString must be provided'
-    })
+    return sendErrorResponse(
+      res,
+      400,
+      'A userId, postId or searchString must be provided'
+    )
   }
 
   try {
@@ -148,13 +150,15 @@ export const getComments = async (req, res) => {
     })
 
     if (comments.length === 0) {
-      return sendDataResponse(res, 404, {
-        error: 'No comments found for the given search parameters'
-      })
+      return sendErrorResponse(
+        res,
+        404,
+        'No comments found for the given search parameters'
+      )
     }
 
     return sendDataResponse(res, 200, formattedComments)
   } catch (e) {
-    return sendDataResponse(res, 500, { error: e.message })
+    return sendErrorResponse(res, 500, e.message)
   }
 }
