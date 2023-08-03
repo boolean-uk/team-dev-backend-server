@@ -10,9 +10,8 @@ export async function getVideosByCohort(req, res) {
     if (!foundCohort) {
       return sendMessageResponse(res, 404, 'Cohort not found')
     }
-    console.log('finds cohort')
     const videos = await getAllCohortVideos(id)
-    return sendDataResponse(videos)
+    return sendDataResponse(res, 200, videos)
   } catch (error) {
     return sendMessageResponse(res, 500, error)
   }
