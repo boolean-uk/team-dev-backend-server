@@ -1,9 +1,17 @@
 import dbClient from '../utils/dbClient.js'
 
-export async function findModule(key, value) {
+async function _findModule(key, value) {
   const foundModule = await dbClient.module.findUnique({
     where: {
       [key]: value
+    },
+    include: {
+      units: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
     }
   })
 
@@ -14,7 +22,7 @@ export async function findModule(key, value) {
 }
 
 export async function findByModuleName(name) {
-  return await findModule('name', name)
+  return await _findModule('name', name)
 }
 // THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
@@ -59,18 +67,6 @@ export async function updateModuleDetails(moduleId, name, courseId) {
   })
 }
 
-export async function getModuleById(moduleId) {
-  return await dbClient.module.findUnique({
-    where: {
-      id: moduleId
-    },
-    include: {
-      units: {
-        select: {
-          id: true,
-          name: true
-        }
-      }
-    }
-  })
+export async function getModuleById(key, moduleId) {
+  return await _findModule(key, moduleId)
 }
