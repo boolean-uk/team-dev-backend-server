@@ -1,6 +1,6 @@
 import { createDeliveryLog, getDeliveryLog } from '../domain/deliveryLog.js'
 import { getCohort } from '../domain/cohort.js'
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 
 export const getLogs = async (req, res) => {
   const cohortId = parseInt(req.params.id)
@@ -11,7 +11,7 @@ export const getLogs = async (req, res) => {
     }
     const gettingLogs = await getDeliveryLog(cohortId)
     if (gettingLogs.length === 0) {
-      return sendMessageResponse(
+      return sendErrorResponse(
         res,
         404,
         'No delivery logs found for this cohort'
@@ -19,7 +19,7 @@ export const getLogs = async (req, res) => {
     }
     return sendDataResponse(res, 201, gettingLogs)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to get delivery logs')
+    return sendErrorResponse(res, 500, 'Unable to get delivery logs')
   }
 }
 
@@ -40,6 +40,6 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdDeliveryLog)
   } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to create new delivery log')
+    return sendErrorResponse(res, 500, 'Unable to create new delivery log')
   }
 }

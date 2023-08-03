@@ -1,4 +1,4 @@
-import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import { getAll, getAllForUser, getExerciseById } from '../domain/exercises.js'
 
 export const getById = async (req, res) => {
@@ -8,7 +8,7 @@ export const getById = async (req, res) => {
     return sendDataResponse(res, 404, exercise)
   } catch (e) {
     console.error(e)
-    return sendMessageResponse(res, 500, { error: e })
+    return sendErrorResponse(res, 500, { error: e })
   }
 }
 
@@ -19,7 +19,7 @@ export const getAllByUnit = async (req, res) => {
     return sendDataResponse(res, 404, { exercises })
   } catch (e) {
     console.error(e)
-    return sendMessageResponse(res, 500, { error: e })
+    return sendErrorResponse(res, 500, { error: e })
   }
 }
 
@@ -30,6 +30,6 @@ export const getAllByUserId = async (req, res) => {
     return sendDataResponse(res, 404, { exercises })
   } catch (e) {
     console.error(e)
-    return sendMessageResponse(res, 500, 'Unable to get UserID')
+    return sendErrorResponse(res, 500, 'Unable to get UserID')
   }
 }
