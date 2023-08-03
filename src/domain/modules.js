@@ -1,54 +1,28 @@
 import dbClient from '../utils/dbClient.js'
 
-export default class Module {
-  /**
-   *
-   * @param {{id: int, module: String}}
-   * @returns {Module}
-   */
-  constructor(id, name, courseId) {
-    this.id = id
-    this.name = name
-    this.courseId = courseId
-  }
-
-  static async _findByUnique(key, value) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        [key]: value
+async function _findModule(key, value) {
+  const foundModule = await dbClient.module.findUnique({
+    where: {
+      [key]: value
+    },
+    include: {
+      units: {
+        select: {
+          id: true,
+          name: true
+        }
       }
-    })
-
-    if (foundModule) {
-      return foundModule
     }
+  })
 
-    return null
+  if (foundModule) {
+    return foundModule
   }
-
-  static async _findModule(key, value) {
-    const foundModule = await dbClient.module.findUnique({
-      where: {
-        [key]: value
-      }
-    })
-
-    if (foundModule) {
-      return foundModule
-    }
-    return null
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      name: this.name
-    }
-  }
+  return null
 }
 
 export async function findByModuleName(name) {
-  return await Module._findByUnique('name', name)
+  return await _findModule('name', name)
 }
 // THIS BLOCK OF CODE WILL CHANGE WHEN THE COURSE ENDPOINT IS MADE
 export async function createModule(name, courseId) {
@@ -64,6 +38,14 @@ export async function createModule(name, courseId) {
           where: {
             id: courseId
           }
+        }
+      }
+    },
+    include: {
+      courses: {
+        select: {
+          id: true,
+          name: true
         }
       }
     }
@@ -86,17 +68,5 @@ export async function updateModuleDetails(moduleId, name, courseId) {
 }
 
 export async function getModuleById(moduleId) {
-  return await dbClient.module.findUnique({
-    where: {
-      id: moduleId
-    },
-    include: {
-      units: {
-        select: {
-          id: true,
-          name: true
-        }
-      }
-    }
-  })
+  return await _findModule('id', moduleId)
 }
