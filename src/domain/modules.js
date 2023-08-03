@@ -32,6 +32,14 @@ export async function createModule(name, courseId) {
           }
         }
       }
+    },
+    include: {
+      courses: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
     }
   })
 }
