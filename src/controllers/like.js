@@ -1,4 +1,4 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -14,7 +14,7 @@ export const togglePostLike = async (req, res) => {
     })
 
     if (!existingPost) {
-      return sendDataResponse(res, 404, { error: 'Post not found' })
+      return sendErrorResponse(res, 404, 'Post not found')
     }
 
     const existingLike = await prisma.like.findFirst({
@@ -56,7 +56,7 @@ export const togglePostLike = async (req, res) => {
       sendDataResponse(res, 201, { like, liked: true })
     }
   } catch (error) {
-    sendDataResponse(res, 500, { error: error.message })
+    sendErrorResponse(res, 500, error.message)
   }
 }
 
@@ -72,7 +72,7 @@ export const toggleCommentLike = async (req, res) => {
     })
 
     if (!existingComment) {
-      return sendDataResponse(res, 404, { error: 'Comment not found' })
+      return sendErrorResponse(res, 404, 'Comment not found')
     }
 
     const existingLike = await prisma.like.findFirst({
@@ -109,6 +109,6 @@ export const toggleCommentLike = async (req, res) => {
       sendDataResponse(res, 201, { like, liked: true })
     }
   } catch (error) {
-    sendDataResponse(res, 500, { error: error.message })
+    sendErrorResponse(res, 500, error.message)
   }
 }

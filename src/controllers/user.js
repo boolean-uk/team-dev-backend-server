@@ -45,18 +45,19 @@ export const create = async (req, res) => {
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
-      return sendDataResponse(res, 400, { email: 'Email already in use' })
+      return sendErrorResponse(res, 400, 'Email already in use')
     }
 
     if (!emailValidation(userToCreate.email)) {
-      return sendDataResponse(res, 400, { email: 'Email not valid' })
+      return sendErrorResponse(res, 400, 'Email not valid')
     }
 
     if (!passwordValidation(password)) {
-      return sendDataResponse(res, 400, {
-        password:
-          'Password must contain at least one uppercase character, one lowercase character, one special character, and one number'
-      })
+      return sendErrorResponse(
+        res,
+        400,
+        'Password must contain at least one uppercase character, one lowercase character, one special character, and one number'
+      )
     }
 
     const createdUser = await userToCreate.save()
@@ -73,7 +74,7 @@ export const getById = async (req, res) => {
     const includeNotes = req.user.role === 'TEACHER'
     const foundUser = await User.findById(id, includeNotes)
     if (!foundUser) {
-      return sendDataResponse(res, 404, { id: 'User not found' })
+      return sendErrorResponse(res, 404, 'User not found')
     }
     return sendDataResponse(res, 200, foundUser)
   } catch (e) {
@@ -126,7 +127,6 @@ export const createProfile = async (req, res) => {
     delete createdProfile.password
     return sendDataResponse(res, 201, createdProfile)
   } catch (e) {
-    console.error(e)
     if (e.code === 'P2014') {
       return sendErrorResponse(res, 409, 'Profile already exists')
     }
@@ -157,17 +157,15 @@ const validateUpdateByIDRequest = (req) => {
 export const updateById = async (req, res) => {
   const validationError = validateUpdateByIDRequest(req, res)
   if (validationError) {
-    return sendDataResponse(res, 400, validationError)
+    return sendErrorResponse(res, 400, validationError.Error)
   }
   if (req.user.role !== 'TEACHER') {
-    return sendDataResponse(res, 403, { Error: 'Permission denied!' })
+    return sendErrorResponse(res, 403, 'Permission denied!')
   }
   try {
     await User.updateUserDetails(req)
     return sendDataResponse(res, 200, { user: req.body })
   } catch (error) {
-    return sendDataResponse(res, 500, {
-      Error: 'Unexpected Error!'
-    })
+    return sendErrorResponse(res, 500, 'Unexpected Error!')
   }
 }

@@ -8,9 +8,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body
 
   if (!email) {
-    return sendDataResponse(res, 400, {
-      email: 'Invalid email and/or password provided'
-    })
+    return sendErrorResponse(res, 400, 'Invalid email and/or password provided')
   }
 
   try {
@@ -18,9 +16,11 @@ export const login = async (req, res) => {
     const areCredentialsValid = await validateCredentials(password, foundUser)
 
     if (!areCredentialsValid) {
-      return sendDataResponse(res, 400, {
-        email: 'Invalid email and/or password provided'
-      })
+      return sendErrorResponse(
+        res,
+        400,
+        'Invalid email and/or password provided'
+      )
     }
 
     const token = generateJwt(foundUser.id)
