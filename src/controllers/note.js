@@ -1,4 +1,4 @@
-import { sendDataResponse } from '../utils/responses.js'
+import { sendDataResponse, sendErrorResponse } from '../utils/responses.js'
 import { createNote } from '../domain/note.js'
 import User from '../domain/user.js'
 
@@ -37,17 +37,15 @@ export const create = async (req, res) => {
   const { content, userId } = req.body
   const validationError = validateCreateNoteFunctionInputs(req, res)
   if (validationError) {
-    return sendDataResponse(res, 400, validationError)
+    return sendErrorResponse(res, 400, validationError.Error)
   }
   if (req.user.role !== 'TEACHER') {
-    return sendDataResponse(res, 403, { Error: 'Permission denied!' })
+    return sendErrorResponse(res, 403, 'Permission denied!')
   }
   try {
     const newNote = await createNote(userId, content)
     return sendDataResponse(res, 201, { note: newNote })
   } catch (error) {
-    return sendDataResponse(res, 500, {
-      Error: 'Unexpected Error!'
-    })
+    return sendErrorResponse(res, 500, 'Unexpected Error!')
   }
 }
