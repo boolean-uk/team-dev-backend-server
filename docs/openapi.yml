@@ -880,42 +880,48 @@ paths:
                       courses:
                         type: array
                         items:
-                          id:
-                            type: integer
-                          name:
-                            type: string
-                          createdAt:
-                            type: string
-                          updatedAt:
-                            type: string
-                          modules:
-                            type: array
-                            items:
-                              id:
-                                type: integer
-                              name:
-                                type: string
-                              createdAt:
-                                type: string
-                              updatedAt:
-                                type: string
-                              units:
-                                type: array
-                                items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            createdAt:
+                              type: string
+                            updatedAt:
+                              type: string
+                            modules:
+                              type: array
+                              items:
+                                type: object
+                                properties:
                                   id:
                                     type: integer
                                   name:
                                     type: string
-                                  moduleId:
-                                    type: integer
                                   createdAt:
                                     type: string
                                   updatedAt:
                                     type: string
-                                  videos:
+                                  units:
                                     type: array
                                     items:
-                                      $ref: '#/components/schemas/Video'
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: integer
+                                        name:
+                                          type: string
+                                        moduleId:
+                                          type: integer
+                                        createdAt:
+                                          type: string
+                                        updatedAt:
+                                          type: string
+                                        videos:
+                                          type: array
+                                          items:
+                                            $ref: '#/components/schemas/Video'
         404:
           description: fail
           content:
