@@ -1,6 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 
-export async function getAllVideos(id) {
+export async function getAllCohortVideos(id) {
   const response = await dbClient.cohort.findMany({
     where: {
       id
@@ -23,4 +23,13 @@ export async function getAllVideos(id) {
   })
 
   return response
+}
+
+export async function getAllVideos() {
+  const videos = await dbClient.video.findMany({
+    include: {
+      unit: true
+    }
+  })
+  return videos
 }
