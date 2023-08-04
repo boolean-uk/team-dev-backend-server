@@ -5,7 +5,8 @@ import {
   getExerciseById,
   createExercise,
   findByExerciseName,
-  findByUnitId
+  findByUnitId,
+  updateExerciseDetails
 } from '../domain/exercises.js'
 
 const validateExerciseFunctionInputs = (req) => {
@@ -60,6 +61,35 @@ export const addExercise = async (req, res) => {
     return sendErrorResponse(res, 500, {
       Error: 'Unexpected Error!'
     })
+  }
+}
+export const updateExercise = async (req, res) => {
+  const { name, unitId } = req.body
+  const exerciseId = Number(req.params.id)
+  const validationError = validateExerciseFunctionInputs(req)
+  if (validationError) {
+    return sendErrorResponse(res, 400, validationError.Error)
+  }
+
+  try {
+    const resExercise = await updateExerciseDetails(exerciseId, name, unitId)
+    return sendDataResponse(res, 200, { exercise: resExercise })
+  } catch (err) {
+    if (err.code === 'P2025') {
+      return sendErrorResponse(
+        res,
+        409,
+        'The unit to which the exercise is being modified does not exist.'
+      )
+    }
+    if (err.code === 'P2016') {
+      return sendErrorResponse(
+        res,
+        404,
+        'The exercise being modified does not exist.'
+      )
+    }
+    return sendErrorResponse(res, 500, 'Unexpected Error')
   }
 }
 export const getById = async (req, res) => {

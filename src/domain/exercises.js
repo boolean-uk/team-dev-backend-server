@@ -62,3 +62,20 @@ export const getExerciseById = async (exerciseId) => {
     }
   })
 }
+
+export async function updateExerciseDetails(exerciseId, name, unitId) {
+  return await dbClient.module.update({
+    where: {
+      id: exerciseId
+    },
+    data: {
+      name,
+      units: {
+        connect: { id: unitId }
+      }
+    },
+    include: {
+      units: true
+    }
+  })
+}
