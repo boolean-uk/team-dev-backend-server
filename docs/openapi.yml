@@ -917,12 +917,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Exercise'
-        404:
-          description: Exercises not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
 
   /cohorts/:id/videos:
     get:
