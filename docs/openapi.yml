@@ -94,6 +94,8 @@ paths:
       summary: Create/Add Exercise
       description: Create and add an exercise to a unit.
       operationId: CreateExercise
+      security: 
+        - bearerAuth: []
       requestBody:
         description: The name of the exercise and the unit Id. The unit Id corresponds to the desired unit that the exercise is to be added to.
         content:
@@ -138,6 +140,11 @@ paths:
       summary: Edit exercise
       description: Edit an existing exercise
       operationId: updateExercise
+      security: 
+        - bearerAuth: []
+      parameters:
+        - name: Exercise ID
+          in: query 
       requestBody:
         description: The information that is needed to make changes to the exercise
         content:
