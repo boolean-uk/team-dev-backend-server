@@ -87,6 +87,101 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /exercises:
+    post:
+      tags:
+        - exercise
+      summary: Create/Add Exercise
+      description: Create and add an exercise to a unit.
+      operationId: CreateExercise
+      security: 
+        - bearerAuth: []
+      requestBody:
+        description: The name of the exercise and the unit Id. The unit Id corresponds to the desired unit that the exercise is to be added to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExercise'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedExercise'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+  /exercises/{id}:
+    put:
+      tags:
+        - exercise
+      summary: Edit exercise
+      description: Edit an existing exercise
+      operationId: updateExercise
+      security: 
+        - bearerAuth: []
+      parameters:
+        - name: Exercise ID
+          in: query 
+      requestBody:
+        description: The information that is needed to make changes to the exercise
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/CreateExercise'
+      responses:
+        '200':
+          description: success
+          content: 
+            application/json:
+              schema:
+                $ref: '#components/schemas/CreatedExercise'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /units:
     post:
       tags:
@@ -1261,7 +1356,33 @@ components:
                   type: string
                 updatedAt:
                   type: string
-
+    CreatedExercise:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            exercise:
+              properties:
+                id:
+                  type: integer
+                unit:
+                  type: object
+                name:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+    CreateExercise:
+      type: object
+      properties:
+        name:
+          type: string
+        unitId:
+          type: integer
     CreatedUnit:
       type: object
       properties:
