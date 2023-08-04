@@ -131,6 +131,50 @@ paths:
             application/json:
               schema:
                 $ref: '#components/schemas/Error'
+  /exercises/{id}:
+    put:
+      tags:
+        - exercise
+      summary: Edit exercise
+      description: Edit an existing exercise
+      operationId: updateExercise
+      requestBody:
+        description: The information that is needed to make changes to the exercise
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/CreateExercise'
+      responses:
+        '200':
+          description: success
+          content: 
+            application/json:
+              schema:
+                $ref: '#components/schemas/CreatedExercise'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /units:
     post:
       tags:
@@ -1061,13 +1105,6 @@ components:
           type: string
         courseId:
           type: integer
-    CreateExercise:
-      type: object
-      properties:
-        name:
-          type: string
-        unitId:
-          type: integer
 
     Cohort:
       type: object
@@ -1288,6 +1325,13 @@ components:
                   type: string
                 updatedAt:
                   type: string
+    CreateExercise:
+      type: object
+      properties:
+        name:
+          type: string
+        unitId:
+          type: integer
     CreatedUnit:
       type: object
       properties:
