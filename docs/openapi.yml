@@ -15,6 +15,7 @@ tags:
   - name: note
   - name: module
   - name: unit
+  - name: exercise
 paths:
   /comments/getComments:
     get:
@@ -86,6 +87,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /exercises:
+    post:
+      tags:
+        - exercise
+      summary: Create/Add Exercise
+      description: Create and add an exercise to a unit.
+      operationId: CreateExercise
+      requestBody:
+        description: The name of the exercise and the unit Id. The unit Id corresponds to the desired unit that the exercise is to be added to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExercise'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedExercise'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '409':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Error'
   /units:
     post:
       tags:
@@ -1016,6 +1061,13 @@ components:
           type: string
         courseId:
           type: integer
+    CreateExercise:
+      type: object
+      properties:
+        name:
+          type: string
+        unitId:
+          type: integer
 
     Cohort:
       type: object
@@ -1216,7 +1268,26 @@ components:
                   type: string
                 updatedAt:
                   type: string
-
+    CreatedExercise:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            exercise:
+              properties:
+                id:
+                  type: integer
+                unit:
+                  type: object
+                name:
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
     CreatedUnit:
       type: object
       properties:
