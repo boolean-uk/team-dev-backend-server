@@ -2,10 +2,19 @@ import dbClient from '../utils/dbClient.js'
 
 export async function createCohort() {
   const createdCohort = await dbClient.cohort.create({
-    data: {}
+    data: {},
+    select: { id: true, createdAt: true, updatedAt: true }
   })
 
-  return createdCohort
+  const { id, createdAt, updatedAt } = createdCohort
+
+  return {
+    cohort: {
+      id,
+      createdAt,
+      updatedAt
+    }
+  }
 }
 
 export async function getCohort(cohortId) {
