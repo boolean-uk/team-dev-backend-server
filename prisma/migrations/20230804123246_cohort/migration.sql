@@ -8,6 +8,3 @@
 -- AlterTable
 ALTER TABLE "Cohort" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
-
--- CreateIndex
-CREATE UNIQUE INDEX "Exercise_name_key" ON "Exercise"("name");
