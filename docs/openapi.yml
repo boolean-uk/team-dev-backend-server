@@ -15,6 +15,7 @@ tags:
   - name: note
   - name: module
   - name: unit
+  - name: exercise
 paths:
   /comments/getComments:
     get:
@@ -896,7 +897,7 @@ paths:
   /exercises:
     get:
       tags:
-        - exercises
+        - exercise
       summary: Get all exercises
       description: Get all exercises
       operationId: getExercises
@@ -915,7 +916,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Exercises'
+                      $ref: '#/components/schemas/Exercise'
         404:
           description: Exercises not found
           content:
@@ -1465,6 +1466,24 @@ components:
                         type: integer
                       content:
                         type: string
+
+    Exercise:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+
     AllComments:
       type: object
       properties:
