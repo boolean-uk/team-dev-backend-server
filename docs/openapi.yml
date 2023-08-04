@@ -184,7 +184,7 @@ paths:
       responses:
         '200':
           description: success
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#components/schemas/Module'
@@ -857,7 +857,7 @@ paths:
         - bearerAuth: []
       responses:
         201:
-          description: success
+          description: successful operation
           content:
             application/json:
               schema:
@@ -867,8 +867,28 @@ paths:
                     type: string
                   data:
                     properties:
-                      cohort:
-                        $ref: '#/components/schemas/Cohort'
+                      id:
+                        type: integer
+                      users:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            email:
+                              type: string
+                            cohortId:
+                              type: integer
+                            role:
+                              type: string
+        404:
+          description: fail - Cohort or student not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /videos:
     get:
       tags:
