@@ -7,8 +7,11 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "prepare": "husky",
-    "db-reset": "prisma migrate reset"
+    "prepare": "npx husky install",
+    "lint": "eslint src",
+    "test": "jest",
+    "migrate": "prisma migrate deploy",
+    "db-reset": "prisma migrate reset --force --skip-seed"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
