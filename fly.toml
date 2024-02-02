@@ -1,6 +1,6 @@
 # fly.toml file generated for team-dev-backend-api on 2022-11-30T11:30:34Z
 
-app = "team-dev-backend-api"
+app = "team-dev-server-c10"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
