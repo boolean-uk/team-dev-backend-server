@@ -9,7 +9,6 @@
     "dev": "nodemon src/index.js",
     "prepare": "npx husky install",
     "lint": "eslint src",
-    "test": "jest",
     "migrate": "prisma migrate deploy",
     "db-reset": "prisma migrate reset --force --skip-seed"
   },
