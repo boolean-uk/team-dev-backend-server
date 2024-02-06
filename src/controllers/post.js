@@ -13,6 +13,7 @@ export const create = async (req, res) => {
     const post = await createPost(content, userId)
     return sendDataResponse(res, 201, post)
   } catch (e) {
+    console.error('error creating post', e.message)
     return sendDataResponse(res, 500, 'something went wrong')
   }
 }
