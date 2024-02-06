@@ -16,3 +16,7 @@ export async function createPost(content, userId) {
   })
   return createdPost
 }
+
+export async function getPosts() {
+  return await dbClient.post.findMany()
+}
