@@ -30,11 +30,12 @@ export async function getPosts() {
 
   const newPostsList = posts.map((post) => {
     const author = post.user.profile
-      ? {
-          firstName: post.user.profile.firstName,
-          lastName: post.user.profile.lastName
-        }
-      : { firstName: 'unknown', lastName: 'unknown' }
+
+    if (!author || !author.firstName || !author.lastName) {
+      throw new Error(
+        `missing profile property on post.user at post with id:${post.id}`
+      )
+    }
 
     return {
       id: post.id,
