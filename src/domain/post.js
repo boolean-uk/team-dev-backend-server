@@ -18,5 +18,13 @@ export async function createPost(content, userId) {
 }
 
 export async function getPosts() {
-  return await dbClient.post.findMany()
+  return await dbClient.post.findMany({
+    include: {
+      user: {
+        include: {
+          profile: true
+        }
+      }
+    }
+  })
 }
