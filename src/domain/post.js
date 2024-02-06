@@ -18,7 +18,7 @@ export async function createPost(content, userId) {
 }
 
 export async function getPosts() {
-  return await dbClient.post.findMany({
+  const posts = await dbClient.post.findMany({
     include: {
       user: {
         include: {
@@ -27,4 +27,24 @@ export async function getPosts() {
       }
     }
   })
+
+  const newPostsList = posts.map((post) => {
+    const author = post.user.profile
+      ? {
+          firstName: post.user.profile.firstName,
+          lastName: post.user.profile.lastName
+        }
+      : { firstName: 'unknown', lastName: 'unknown' }
+
+    return {
+      id: post.id,
+      content: post.content,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      userId: post.user.id,
+      author
+    }
+  })
+
+  return newPostsList
 }

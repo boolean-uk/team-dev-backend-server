@@ -20,22 +20,5 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
   const posts = await getPosts()
-  const newPostsList = posts.map((post) => {
-    const author = post.user.profile
-      ? {
-          firstName: post.user.profile.firstName,
-          lastName: post.user.profile.lastName
-        }
-      : { firstName: 'unknown', lastName: 'unknown' }
-
-    return {
-      id: post.id,
-      content: post.content,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-      userId: post.user.id,
-      author
-    }
-  })
-  return sendDataResponse(res, 200, { posts: newPostsList })
+  return sendDataResponse(res, 200, { posts })
 }
