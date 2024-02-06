@@ -20,5 +20,12 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
   const posts = await getPosts()
-  return sendDataResponse(res, 200, { posts })
+  const postlist = posts.map((post) => ({
+    ...post,
+    author: {
+      firstName: 'Loza',
+      lastName: 'MockUser'
+    }
+  }))
+  return sendDataResponse(res, 200, { posts: postlist })
 }
