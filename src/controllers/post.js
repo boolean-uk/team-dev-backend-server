@@ -1,4 +1,4 @@
-import { createPost } from '../domain/post.js'
+import { createPost, getPosts } from '../domain/post.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -13,18 +13,6 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  return sendDataResponse(res, 200, {
-    posts: [
-      {
-        id: 1,
-        content: 'Hello world!',
-        author: { ...req.user }
-      },
-      {
-        id: 2,
-        content: 'Hello from the void!',
-        author: { ...req.user }
-      }
-    ]
-  })
+  const posts = await getPosts()
+  return sendDataResponse(res, 200, { posts })
 }
