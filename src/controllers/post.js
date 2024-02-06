@@ -9,8 +9,12 @@ export const create = async (req, res) => {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
 
-  const post = await createPost(content, userId)
-  return sendDataResponse(res, 201, post)
+  try {
+    const post = await createPost(content, userId)
+    return sendDataResponse(res, 201, post)
+  } catch (e) {
+    return sendDataResponse(res, 500, 'something went wrong')
+  }
 }
 
 export const getAll = async (req, res) => {
