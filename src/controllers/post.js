@@ -8,8 +8,9 @@ export const create = async (req, res) => {
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
-  await createPost(content, userId)
-  return sendDataResponse(res, 201, { post: { content } })
+
+  const post = await createPost(content, userId)
+  return sendDataResponse(res, 201, post)
 }
 
 export const getAll = async (req, res) => {
