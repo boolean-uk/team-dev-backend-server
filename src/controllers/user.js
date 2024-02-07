@@ -8,10 +8,11 @@ export const create = async (req, res) => {
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
-      return sendDataResponse(res, 400, { email: 'Email already in use' })
+      return sendDataResponse(res, 409, { email: 'Email already in use' })
     }
 
     const createdUser = await userToCreate.save()
+    console.log(createdUser)
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
