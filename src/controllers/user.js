@@ -36,15 +36,17 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { name } = req.query
 
-  let foundUsers
+  const nameParts = new Set(name.split(' '))
 
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
+  const foundUsers = []
+  if (name) {
+    nameParts.forEach(async (word, index) => {
+      foundUsers.push(await User.findManyByFirstNameOrLastName(word))
+    })
   } else {
-    foundUsers = await User.findAll()
+    foundUsers.push(await User.findAll())
   }
 
   const formattedUsers = foundUsers.map((user) => {
