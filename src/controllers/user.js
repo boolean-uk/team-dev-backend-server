@@ -37,17 +37,25 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
   const { name } = req.query
+  console.log('name', name)
 
-  const nameParts = new Set(name.split(' '))
-
-  const foundUsers = []
+  let foundUsers
   if (name) {
-    nameParts.forEach(async (word, index) => {
-      foundUsers.push(await User.findManyByFirstNameOrLastName(word))
-    })
+    const nameParts = Array.from(new Set(name.split(' ')))
+
+    const results = Promise.all(
+      nameParts.map(async (word, index) => {
+        console.log('nameParts', nameParts)
+        return User.findManyByFirstNameOrLastName(word)
+      })
+    )
+    foundUsers = await results
+    foundUsers = foundUsers.flat()
+    console.log('founduser', foundUsers)
   } else {
-    foundUsers.push(await User.findAll())
+    foundUsers = await User.findAll()
   }
+  console.log('foundUsers', foundUsers)
 
   const formattedUsers = foundUsers.map((user) => {
     return {
