@@ -130,6 +130,19 @@ export default class User {
     return User._findMany('firstName', firstName)
   }
 
+  static async findManyByFirstNameOrLastName(name) {
+    return await dbClient.user.findMany({
+      where: {
+        profile: {
+          OR: [{ firstName: name }, { lastName: name }]
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+  }
+
   static async findAll() {
     return User._findMany()
   }
