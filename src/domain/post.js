@@ -18,5 +18,39 @@ export async function createPost(content, userId) {
 }
 
 export async function getPosts() {
-  return await dbClient.post.findMany()
+  const posts = await dbClient.post.findMany({
+    include: {
+      user: {
+        include: {
+          profile: true
+        }
+      }
+    }
+  })
+
+  const newPostsList = posts.map((post) => {
+    const profile = post.user.profile
+
+    if (!profile || !profile.firstName || !profile.lastName) {
+      throw new Error(
+        `missing profile property on post.user at post with id:${post.id}`
+      )
+    }
+
+    const author = {
+      firstName: profile.firstName,
+      lastName: profile.lastName
+    }
+
+    return {
+      id: post.id,
+      content: post.content,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      userId: post.user.id,
+      author
+    }
+  })
+
+  return newPostsList
 }
