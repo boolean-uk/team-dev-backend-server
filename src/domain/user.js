@@ -187,4 +187,23 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async _findManyOr(value, ...keys) {
+    const query = keys.map((key) => ({
+      [key]: { mode: 'insensitive', contains: value }
+    }))
+
+    const foundUsers = await dbClient.user.findMany({
+      where: {
+        profile: {
+          OR: query
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
 }
