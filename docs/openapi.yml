@@ -35,15 +35,15 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users by name if provided
       description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by name if provided. Name is case insensitive and will return matches for both first name and last name.
           schema:
             type: string
       responses:
