@@ -134,7 +134,10 @@ export default class User {
     const foundUsers = await dbClient.user.findMany({
       where: {
         profile: {
-          OR: [{ firstName: name }, { lastName: name }]
+          OR: [
+            { firstName: { mode: 'insensitive', contains: name } },
+            { lastName: { mode: 'insensitive', contains: name } }
+          ]
         }
       },
       include: {
