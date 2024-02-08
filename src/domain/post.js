@@ -54,3 +54,29 @@ export async function getPosts() {
 
   return newPostsList
 }
+
+async function deletePostByIdAndUserId(postId, userId) {
+  const post = await dbClient.post.findUnique({
+    where: {
+      id: postId
+    }
+  })
+
+  if (!post) {
+    return { error: 'Post not found', status: 404 }
+  }
+
+  if (post.userId !== userId) {
+    return { error: 'You are not authorized to delete this post', status: 403 }
+  }
+
+  await dbClient.post.delete({
+    where: {
+      id: postId
+    }
+  })
+
+  return { success: true }
+}
+
+export { deletePostByIdAndUserId }
