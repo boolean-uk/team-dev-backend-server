@@ -6,6 +6,6 @@ const router = Router()
 
 router.post('/', validateAuthentication, create)
 router.get('/', validateAuthentication, getAll)
-router.delete('/:postid', validateAuthentication, deletePost)
+router.delete('/:postId', validateAuthentication, deletePost)
 
 export default router

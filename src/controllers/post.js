@@ -28,7 +28,8 @@ export const getAll = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  const postId = parseInt(req.params.postid)
+  console.log(req.params.postId)
+  const postId = parseInt(req.params.postId)
   const userId = req.user.id
 
   if (!postId) {
