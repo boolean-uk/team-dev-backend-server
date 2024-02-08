@@ -411,6 +411,37 @@ components:
                   updatedAt:
                     type: string
                     format: string
+                  comments:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          postId:
+                            type: integer
+                          userId:
+                            type: integer
+                          content: 
+                            type: string
+                            format: string
+                          createdAt:
+                            type: string
+                            format: string
+                          updatedAt:
+                            type: string
+                            format: string 
+                  likes: 
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id: 
+                          type: integer
+                        userId:
+                          type: integer
+                        postId:
+                          type: integer
                   author:
                     type: object
                     properties:
