@@ -131,20 +131,31 @@ export default class User {
   }
 
   static async findManyByFirstNameOrLastName(name) {
-    const foundUsers = await dbClient.user.findMany({
-      where: {
-        profile: {
-          OR: [
-            { firstName: { mode: 'insensitive', contains: name } },
-            { lastName: { mode: 'insensitive', contains: name } }
-          ]
-        }
-      },
-      include: {
-        profile: true
+    const splitName = name.split(' ')
+
+    const promise = Promise.all(
+      splitName.map((word) => {
+        return User._findManyOr(word, 'firstName', 'lastName')
+      })
+    )
+
+    let results = await promise
+    results = results.flat()
+
+    const foundUsers = []
+    results.forEach((user) => {
+      const { id } = user
+      const match = foundUsers.some((entry) => entry.id === id)
+      if (!match) {
+        user.count = 1
+        foundUsers.push(user)
+      } else {
+        const dupeResult = foundUsers.find((entry) => entry.id === id)
+        dupeResult.count++
       }
     })
-    return foundUsers.map((user) => User.fromDb(user))
+
+    return foundUsers.sort((a, b) => b.count - a.count)
   }
 
   static async findAll() {
