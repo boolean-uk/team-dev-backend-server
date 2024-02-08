@@ -39,7 +39,9 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
   const { name } = req.query
 
-  const foundUsers = await User.findManyByFirstNameOrLastName(name)
+  let foundUsers
+  if (name) foundUsers = await User.findManyByFirstNameOrLastName(name)
+  else foundUsers = await User.findAll()
 
   const formattedUsers = foundUsers.map((user) => {
     return {
