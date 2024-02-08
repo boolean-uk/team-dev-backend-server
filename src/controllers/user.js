@@ -37,16 +37,9 @@ export const getById = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  // eslint-disable-next-line camelcase
-  const { first_name: firstName } = req.query
+  const { name } = req.query
 
-  let foundUsers
-
-  if (firstName) {
-    foundUsers = await User.findManyByFirstName(firstName)
-  } else {
-    foundUsers = await User.findAll()
-  }
+  const foundUsers = await User.findManyByFirstNameOrLastName(name)
 
   const formattedUsers = foundUsers.map((user) => {
     return {
