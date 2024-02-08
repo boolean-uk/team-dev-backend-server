@@ -306,10 +306,6 @@ components:
                   type: integer
                 content:
                   type: string
-                comments: 
-                  type: array
-                  items:
-                    type: object
 
     Cohort:
       type: object
