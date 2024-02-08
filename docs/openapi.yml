@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
   - url: http://localhost:4000/
@@ -204,13 +204,13 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Posts'
-        '401':
+        401:
           description: fail
           content:
             application/json:
@@ -405,11 +405,6 @@ components:
                     type: integer
                   content:
                     type: string
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
-                    type: string
                     format: string
                   author:
                     type: object
@@ -430,7 +425,43 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
+                  comments:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          postId:
+                            type: integer
+                          userId:
+                            type: integer
+                          content: 
+                            type: string
+                            format: string
+                          createdAt:
+                            type: string
+                            format: string
+                          updatedAt:
+                            type: string
+                            format: string 
+                  likes: 
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id: 
+                          type: integer
+                        userId:
+                          type: integer
+                        postId:
+                          type: integer
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    
     CreatedUser:
       type: object
       properties:
