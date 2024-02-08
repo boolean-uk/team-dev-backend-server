@@ -131,7 +131,7 @@ export default class User {
   }
 
   static async findManyByFirstNameOrLastName(name) {
-    return await dbClient.user.findMany({
+    const foundUsers = await dbClient.user.findMany({
       where: {
         profile: {
           OR: [{ firstName: name }, { lastName: name }]
@@ -141,6 +141,7 @@ export default class User {
         profile: true
       }
     })
+    return foundUsers.map((user) => User.fromDb(user))
   }
 
   static async findAll() {
