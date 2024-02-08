@@ -40,8 +40,11 @@ export const getAll = async (req, res) => {
   const { name } = req.query
 
   let foundUsers
-  if (name) foundUsers = await User.findManyByFirstNameOrLastName(name)
-  else foundUsers = await User.findAll()
+  if (name) {
+    foundUsers = await User.findManyByFirstNameOrLastName(name)
+  } else {
+    foundUsers = await User.findAll()
+  }
 
   const formattedUsers = foundUsers.map((user) => {
     return {
