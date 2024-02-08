@@ -29,7 +29,7 @@ export const getAll = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  const postId = parseInt(req.params.postId)
+  const postId = Number(req.params.postId)
   const userId = req.user.id
 
   try {
@@ -48,13 +48,13 @@ export const deletePost = async (req, res) => {
 }
 
 export const editPost = async (req, res) => {
-  const postId = parseInt(req.params.postId)
+  const postId = Number(req.params.postId)
   const { content } = req.body
   const userId = req.user.id
 
   if (!postId) {
-    console.error('Post ID does not exist')
-    return sendDataResponse(res, 400, { error: 'Post ID does not exist' })
+    console.error('postId is required')
+    return sendDataResponse(res, 400, { error: 'postId is required' })
   }
 
   try {
