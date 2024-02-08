@@ -135,7 +135,13 @@ export default class User {
 
     const promise = Promise.all(
       splitName.map((word) => {
-        return User._findManyOr(word, 'firstName', 'lastName')
+        return User._findManyOr(
+          {
+            key: 'firstName',
+            value: { mode: 'insensitive', contains: word }
+          },
+          { key: 'lastName', value: { mode: 'insensitive', contains: word } }
+        )
       })
     )
 
@@ -199,20 +205,9 @@ export default class User {
     return foundUsers.map((user) => User.fromDb(user))
   }
 
-  static async _findManyOr(value, ...keys) {
-    const validValue = typeof value === 'string' || typeof value === 'number'
-    const validKeys = keys.every(
-      (key) => typeof key === 'string' && key.length > 0
-    )
-
-    if (!validValue || !validKeys) {
-      throw new Error(
-        "Invalid method inputs. Value must be of type 'string' or 'number'. Keys must be of type 'string'."
-      )
-    }
-
-    const query = keys.map((key) => ({
-      [key]: { mode: 'insensitive', contains: value }
+  static async _findManyOr(...keyValue) {
+    const query = keyValue.map(({ key, value }) => ({
+      [key]: value
     }))
 
     const foundUsers = await dbClient.user.findMany({
