@@ -200,6 +200,17 @@ export default class User {
   }
 
   static async _findManyOr(value, ...keys) {
+    const validValue = typeof value === 'string' || typeof value === 'number'
+    const validKeys = keys.every(
+      (key) => typeof key === 'string' && key.length > 0
+    )
+
+    if (!validValue || !validKeys) {
+      throw new Error(
+        "Invalid method inputs. Value must be of type 'string' or 'number'. Keys must be of type 'string'."
+      )
+    }
+
     const query = keys.map((key) => ({
       [key]: { mode: 'insensitive', contains: value }
     }))
