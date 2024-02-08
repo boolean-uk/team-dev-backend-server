@@ -25,20 +25,36 @@ async function seed() {
     'TEACHER'
   )
 
-  await createPost(student.id, 'My first post!')
-  await createPost(teacher.id, 'Hello, students')
+  await createPost(
+    student.id,
+    'My first post!',
+    [
+      { content: 'hi', userId: 2 },
+      { content: "'sup?", userId: 2 }
+    ],
+    [{ userId: 2 }]
+  )
+  await createPost(teacher.id, 'Hello, students', [], [{ userId: 1 }])
 
   process.exit(0)
 }
 
-async function createPost(userId, content) {
+async function createPost(userId, content, comments, likes) {
   const post = await prisma.post.create({
     data: {
       userId,
-      content
+      content,
+      comments: {
+        create: comments
+      },
+      likes: {
+        create: likes
+      }
     },
     include: {
-      user: true
+      user: true,
+      comments: true,
+      likes: true
     }
   })
 
