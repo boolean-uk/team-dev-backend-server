@@ -62,7 +62,7 @@ export const deletePost = async (req, res) => {
 
 export const editPost = async (req, res) => {
   const postId = parseInt(req.params.postId)
-  const { content } = req.body // Assuming you want to update post content
+  const { content } = req.body
   const userId = req.user.id
 
   if (!postId) {
