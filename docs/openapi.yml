@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
   - url: http://localhost:4000/
@@ -204,13 +204,13 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Posts'
-        '401':
+        401:
           description: fail
           content:
             application/json:
@@ -306,6 +306,10 @@ components:
                   type: integer
                 content:
                   type: string
+                comments: 
+                  type: array
+                  items:
+                    type: object
 
     Cohort:
       type: object
@@ -405,12 +409,26 @@ components:
                     type: integer
                   content:
                     type: string
-                  createdAt:
-                    type: string
                     format: string
-                  updatedAt:
-                    type: string
-                    format: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      cohortId:
+                        type: integer
+                      role:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      bio:
+                        type: string
+                      githubUrl:
+                        type: string
+                      profileImageUrl:
+                        type: string
                   comments:
                     type: array
                     items:
@@ -442,26 +460,12 @@ components:
                           type: integer
                         postId:
                           type: integer
-                  author:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
-                      bio:
-                        type: string
-                      githubUrl:
-                        type: string
-                      profileImageUrl:
-                        type: string
-    
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    
     CreatedUser:
       type: object
       properties:
