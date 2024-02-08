@@ -195,6 +195,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+    put:
+      tags:    
+       - put  
+      summary: Update post
+      description: you can update your own post
+      operationId: editPost
+      security:
+         - bearerAuth: []
+      requestBody: 
+        description: Updated post object
+        content: 
+          application/json: 
+            schema:
+              type: object
+              properties: 
+                content: 
+                  type: string
+      responses:
+        200:
+          description: success
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Post'
+        400:
+          description: fail
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'                
     get:
       tags:
         - post
