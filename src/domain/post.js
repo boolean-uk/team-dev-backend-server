@@ -79,4 +79,25 @@ async function deletePostByIdAndUserId(postId, userId) {
   return { success: true }
 }
 
+export async function updatePostByIdAndUserId(postId, userId, content) {
+  const post = await dbClient.post.findUnique({
+    where: { id: postId }
+  })
+
+  if (!post) {
+    return { error: 'Post not found', status: 404 }
+  }
+
+  if (post.userId !== userId) {
+    return { error: 'You are not authorized to update this post', status: 403 }
+  }
+
+  const updatedPost = await dbClient.post.update({
+    where: { id: postId },
+    data: { content }
+  })
+
+  return { post: updatedPost }
+}
+
 export { deletePostByIdAndUserId }

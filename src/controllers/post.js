@@ -1,7 +1,8 @@
 import {
   createPost,
   getPosts,
-  deletePostByIdAndUserId
+  deletePostByIdAndUserId,
+  updatePostByIdAndUserId
 } from '../domain/post.js'
 import { sendDataResponse } from '../utils/responses.js'
 
@@ -55,6 +56,32 @@ export const deletePost = async (req, res) => {
     }
   } catch (error) {
     console.error('Error deleting post:', error.message)
+    return sendDataResponse(res, 500, { error: 'Something went wrong' })
+  }
+}
+
+export const editPost = async (req, res) => {
+  const postId = parseInt(req.params.postId)
+  const { content } = req.body // Assuming you want to update post content
+  const userId = req.user.id
+
+  if (!postId) {
+    console.error('Invalid post id')
+    return sendDataResponse(res, 400, { error: 'Invalid post id' })
+  }
+
+  try {
+    const result = await updatePostByIdAndUserId(postId, userId, content)
+    if (result.error) {
+      return sendDataResponse(res, result.status, { error: result.error })
+    }
+
+    return sendDataResponse(res, 200, {
+      message: 'Post updated successfully',
+      post: result.post
+    })
+  } catch (error) {
+    console.error('Error updating post:', error.message)
     return sendDataResponse(res, 500, { error: 'Something went wrong' })
   }
 }
