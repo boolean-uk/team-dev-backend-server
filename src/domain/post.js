@@ -75,8 +75,6 @@ async function deletePostByIdAndUserId(postId, userId) {
       id: postId
     }
   })
-
-  return { success: true }
 }
 
 export async function updatePostByIdAndUserId(postId, userId, content) {

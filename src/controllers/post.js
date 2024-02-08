@@ -29,33 +29,20 @@ export const getAll = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  console.log(req.params.postId)
   const postId = parseInt(req.params.postId)
   const userId = req.user.id
 
-  if (!postId) {
-    console.error('Invalid post id')
-    return sendDataResponse(res, 400, { error: 'Invalid post id' })
-  }
-
   try {
-    const { error, status, success } = await deletePostByIdAndUserId(
-      postId,
-      userId
-    )
-
-    if (error) {
-      console.error(error)
-      return sendDataResponse(res, status, { error })
-    }
-
-    if (success) {
-      return sendDataResponse(res, 201, {
+    const result = await deletePostByIdAndUserId(postId, userId)
+    if (result && result.error) {
+      return sendDataResponse(res, result.status, { error: result.error })
+    } else {
+      return sendDataResponse(res, 200, {
         message: 'Post deleted successfully'
       })
     }
   } catch (error) {
-    console.error('Error deleting post:', error.message)
+    console.error('Error deleting post:', error)
     return sendDataResponse(res, 500, { error: 'Something went wrong' })
   }
 }
@@ -66,13 +53,14 @@ export const editPost = async (req, res) => {
   const userId = req.user.id
 
   if (!postId) {
-    console.error('Invalid post id')
-    return sendDataResponse(res, 400, { error: 'Invalid post id' })
+    console.error('Post ID does not exist')
+    return sendDataResponse(res, 400, { error: 'Post ID does not exist' })
   }
 
   try {
     const result = await updatePostByIdAndUserId(postId, userId, content)
     if (result.error) {
+      console.error('Error updating post:', result.error) // Log the error here as well
       return sendDataResponse(res, result.status, { error: result.error })
     }
 
@@ -81,7 +69,7 @@ export const editPost = async (req, res) => {
       post: result.post
     })
   } catch (error) {
-    console.error('Error updating post:', error.message)
+    console.error('Exception error updating post:', error.message) // This captures exceptions thrown during the process
     return sendDataResponse(res, 500, { error: 'Something went wrong' })
   }
 }
