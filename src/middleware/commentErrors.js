@@ -4,7 +4,7 @@ const errorCreator = (message, status) => {
   return error
 }
 
-export const checkFields = async (req, res, next) => {
+export const checkFields = (req, res, next) => {
   const fields = req.body
   const requiredFields = ['userId', 'postId', 'content']
 
