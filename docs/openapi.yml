@@ -183,22 +183,21 @@ paths:
                 content:
                   type: string
       responses:
-        201:
+        '201':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        400:
+        '400':
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
     put:
       tags:    
-       - put  
+       - post  
       summary: Update post
       description: you can update your own post
       operationId: editPost
@@ -214,18 +213,48 @@ paths:
                 content: 
                   type: string
       responses:
-        200:
+        '200':
           description: success
           content: 
             application/json: 
               schema: 
                 $ref: '#/components/schemas/Post'
-        400:
+        '400':
           description: fail
           content: 
             application/json:
               schema: 
-                $ref: '#/components/schemas/Error'                
+                $ref: '#/components/schemas/Error'
+    delete:
+          tags:    
+           - post  
+          summary: Delete post
+          description: you can delete your own post
+          operationId: deletePost
+          security:
+             - bearerAuth: []
+          requestBody: 
+            description: Updated post object
+            content: 
+              application/json: 
+                schema:   
+                  type: object
+                  properties: 
+                    content: 
+                      type: string
+          responses:            
+            '200':
+              description: success
+              content: 
+                application/json: 
+                  schema:   
+                    $ref: '#/components/schemas/Post'         
+            '500':   
+              description: fail
+              content: 
+                application/json: 
+                  schema:   
+                    $ref: '#/components/schemas/Error'                               
     get:
       tags:
         - post
