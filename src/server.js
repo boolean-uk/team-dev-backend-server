@@ -32,10 +32,10 @@ app.use('/comments', commentsRouter)
 app.use('/', authRouter)
 
 app.get('*', (req, res) => {
-  res.status(404).json({
+  res.status(req.status ?? 500).json({
     status: 'fail',
     data: {
-      resource: 'Not found'
+      message: req.message
     }
   })
 })
