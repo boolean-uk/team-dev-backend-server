@@ -5,7 +5,7 @@ export const createCommentDb = async ({ userId, postId, content }) => {
     data: {
       content,
       user: {
-        content: {
+        connect: {
           id: Number(userId)
         }
       },
