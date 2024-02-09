@@ -98,13 +98,13 @@ export async function toggleLike(postId, userId) {
   if (existingLike) {
     await dbClient.like.delete({ where: { id: existingLike.id } })
     return 'Like removed successfully.'
-  } else {
-    await dbClient.like.create({
-      data: {
-        postId,
-        userId
-      }
-    })
-    return 'Like added successfully.'
   }
+
+  await dbClient.like.create({
+    data: {
+      postId,
+      userId
+    }
+  })
+  return 'Like added successfully.'
 }
