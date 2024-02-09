@@ -31,11 +31,20 @@ app.use('/logs', deliveryLogRouter)
 app.use('/comments', commentsRouter)
 app.use('/', authRouter)
 
+app.use((err, req, res, next) => {
+  res.status(err.status ?? 500).json({
+    status: 'error',
+    data: {
+      message: err.message
+    }
+  })
+})
+
 app.get('*', (req, res) => {
-  res.status(req.status ?? 500).json({
+  res.status(404).json({
     status: 'fail',
     data: {
-      message: req.message
+      resource: 'Not found'
     }
   })
 })
