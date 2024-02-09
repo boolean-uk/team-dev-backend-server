@@ -1,4 +1,4 @@
-import dbClient from '../utils/dbClient'
+import dbClient from '../utils/dbClient.js'
 
 export const createCommentDb = async ({ userId, postId, content }) => {
   const createdComment = await dbClient.comment.create({
