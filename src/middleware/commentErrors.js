@@ -6,7 +6,7 @@ const errorCreator = (message, status) => {
 
 export const checkFields = (req, res, next) => {
   const fields = req.body
-  const requiredFields = ['userId', 'postId', 'content']
+  const requiredFields = ['postId', 'content']
 
   requiredFields.forEach((field) => {
     if (!fields[field]) {
