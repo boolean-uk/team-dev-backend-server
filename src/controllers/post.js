@@ -2,7 +2,8 @@ import {
   createPost,
   getPosts,
   deletePostByIdAndUserId,
-  updatePostByIdAndUserId
+  updatePostByIdAndUserId,
+  toggleLike
 } from '../domain/post.js'
 import { sendDataResponse } from '../utils/responses.js'
 
@@ -71,5 +72,18 @@ export const editPost = async (req, res) => {
   } catch (error) {
     console.error('Exception error updating post:', error.message) // This captures exceptions thrown during the process
     return sendDataResponse(res, 500, { error: 'Something went wrong' })
+  }
+}
+
+export const likePost = async (req, res) => {
+  const { postId } = req.params
+  const userId = req.user.id
+
+  try {
+    const message = await toggleLike(Number(postId), userId)
+    res.status(200).json({ message })
+  } catch (error) {
+    console.error('Error handling like action:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }
