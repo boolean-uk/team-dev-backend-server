@@ -38,6 +38,6 @@ app.get('*', (req, res) => {
       resource: 'Not found'
     }
   })
-});
+})
 
 export default app

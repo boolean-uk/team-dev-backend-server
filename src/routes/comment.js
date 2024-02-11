@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { getComments } from "../controllers/comment.js";
-import { validateAuthentication } from "../middleware/auth.js";
+import { Router } from 'express'
+import { getComments } from '../controllers/comment.js'
+import { validateAuthentication } from '../middleware/auth.js'
 
 const router = Router()
 
