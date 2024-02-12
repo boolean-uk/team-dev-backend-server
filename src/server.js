@@ -11,6 +11,7 @@ import authRouter from './routes/auth.js'
 import cohortRouter from './routes/cohort.js'
 import commentsRouter from './routes/comments.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
+import commentRouter from './routes/comment.js'
 
 const app = express()
 app.disable('x-powered-by')
@@ -30,6 +31,7 @@ app.use('/cohorts', cohortRouter)
 app.use('/logs', deliveryLogRouter)
 app.use('/comments', commentsRouter)
 app.use('/', authRouter)
+app.use('/comments', commentRouter)
 
 app.use((err, req, res, next) => {
   res.status(err.status ?? 500).json({
