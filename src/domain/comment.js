@@ -31,6 +31,11 @@ export default class Comment {
     )
   }
 
+  static async fromJson(json) {
+    console.log(json)
+    return new Comment(null, json.content, json.postId, json.userId)
+  }
+
   static async _findMany() {
     const comments = await dbClient.comment.findMany({
       include: {
@@ -47,9 +52,43 @@ export default class Comment {
     return comments
   }
 
+  async save() {
+    const data = {
+      content: this.content,
+      author: this.author,
+      user: {
+        connect: {
+          id: Number(this.userId)
+        }
+      },
+      post: {
+        connect: {
+          id: Number(this.postId)
+        }
+      }
+    }
+    const createdComment = await dbClient.comment.create({
+      data,
+      include: {
+        user: {
+          include: {
+            profile: true
+          }
+        },
+        post: true
+      }
+    })
+    return Comment.fromDb(createdComment)
+  }
+
   static async getAll() {
     const comments = await Comment._findMany()
     const newCommentList = comments.map(Comment.fromDb)
     return newCommentList
+  }
+
+  static async createComment() {
+    const comment = await Comment._create(Comment.fromJSON())
+    return Comment.fromDb(comment)
   }
 }
