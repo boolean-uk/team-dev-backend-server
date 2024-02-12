@@ -5,15 +5,30 @@ export default class Comment {
    * @param { {id: int, content; string, postId: int, userId: int, user: { profile: {firstName: string, lastName: string }} createdAt: dateTime, updatedAt: dateTime } } comment
    * @returns {id: int, content; string, postId: int, userId: int, author: {firstName: string, lastName: string } createdAt: dateTime, updatedAt: dateTime }
    */
-  constructor(id, content, postId, post, userId, user, createdAt, updatedAt) {
+  constructor(id, content, postId, userId, author, createdAt, updatedAt) {
     this.id = id
     this.content = content
     this.postId = postId
-    this.post = post
     this.userId = userId
-    this.user = user
+    this.author = author
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+  }
+
+  static fromDb(comment) {
+    const author = {
+      firstName: comment.user.profile.firstName,
+      lastName: comment.user.profile.lastName
+    }
+    return new Comment(
+      comment.id,
+      comment.content,
+      comment.post.id,
+      comment.user.id,
+      comment.createdAt,
+      author,
+      comment.updatedAt
+    )
   }
 
   static async _findMany() {
@@ -34,25 +49,7 @@ export default class Comment {
 
   static async getAll() {
     const comments = await Comment._findMany()
-
-    const newCommentList = comments.map((comment) => {
-      const profile = comment.user.profile
-
-      const author = {
-        firstName: profile.firstName,
-        lastName: profile.lastName
-      }
-
-      return {
-        id: comment.id,
-        content: comment.content,
-        postId: comment.post.id,
-        userId: comment.user.id,
-        createdAt: comment.createdAt,
-        updatedAt: comment.updatedAt,
-        author
-      }
-    })
+    const newCommentList = comments.map(Comment.fromDb)
     return newCommentList
   }
 }
