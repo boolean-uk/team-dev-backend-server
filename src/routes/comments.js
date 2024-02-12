@@ -7,6 +7,11 @@ import { validateAuthentication } from '../middleware/auth.js'
 
 const router = Router()
 
-router.post('/', validateAuthentication, checkFields, createComment)
+router.post(
+  '/',
+  validateAuthentication,
+  checkFields(['postId', 'content']),
+  createComment
+)
 
 export default router

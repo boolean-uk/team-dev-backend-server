@@ -4,15 +4,16 @@ const errorCreator = (message, status) => {
   return error
 }
 
-export const checkFields = (req, res, next) => {
-  const fields = req.body
-  const requiredFields = ['postId', 'content']
+export const checkFields = (requiredFields) => {
+  return (req, res, next) => {
+    const fields = req.body
 
-  requiredFields.forEach((field) => {
-    if (!fields[field]) {
-      throw errorCreator(`Missing field: ${field}`, 400)
-    }
-  })
+    requiredFields.forEach((field) => {
+      if (!fields[field]) {
+        throw errorCreator(`Missing field: ${field}`, 400)
+      }
+    })
 
-  next()
+    next()
+  }
 }
