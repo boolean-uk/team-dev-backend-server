@@ -45,7 +45,7 @@ export async function getPosts() {
       updatedAt: post.updatedAt,
       userId: post.user.id,
       comments: post.comments,
-      likes: post.likes.length,
+      likes: post.likes,
       author: {
         firstName: profile.firstName,
         lastName: profile.lastName
