@@ -88,7 +88,6 @@ paths:
 
         '400':
           description: Invalid username/password supplied
-
   /users/{id}:
     get:
       tags:
@@ -345,7 +344,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /comments:
+    get:
+      tags: 
+        - comments
+      summary: Retrieve comments
+      description: only registered users can view these
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
 components:
   securitySchemes:
     bearerAuth:
@@ -499,6 +513,13 @@ components:
                           content: 
                             type: string
                             format: string
+                          author:
+                            type: object
+                            properties: 
+                              firstName: 
+                                type: string
+                              lastName:
+                                type: string
                           createdAt:
                             type: string
                             format: string
@@ -521,7 +542,36 @@ components:
                     format: string
                   updatedAt:
                     type: string
-                    
+
+    Comments:
+        type: object
+        properties:
+          status:
+            type: string
+          data: 
+            type: object
+            properties:
+              comments:
+                type: array
+                items:
+                  type: object
+                  properties: 
+                    id:
+                      type: integer
+                    content:
+                      type: string
+                    postId:
+                      type: integer
+                    userId:
+                      type: integer
+                    author:
+                      type: object
+                      properties: 
+                        firstName: 
+                          type: string
+                        lastName:
+                          type: string
+
     CreatedUser:
       type: object
       properties:
