@@ -130,6 +130,40 @@ export default class User {
     return User._findMany('firstName', firstName)
   }
 
+  static async findManyByFirstNameOrLastName(name) {
+    const splitName = name.split(' ')
+
+    const promise = Promise.all(
+      splitName.map((word) => {
+        return User._findManyOr(
+          {
+            key: 'firstName',
+            value: { mode: 'insensitive', contains: word }
+          },
+          { key: 'lastName', value: { mode: 'insensitive', contains: word } }
+        )
+      })
+    )
+
+    let results = await promise
+    results = results.flat()
+
+    const foundUsers = []
+    results.forEach((user) => {
+      const { id } = user
+      const match = foundUsers.some((entry) => entry.id === id)
+      if (!match) {
+        user.count = 1
+        foundUsers.push(user)
+      } else {
+        const dupeResult = foundUsers.find((entry) => entry.id === id)
+        dupeResult.count++
+      }
+    })
+
+    return foundUsers.sort((a, b) => b.count - a.count)
+  }
+
   static async findAll() {
     return User._findMany()
   }
@@ -167,6 +201,25 @@ export default class User {
     }
 
     const foundUsers = await dbClient.user.findMany(query)
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async _findManyOr(...keyValue) {
+    const query = keyValue.map(({ key, value }) => ({
+      [key]: value
+    }))
+
+    const foundUsers = await dbClient.user.findMany({
+      where: {
+        profile: {
+          OR: query
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
 
     return foundUsers.map((user) => User.fromDb(user))
   }

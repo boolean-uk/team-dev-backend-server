@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
   - url: http://localhost:4000/
@@ -35,15 +35,15 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users by name if provided
       description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by name if provided. Name is case insensitive and will return matches for both first name and last name.
           schema:
             type: string
       responses:
@@ -88,7 +88,6 @@ paths:
 
         '400':
           description: Invalid username/password supplied
-
   /users/{id}:
     get:
       tags:
@@ -183,18 +182,78 @@ paths:
                 content:
                   type: string
       responses:
-        201:
+        '201':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        400:
+        '400':
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    put:
+      tags:    
+       - post  
+      summary: Update post
+      description: you can update your own post
+      operationId: editPost
+      security:
+         - bearerAuth: []
+      requestBody: 
+        description: Updated post object
+        content: 
+          application/json: 
+            schema:
+              type: object
+              properties: 
+                content: 
+                  type: string
+      responses:
+        '200':
+          description: success
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: fail
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+          tags:    
+           - post  
+          summary: Delete post
+          description: you can delete your own post
+          operationId: deletePost
+          security:
+             - bearerAuth: []
+          requestBody: 
+            description: Updated post object
+            content: 
+              application/json: 
+                schema:   
+                  type: object
+                  properties: 
+                    content: 
+                      type: string
+          responses:            
+            '200':
+              description: success
+              content: 
+                application/json: 
+                  schema:   
+                    $ref: '#/components/schemas/Post'         
+            '500':   
+              description: fail
+              content: 
+                application/json: 
+                  schema:   
+                    $ref: '#/components/schemas/Error'                               
     get:
       tags:
         - post
@@ -204,13 +263,13 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Posts'
-        '401':
+        401:
           description: fail
           content:
             application/json:
@@ -285,7 +344,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /comments:
+    get:
+      tags: 
+        - comments
+      summary: Retrieve comments
+      description: only registered users can view these
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
 components:
   securitySchemes:
     bearerAuth:
@@ -405,11 +479,6 @@ components:
                     type: integer
                   content:
                     type: string
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
-                    type: string
                     format: string
                   author:
                     type: object
@@ -430,7 +499,79 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
+                  comments:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          postId:
+                            type: integer
+                          userId:
+                            type: integer
+                          content: 
+                            type: string
+                            format: string
+                          author:
+                            type: object
+                            properties: 
+                              firstName: 
+                                type: string
+                              lastName:
+                                type: string
+                          createdAt:
+                            type: string
+                            format: string
+                          updatedAt:
+                            type: string
+                            format: string 
+                  likes: 
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id: 
+                          type: integer
+                        userId:
+                          type: integer
+                        postId:
+                          type: integer
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+
+    Comments:
+        type: object
+        properties:
+          status:
+            type: string
+          data: 
+            type: object
+            properties:
+              comments:
+                type: array
+                items:
+                  type: object
+                  properties: 
+                    id:
+                      type: integer
+                    content:
+                      type: string
+                    postId:
+                      type: integer
+                    userId:
+                      type: integer
+                    author:
+                      type: object
+                      properties: 
+                        firstName: 
+                          type: string
+                        lastName:
+                          type: string
+
     CreatedUser:
       type: object
       properties:

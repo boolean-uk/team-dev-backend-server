@@ -4,15 +4,19 @@ import YAML from 'yaml'
 import swaggerUi from 'swagger-ui-express'
 import express from 'express'
 import cors from 'cors'
+import morgan from 'morgan'
 import userRouter from './routes/user.js'
 import postRouter from './routes/post.js'
 import authRouter from './routes/auth.js'
 import cohortRouter from './routes/cohort.js'
+import commentsRouter from './routes/comments.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
+import commentRouter from './routes/comment.js'
 
 const app = express()
 app.disable('x-powered-by')
 app.use(cors())
+app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -25,7 +29,18 @@ app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/cohorts', cohortRouter)
 app.use('/logs', deliveryLogRouter)
+app.use('/comments', commentsRouter)
 app.use('/', authRouter)
+app.use('/comments', commentRouter)
+
+app.use((err, req, res, next) => {
+  res.status(err.status ?? 500).json({
+    status: 'error',
+    data: {
+      message: err.message
+    }
+  })
+})
 
 app.get('*', (req, res) => {
   res.status(404).json({
