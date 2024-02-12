@@ -32,7 +32,6 @@ export default class Comment {
   }
 
   static async fromJson(json) {
-    console.log(json)
     return new Comment(null, json.content, json.postId, json.userId)
   }
 
