@@ -354,12 +354,34 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        200:
+        '200':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comments'
+    post:
+      tags: 
+        - comments
+      summary: Create a new comment
+      description: only registered users can do this
+      operationId: postComment
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        
 components:
   securitySchemes:
     bearerAuth:
@@ -571,6 +593,45 @@ components:
                           type: string
                         lastName:
                           type: string
+                    createdAt:
+                      type: string
+                      format: string
+                    updatedAt:
+                      type: string
+                      format: string                       
+
+    Comment:
+        type: object
+        properties:
+          status:
+            type: string
+          data: 
+            type: object
+            properties:
+              comment:
+                type: object
+                properties: 
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  postId:
+                    type: integer
+                  userId:
+                    type: integer
+                  author:
+                    type: object
+                    properties: 
+                      firstName: 
+                        type: string
+                      lastName:
+                        type: string
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    format: string 
 
     CreatedUser:
       type: object
