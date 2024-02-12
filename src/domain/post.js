@@ -30,18 +30,12 @@ export async function getPosts() {
     }
   })
 
-  const newPostsList = posts.map((post) => {
-    const profile = post.user.profile
-
+  return posts.map((post) => {
+    const { profile } = post.user
     if (!profile || !profile.firstName || !profile.lastName) {
       throw new Error(
-        `missing profile property on post.user at post with id:${post.id}`
+        `Missing profile property on post.user at post with id: ${post.id}`
       )
-    }
-
-    const author = {
-      firstName: profile.firstName,
-      lastName: profile.lastName
     }
 
     return {
@@ -52,19 +46,16 @@ export async function getPosts() {
       userId: post.user.id,
       comments: post.comments,
       likes: post.likes,
-      author
+      author: {
+        firstName: profile.firstName,
+        lastName: profile.lastName
+      }
     }
   })
-
-  return newPostsList
 }
 
-async function deletePostByIdAndUserId(postId, userId) {
-  const post = await dbClient.post.findUnique({
-    where: {
-      id: postId
-    }
-  })
+export async function deletePostByIdAndUserId(postId, userId) {
+  const post = await dbClient.post.findUnique({ where: { id: postId } })
 
   if (!post) {
     return { error: 'Post not found', status: 404 }
@@ -74,17 +65,12 @@ async function deletePostByIdAndUserId(postId, userId) {
     return { error: 'You are not authorized to delete this post', status: 403 }
   }
 
-  await dbClient.post.delete({
-    where: {
-      id: postId
-    }
-  })
+  await dbClient.post.delete({ where: { id: postId } })
+  return { message: 'Post deleted successfully' }
 }
 
 export async function updatePostByIdAndUserId(postId, userId, content) {
-  const post = await dbClient.post.findUnique({
-    where: { id: postId }
-  })
+  const post = await dbClient.post.findUnique({ where: { id: postId } })
 
   if (!post) {
     return { error: 'Post not found', status: 404 }
@@ -102,4 +88,23 @@ export async function updatePostByIdAndUserId(postId, userId, content) {
   return { post: updatedPost }
 }
 
-export { deletePostByIdAndUserId }
+export async function toggleLike(postId, userId) {
+  const existingLike = await dbClient.like.findFirst({
+    where: {
+      AND: [{ postId: postId }, { userId: userId }]
+    }
+  })
+
+  if (existingLike) {
+    await dbClient.like.delete({ where: { id: existingLike.id } })
+    return 'Like removed successfully.'
+  }
+
+  await dbClient.like.create({
+    data: {
+      postId,
+      userId
+    }
+  })
+  return 'Like added successfully.'
+}

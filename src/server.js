@@ -9,6 +9,7 @@ import userRouter from './routes/user.js'
 import postRouter from './routes/post.js'
 import authRouter from './routes/auth.js'
 import cohortRouter from './routes/cohort.js'
+import commentsRouter from './routes/comments.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
 import commentRouter from './routes/comment.js'
 
@@ -28,8 +29,18 @@ app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/cohorts', cohortRouter)
 app.use('/logs', deliveryLogRouter)
+app.use('/comments', commentsRouter)
 app.use('/', authRouter)
 app.use('/comments', commentRouter)
+
+app.use((err, req, res, next) => {
+  res.status(err.status ?? 500).json({
+    status: 'error',
+    data: {
+      message: err.message
+    }
+  })
+})
 
 app.get('*', (req, res) => {
   res.status(404).json({
