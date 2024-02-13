@@ -36,6 +36,8 @@ export const getById = async (req, res) => {
   }
 }
 
+export const getSelf = async (req, res) => res.json({ self: req.user })
+
 export const getAll = async (req, res) => {
   const { name } = req.query
 
