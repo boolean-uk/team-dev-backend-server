@@ -55,8 +55,8 @@ export default class User {
   ) {
     this.id = id
     this.cohortId = cohortId
-    this.firstName = firstName
-    this.lastName = lastName
+    this.firstName = firstName || 'unknown'
+    this.lastName = lastName || 'unknown'
     this.email = email
     this.bio = bio
     this.githubUrl = githubUrl
@@ -98,16 +98,15 @@ export default class User {
       }
     }
 
-    if (this.firstName && this.lastName) {
-      data.profile = {
-        create: {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          bio: this.bio,
-          githubUrl: this.githubUrl
-        }
+    data.profile = {
+      create: {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        bio: this.bio,
+        githubUrl: this.githubUrl
       }
     }
+
     const createdUser = await dbClient.user.create({
       data,
       include: {
