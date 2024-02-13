@@ -408,6 +408,9 @@ components:
       properties:
         id:
           type: integer
+        name: 
+          type: string
+          format: string  
         createdAt:
           type: string
           format: string
