@@ -8,7 +8,7 @@ export const create = async (req, res) => {
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
-      return sendDataResponse(res, 409, { email: 'Email already in use' })
+      return sendDataResponse(res, 409, { error: 'Email already in use' })
     }
 
     const createdUser = await userToCreate.save()
@@ -27,7 +27,7 @@ export const getById = async (req, res) => {
     const foundUser = await User.findById(id)
 
     if (!foundUser) {
-      return sendDataResponse(res, 404, { id: 'User not found' })
+      return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
     return sendDataResponse(res, 200, foundUser)
@@ -59,7 +59,7 @@ export const updateById = async (req, res) => {
   const { cohort_id: cohortId } = req.body
 
   if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+    return sendDataResponse(res, 400, { error: 'Cohort ID is required' })
   }
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
