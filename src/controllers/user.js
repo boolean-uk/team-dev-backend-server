@@ -27,7 +27,7 @@ export const getById = async (req, res) => {
     const foundUser = await User.findById(id)
 
     if (!foundUser) {
-      return sendDataResponse(res, 404, { message: 'User not found' })
+      return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
     return sendDataResponse(res, 200, foundUser)
@@ -59,7 +59,7 @@ export const updateById = async (req, res) => {
   const { cohort_id: cohortId } = req.body
 
   if (!cohortId) {
-    return sendDataResponse(res, 400, { message: 'Cohort ID is required' })
+    return sendDataResponse(res, 400, { error: 'Cohort ID is required' })
   }
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
