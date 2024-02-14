@@ -427,6 +427,11 @@ components:
         name: 
           type: string
           format: string  
+        department: 
+          type: object
+          properties:
+            name: 
+              type: string
         createdAt:
           type: string
           format: string
@@ -441,23 +446,7 @@ components:
           type: string
         data: 
           type: object
-          properties:
-            cohorts: 
-              type: array
-              items: 
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name: 
-                    type: string
-                    format: string     
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
-                    type: string
-                    format: string
+          $ref: '#/components/schemas/Cohort'    
 
     AllUsers:
       type: object
