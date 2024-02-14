@@ -13,18 +13,35 @@ export async function createCohort() {
 }
 
 export class Cohort {
-  constructor(id = null, name = 'default name', users = []) {
+  constructor(
+    id = null,
+    name = 'default name',
+    users = [],
+    departmentId = null
+  ) {
     this.id = id
     this.name = name
     this.users = users
+    this.departmentId = departmentId
   }
 
   static fromDb(cohort) {
+    if (!cohort.department || !cohort.department.name) {
+      this.department.name = 'default department name'
+    }
     return new Cohort(cohort)
   }
 
   static async _findMany() {
-    return dbClient.cohort.findMany()
+    return dbClient.cohort.findMany({
+      include: {
+        department: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
   }
 
   static async getAll() {
