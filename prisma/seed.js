@@ -3,33 +3,57 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function seed() {
-  const cohort = await createCohort()
+  const department1 = await createDepartment('Software Development')
+  const department2 = await createDepartment('Data Analytics')
+  const cohort1 = await createCohort('Cohort 1', department1)
+  const cohort2 = await createCohort('Cohort 2', department2)
+  await createCohort('Cohort 3', department1)
 
-  const student = await createUserWithRole(
+  const student1 = await createUserWithRole(
     'student@test.com',
     'Testpassword1!',
     'STUDENT',
-    cohort.id,
+    cohort1.id,
     'Joe',
     'Bloggs',
     'Hello, world!',
     'https://github.com/student1'
   )
-  console.log(cohort.id)
+  await createUserWithRole(
+    'student2@test.com',
+    'Testpassword1!',
+    'STUDENT',
+    cohort2.id,
+    'Lee',
+    'Dev',
+    'Hello, world!',
+    'https://github.com/student1'
+  )
   // Creating teacher users with specific departments
-  const teacher = await createUserWithRole(
-    'rick@test.com',
-    'Testpassword2!',
+  const teacher1 = await createUserWithRole(
+    'teacher@test.com',
+    'Testpassword1!',
     'TEACHER',
     null,
     'Rick',
     'Sanchez',
     'Wubba Lubba Dub Dub!',
     'https://github.com/rick',
-    'Software Developer'
+    department1
+  )
+  await createUserWithRole(
+    'teacher2@test.com',
+    'Testpassword1!',
+    'TEACHER',
+    null,
+    'Max',
+    'Sminth',
+    'Hello there',
+    'https://github.com/max',
+    department2
   )
   await createPost(
-    student.id,
+    student1.id,
     'My first post!',
     [
       { content: 'hi', userId: 2 },
@@ -37,7 +61,7 @@ async function seed() {
     ],
     [{ userId: 2 }]
   )
-  await createPost(teacher.id, 'Hello, students', [], [{ userId: 1 }])
+  await createPost(teacher1.id, 'Hello, students', [], [{ userId: 1 }])
 
   process.exit(0)
 }
@@ -66,13 +90,29 @@ async function createPost(userId, content, comments, likes) {
   return post
 }
 
-async function createCohort() {
+async function createDepartment(name) {
+  const department = await prisma.department.create({
+    data: {
+      name
+    }
+  })
+  console.info('Department created', department)
+  return department
+}
+
+async function createCohort(name, department) {
   const cohort = await prisma.cohort.create({
     data: {
-      name: 'Cohort 4'
+      name,
+      department: {
+        connect: {
+          id: department.id
+        }
+      }
     },
     include: {
-      users: true
+      users: true,
+      department: true
     }
   })
 
@@ -90,7 +130,7 @@ async function createUserWithRole(
   lastName,
   bio,
   githubUrl,
-  department = null
+  department
 ) {
   const hashedPassword = await bcrypt.hash(password, 10)
   const userData = {
@@ -118,8 +158,23 @@ async function createUserWithRole(
   if (role === 'TEACHER' && department) {
     await prisma.teacher.create({
       data: {
-        userId: user.id,
-        department
+        user: {
+          connect: {
+            id: user.id
+          }
+        },
+        department: {
+          connect: {
+            id: department.id
+          }
+        }
+      },
+      include: {
+        department: {
+          select: {
+            name: true
+          }
+        }
       }
     })
   }
@@ -127,6 +182,7 @@ async function createUserWithRole(
   console.info(`${role} created:`, user.email)
   return user
 }
+
 seed().catch(async (e) => {
   console.error(e)
   await prisma.$disconnect()
