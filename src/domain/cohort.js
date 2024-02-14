@@ -26,6 +26,9 @@ export class Cohort {
   }
 
   static fromDb(cohort) {
+    if (!cohort.department || !cohort.department.name) {
+      this.department.name = 'default department name'
+    }
     return new Cohort(cohort)
   }
 
