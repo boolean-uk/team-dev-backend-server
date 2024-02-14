@@ -13,8 +13,24 @@ export async function createCohort() {
 }
 
 export class Cohort {
-  constructor(id = null) {
+  constructor(id = null, name = 'default name', users = []) {
     this.id = id
+    this.name = name
+    this.users = users
+  }
+
+  static fromDb(cohort) {
+    return new Cohort(cohort)
+  }
+
+  static async _findMany() {
+    return dbClient.cohort.findMany()
+  }
+
+  static async getAll() {
+    const foundCohorts = await Cohort._findMany()
+    const cohortList = foundCohorts.map(Cohort.fromDb)
+    return cohortList
   }
 
   toJSON() {

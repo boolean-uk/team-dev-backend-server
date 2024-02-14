@@ -344,6 +344,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get a list of all the /cohorts
+      description: This can only be done is the logged in user has a role of TEACHER
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohorts'
+      
   /comments:
     get:
       tags: 
@@ -417,6 +433,31 @@ components:
         updatedAt:
           type: string
           format: string
+    
+    Cohorts:
+      type: object
+      properties: 
+        status: 
+          type: string
+        data: 
+          type: object
+          properties:
+            cohorts: 
+              type: array
+              items: 
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name: 
+                    type: string
+                    format: string     
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    format: string
 
     AllUsers:
       type: object
