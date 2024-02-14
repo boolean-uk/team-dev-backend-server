@@ -23,11 +23,15 @@ export const checkFields = (requiredFields) => {
 export const checkPostExist = async (req, res, next) => {
   const { postId } = req.params
 
-  const foundPost = await getPostByIdDb(postId)
+  try {
+    const foundPost = await getPostByIdDb(postId)
 
-  if (!foundPost) {
-    throw errorCreator(`Post with provided id ${postId} does not exist`, 404)
+    if (!foundPost) {
+      throw errorCreator(`Post with provided id ${postId} does not exist`, 404)
+    }
+
+    next()
+  } catch (err) {
+    next(err)
   }
-
-  next()
 }
