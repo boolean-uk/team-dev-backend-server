@@ -25,7 +25,6 @@ export async function getPosts() {
           profile: true
         }
       },
-      comments: true,
       likes: true
     }
   })
@@ -44,7 +43,6 @@ export async function getPosts() {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       userId: post.user.id,
-      comments: post.comments,
       likes: post.likes,
       author: {
         firstName: profile.firstName,
