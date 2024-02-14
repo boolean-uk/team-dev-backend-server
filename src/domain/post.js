@@ -108,3 +108,13 @@ export async function toggleLike(postId, userId) {
   })
   return 'Like added successfully.'
 }
+
+export const getPostByIdDb = async (postId) => {
+  const foundPost = await dbClient.post.findFirst({
+    where: {
+      id: Number(postId)
+    }
+  })
+
+  return foundPost
+}

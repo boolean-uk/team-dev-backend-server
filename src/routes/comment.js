@@ -5,7 +5,7 @@ import {
   getCommentsByPost
 } from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
-import { checkFields } from '../middleware/commentErrors.js'
+import { checkFields, checkPostExist } from '../middleware/commentErrors.js'
 
 const router = Router()
 
@@ -16,6 +16,6 @@ router.post(
   checkFields(['postId', 'content']),
   createComment
 )
-router.get('/:postId', getCommentsByPost)
+router.get('/:postId', checkPostExist, getCommentsByPost)
 
 export default router
