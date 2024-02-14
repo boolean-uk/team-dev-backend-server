@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { createComment, getComments } from '../controllers/comment.js'
+import {
+  createComment,
+  getComments,
+  getCommentsByPost
+} from '../controllers/comment.js'
 import { validateAuthentication } from '../middleware/auth.js'
 import { checkFields } from '../middleware/commentErrors.js'
 
@@ -12,5 +16,6 @@ router.post(
   checkFields(['postId', 'content']),
   createComment
 )
+router.get('/:postId', getCommentsByPost)
 
 export default router
