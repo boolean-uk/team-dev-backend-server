@@ -30,10 +30,6 @@ export class Cohort {
   }
 
   static async _findMany() {
-    if (!this.departmentId) {
-      return dbClient.cohort.findMany()
-    }
-
     return dbClient.cohort.findMany({
       include: {
         department: {
