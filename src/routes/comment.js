@@ -16,6 +16,11 @@ router.post(
   checkFields(['postId', 'content']),
   createComment
 )
-router.get('/:postId', checkPostExist, getCommentsByPost)
+router.get(
+  '/:postId',
+  validateAuthentication,
+  checkPostExist,
+  getCommentsByPost
+)
 
 export default router
