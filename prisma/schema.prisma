@@ -30,6 +30,7 @@ model User {
   deliveryLogs DeliveryLog[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  Teacher      Teacher?
 }
 
 model Profile {
@@ -44,6 +45,15 @@ model Profile {
   updatedAt DateTime @updatedAt
 }
 
+model Teacher {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id])
+  department String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Cohort {
   id           Int           @id @default(autoincrement())
   name         String
@@ -54,33 +64,33 @@ model Cohort {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   content   String
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
   comments  Comment[]
   likes     Like[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
-  id       Int      @id @default(autoincrement())
-  postId   Int
-  post     Post      @relation(fields: [postId], references: [id])
-  userId   Int
-  user     User      @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Comment {
-  id       Int       @id @default(autoincrement())
-  content  String
-  postId   Int
-  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId   Int
-  user     User      @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  content   String
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -105,4 +115,3 @@ model DeliveryLogLine {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
-

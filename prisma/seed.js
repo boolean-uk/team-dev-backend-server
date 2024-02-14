@@ -5,26 +5,29 @@ const prisma = new PrismaClient()
 async function seed() {
   const cohort = await createCohort()
 
-  const student = await createUser(
+  const student = await createUserWithRole(
     'student@test.com',
     'Testpassword1!',
+    'STUDENT',
     cohort.id,
     'Joe',
     'Bloggs',
     'Hello, world!',
-    'student1'
+    'https://github.com/student1'
   )
-  const teacher = await createUser(
-    'teacher@test.com',
-    'Testpassword1!',
+  console.log(cohort.id)
+  // Creating teacher users with specific departments
+  const teacher = await createUserWithRole(
+    'rick@test.com',
+    'Testpassword2!',
+    'TEACHER',
     null,
     'Rick',
     'Sanchez',
-    'Hello there!',
-    'teacher1',
-    'TEACHER'
+    'Wubba Lubba Dub Dub!',
+    'https://github.com/rick',
+    'Software Developer'
   )
-
   await createPost(
     student.id,
     'My first post!',
@@ -78,41 +81,52 @@ async function createCohort() {
   return cohort
 }
 
-async function createUser(
+async function createUserWithRole(
   email,
   password,
+  role,
   cohortId,
   firstName,
   lastName,
   bio,
   githubUrl,
-  role = 'STUDENT'
+  department = null
 ) {
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: await bcrypt.hash(password, 8),
-      role,
-      cohortId,
-      profile: {
-        create: {
-          firstName,
-          lastName,
-          bio,
-          githubUrl
-        }
+  const hashedPassword = await bcrypt.hash(password, 10)
+  const userData = {
+    email,
+    password: hashedPassword,
+    role,
+    cohortId,
+    profile: {
+      create: {
+        firstName,
+        lastName,
+        bio,
+        githubUrl
       }
-    },
+    }
+  }
+
+  const user = await prisma.user.create({
+    data: userData,
     include: {
       profile: true
     }
   })
 
-  console.info(`${role} created`, user)
+  if (role === 'TEACHER' && department) {
+    await prisma.teacher.create({
+      data: {
+        userId: user.id,
+        department
+      }
+    })
+  }
 
+  console.info(`${role} created:`, user.email)
   return user
 }
-
 seed().catch(async (e) => {
   console.error(e)
   await prisma.$disconnect()
