@@ -32,7 +32,6 @@ app.use('/', authRouter)
 app.use('/comments', commentRouter)
 
 app.use((err, req, res, next) => {
-  console.log(err.message)
   res.status(err.status ?? 500).json({
     status: 'error',
     data: {
