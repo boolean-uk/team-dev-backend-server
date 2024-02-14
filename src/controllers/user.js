@@ -1,5 +1,6 @@
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/index.js'
 
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
@@ -15,6 +16,11 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return sendDataResponse(res, 409, { error: 'Email already in use' })
+      }
+    }
     console.error('Error creating user', error)
     return sendMessageResponse(res, 500, 'Unable to create new user')
   }
