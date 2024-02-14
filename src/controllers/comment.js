@@ -16,4 +16,10 @@ export const createComment = async (req, res) => {
   return sendDataResponse(res, 201, createdComment)
 }
 
-export const getCommentsByPost = async (req, res) => {}
+export const getCommentsByPost = async (req, res) => {
+  const { postId } = req.params
+
+  const comments = await Comment.getCommentsByPostId(postId)
+
+  return sendDataResponse(res, 200, { comments })
+}
