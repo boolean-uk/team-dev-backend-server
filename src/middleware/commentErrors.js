@@ -1,3 +1,5 @@
+import Post from '../domain/post.js'
+
 const errorCreator = (message, status) => {
   const error = new Error(message)
   error.status = status
@@ -15,5 +17,21 @@ export const checkFields = (requiredFields) => {
     })
 
     next()
+  }
+}
+
+export const checkPostExist = async (req, res, next) => {
+  const { postId } = req.params
+
+  try {
+    const foundPost = await Post.getById(postId)
+
+    if (!foundPost) {
+      throw errorCreator(`Post with provided id ${postId} does not exist`, 404)
+    }
+
+    next()
+  } catch (err) {
+    next(err)
   }
 }

@@ -90,4 +90,14 @@ export default class Comment {
     const comment = await Comment._create(Comment.fromJSON())
     return Comment.fromDb(comment)
   }
+
+  static async getCommentsByPostId(postId) {
+    const foundComments = await dbClient.comment.findMany({
+      where: {
+        postId: Number(postId)
+      }
+    })
+
+    return foundComments
+  }
 }

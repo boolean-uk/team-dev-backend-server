@@ -1,10 +1,4 @@
-import {
-  createPost,
-  getPosts,
-  deletePostByIdAndUserId,
-  updatePostByIdAndUserId,
-  toggleLike
-} from '../domain/post.js'
+import Post from '../domain/post.js'
 import { sendDataResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
@@ -16,7 +10,7 @@ export const create = async (req, res) => {
   }
 
   try {
-    const post = await createPost(content, userId)
+    const post = await Post.create(content, userId)
     return sendDataResponse(res, 201, post)
   } catch (e) {
     console.error('error creating post', e.message)
@@ -25,7 +19,7 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const posts = await getPosts()
+  const posts = await Post.getAll()
   return sendDataResponse(res, 200, { posts })
 }
 
@@ -34,7 +28,7 @@ export const deletePost = async (req, res) => {
   const userId = req.user.id
 
   try {
-    const result = await deletePostByIdAndUserId(postId, userId)
+    const result = await Post.deleteByIdAndUserId(postId, userId)
     if (result && result.error) {
       return sendDataResponse(res, result.status, { error: result.error })
     } else {
@@ -59,7 +53,7 @@ export const editPost = async (req, res) => {
   }
 
   try {
-    const result = await updatePostByIdAndUserId(postId, userId, content)
+    const result = await Post.updateByIdAndUserId(postId, userId, content)
     if (result.error) {
       console.error('Error updating post:', result.error) // Log the error here as well
       return sendDataResponse(res, result.status, { error: result.error })
@@ -80,7 +74,7 @@ export const likePost = async (req, res) => {
   const userId = req.user.id
 
   try {
-    const message = await toggleLike(Number(postId), userId)
+    const message = await Post.toggleLike(Number(postId), userId)
     res.status(200).json({ message })
   } catch (error) {
     console.error('Error handling like action:', error)
