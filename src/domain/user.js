@@ -85,7 +85,6 @@ export default class User {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        password: this.passwordHash,
         biography: this.bio,
         githubUrl: this.githubUrl,
         imageUrl: this.imageUrl
