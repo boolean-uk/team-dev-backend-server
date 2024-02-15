@@ -17,7 +17,8 @@ async function seed() {
     'Joe',
     'Bloggs',
     'Hello, world!',
-    'https://github.com/student1'
+    'https://github.com/student1',
+    'Software Developer',
   )
   await createUserWithRole(
     'student2@test.com',
@@ -27,7 +28,8 @@ async function seed() {
     'Lee',
     'Dev',
     'Hello, world!',
-    'https://github.com/student1'
+    'https://github.com/student1',
+    'Data Analyst',
   )
   // Creating teacher users with specific departments
   const teacher1 = await createUserWithRole(
@@ -47,7 +49,7 @@ async function seed() {
     'TEACHER',
     null,
     'Max',
-    'Sminth',
+    'Smith',
     'Hello there',
     'https://github.com/max',
     department2
@@ -111,7 +113,7 @@ async function createCohort(name, department) {
       }
     },
     include: {
-      users: true,
+      students: true,
       department: true
     }
   })
@@ -130,14 +132,14 @@ async function createUserWithRole(
   lastName,
   bio,
   githubUrl,
-  department
+  title,
+  department,
 ) {
   const hashedPassword = await bcrypt.hash(password, 10)
   const userData = {
     email,
     password: hashedPassword,
     role,
-    cohortId,
     profile: {
       create: {
         firstName,
@@ -171,6 +173,31 @@ async function createUserWithRole(
       },
       include: {
         department: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
+  }
+
+  if (role === 'STUDENT') {
+    await prisma.student.create({
+      data: {
+        user: {
+          connect: {
+            id: user.id
+          }
+        },
+        cohort: {
+          connect:{
+            id: cohortId
+          }
+        },
+        title
+      },
+      include: {
+        cohort: {
           select: {
             name: true
           }
