@@ -23,7 +23,7 @@ export const login = async (req, res) => {
       })
     }
 
-    const token = generateJwt(foundUser.id)
+    const token = generateJwt(foundUser.id, foundUser.role)
 
     return sendDataResponse(res, 200, { token, ...foundUser.toJSON() })
   } catch (e) {
@@ -32,8 +32,8 @@ export const login = async (req, res) => {
   }
 }
 
-function generateJwt(userId) {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRY })
+function generateJwt(userId, userRole = 'STUDENT') {
+  return jwt.sign({ userId, userRole }, JWT_SECRET, { expiresIn: JWT_EXPIRY })
 }
 
 async function validateCredentials(password, user) {
