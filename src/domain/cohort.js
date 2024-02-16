@@ -17,12 +17,14 @@ export class Cohort {
     id = null,
     name = 'default name',
     users = [],
-    departmentId = null
+    departmentId = null,
+    department = null
   ) {
     this.id = id
     this.name = name
     this.users = users
     this.departmentId = departmentId
+    this.department = department
   }
 
   static fromDb(cohort) {
@@ -33,7 +35,8 @@ export class Cohort {
       cohort.id,
       cohort.name,
       cohort.users,
-      cohort.departmentId
+      cohort.departmentId,
+      cohort.department
     )
     return newCohort
   }
@@ -58,12 +61,11 @@ export class Cohort {
 
   toJSON() {
     return {
-      cohort: {
-        id: this.id,
-        name: this.name,
-        users: this.users,
-        departmentId: this.departmentId
-      }
+      id: this.id,
+      name: this.name,
+      users: this.users,
+      departmentId: this.departmentId,
+      department: this.department
     }
   }
 }
