@@ -444,6 +444,8 @@ components:
         name:
           type: string
           format: string
+        departmentId:
+          type: integer
         department:
           type: object
           properties:
