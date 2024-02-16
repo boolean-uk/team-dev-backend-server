@@ -359,7 +359,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cohorts'
-      
+
   /comments:
     get:
       tags:
@@ -443,11 +443,11 @@ components:
           type: integer
         name:
           type: string
-          format: string  
-        department: 
+          format: string
+        department:
           type: object
           properties:
-            name: 
+            name:
               type: string
         createdAt:
           type: string
@@ -455,15 +455,15 @@ components:
         updatedAt:
           type: string
           format: string
-    
+
     Cohorts:
       type: object
-      properties: 
-        status: 
+      properties:
+        status:
           type: string
-        data: 
+        data:
           type: object
-          $ref: '#/components/schemas/Cohort'    
+          $ref: '#/components/schemas/Cohort'
 
     AllUsers:
       type: object
@@ -497,6 +497,8 @@ components:
           type: string
         githubUrl:
           type: string
+        imageUrl:
+          type: string
 
     CreateUser:
       type: object
@@ -512,6 +514,8 @@ components:
         githubUrl:
           type: string
         password:
+          type: string
+        imageUrl:
           type: string
 
     UpdateUser:
@@ -532,6 +536,8 @@ components:
         bio:
           type: string
         githubUrl:
+          type: string
+        imageUrl:
           type: string
 
     Posts:
