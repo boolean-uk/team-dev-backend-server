@@ -42,7 +42,7 @@ export const getStudentsByCohortId = async (req, res) => {
 
     return res.status(200).send({ students: foundStudents })
   } catch (e) {
-    console.log(e)
+    console.log('Error getting cohort by ID:', e)
     return sendMessageResponse(res, 500, 'Unable to get students')
   }
 }
