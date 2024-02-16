@@ -29,7 +29,13 @@ export class Cohort {
     if (!cohort.department || !cohort.department.name) {
       this.department.name = 'default department name'
     }
-    return new Cohort(cohort)
+    const newCohort = new Cohort(
+      cohort.id,
+      cohort.name,
+      cohort.users,
+      cohort.departmentId
+    )
+    return newCohort
   }
 
   static async _findMany() {
@@ -53,7 +59,10 @@ export class Cohort {
   toJSON() {
     return {
       cohort: {
-        id: this.id
+        id: this.id,
+        name: this.name,
+        users: this.users,
+        departmentId: this.departmentId
       }
     }
   }
