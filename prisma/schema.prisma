@@ -51,6 +51,7 @@ model Profile {
   lastName  String
   bio       String?
   githubUrl String?
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
