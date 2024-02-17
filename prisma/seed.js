@@ -18,7 +18,7 @@ async function seed() {
     'Bloggs',
     'Hello, world!',
     'https://github.com/student1',
-    'Software Developer',
+    'Software Developer'
   )
   await createUserWithRole(
     'student2@test.com',
@@ -29,7 +29,7 @@ async function seed() {
     'Dev',
     'Hello, world!',
     'https://github.com/student1',
-    'Data Analyst',
+    'Data Analyst'
   )
   // Creating teacher users with specific departments
   const teacher1 = await createUserWithRole(
@@ -41,6 +41,7 @@ async function seed() {
     'Sanchez',
     'Wubba Lubba Dub Dub!',
     'https://github.com/rick',
+    null,
     department1
   )
   await createUserWithRole(
@@ -52,6 +53,7 @@ async function seed() {
     'Smith',
     'Hello there',
     'https://github.com/max',
+    null,
     department2
   )
   await createPost(
@@ -133,7 +135,7 @@ async function createUserWithRole(
   bio,
   githubUrl,
   title,
-  department,
+  department
 ) {
   const hashedPassword = await bcrypt.hash(password, 10)
   const userData = {
@@ -190,7 +192,7 @@ async function createUserWithRole(
           }
         },
         cohort: {
-          connect:{
+          connect: {
             id: cohortId
           }
         },
