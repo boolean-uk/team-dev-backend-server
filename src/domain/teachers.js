@@ -1,6 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 
-export class Teacher {
+export default class Teacher {
   constructor(id = null, userId = null, departmentId = null) {
     this.id = id
     this.userId = userId
@@ -11,7 +11,9 @@ export class Teacher {
     return dbClient.teacher.findMany({
       include: {
         user: {
-          profile: true
+          include: {
+            profile: true
+          }
         },
         department: true
       }
