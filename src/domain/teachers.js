@@ -1,10 +1,14 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Teacher {
-  constructor(id = null, userId = null, departmentId = null) {
+  constructor(id = null, user = null, departmentId = null) {
     this.id = id
-    this.userId = userId
+    this.user = user
     this.departmentId = departmentId
+  }
+
+  static fromDb(teacher) {
+    return new Teacher(teacher.id, teacher.user, teacher.departmentId)
   }
 
   static async _findMany() {
@@ -23,6 +27,8 @@ export default class Teacher {
   static async getAll() {
     const foundTeachers = await Teacher._findMany()
 
-    return foundTeachers
+    const allTeachers = foundTeachers.map(Teacher.fromDb)
+
+    return allTeachers
   }
 }
