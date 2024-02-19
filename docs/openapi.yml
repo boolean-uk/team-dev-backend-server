@@ -93,6 +93,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /students:
+    get:
+      tags:
+        - student
+      summary: Get all students
+      description: ''
+      operationId: getAllStudents
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllStudents'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /login:
     post:
       tags:
