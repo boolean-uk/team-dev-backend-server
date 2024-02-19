@@ -6,3 +6,9 @@ export const getAllTeachers = async (req, res) => {
 
   return sendDataResponse(res, 200, { teachers })
 }
+
+export const getTeacher = async (req, res) => {
+  const id = Number(req.params.id)
+  const teacher = await Teacher.getTeacherBy(id)
+  return sendDataResponse(res, 200, { teacher })
+}
