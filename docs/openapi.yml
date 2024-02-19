@@ -93,6 +93,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /teachers/:id:
+    get:
+      tags:
+        - teacher
+      summary: Get a teacher by id
+      description: ''
+      operationId: getTeacherById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /login:
     post:
       tags:
@@ -536,6 +565,29 @@ components:
                   department:
                     type: object
 
+    Teacher: 
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            userId:
+              type: integer
+            departmentId:
+              type: integer
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+            user:
+              $ref: '#/components/schemas/User'
+            department:
+              type: object
+    
     User:
       type: object
       properties:
