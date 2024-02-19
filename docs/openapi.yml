@@ -564,6 +564,34 @@ components:
                   department:
                     type: object
 
+   AllStudents:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            students:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  cohortId:
+                    type: integer
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  user:
+                    type: object
+                  title:
+                    type: string
+
     User:
       type: object
       properties:
