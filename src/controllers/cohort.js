@@ -32,7 +32,7 @@ export const getStudentsByCohortId = async (req, res) => {
   try {
     const foundCohort = await Cohort.getAll()
 
-    const hasCohort = foundCohort.find((cohort) => cohort.id.id === cohortId)
+    const hasCohort = foundCohort.find((cohort) => cohort.id === cohortId)
 
     if (!hasCohort) {
       return sendMessageResponse(res, 404, 'No cohort found with provided ID')
