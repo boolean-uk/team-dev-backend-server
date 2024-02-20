@@ -50,6 +50,22 @@ export default class Teacher {
     })
   }
 
+  static async _findManyWhere(key, value) {
+    return dbClient.teacher.findMany({
+      where: {
+        [key]: value
+      },
+      include: {
+        user: {
+          include: {
+            profile: true
+          }
+        },
+        department: true
+      }
+    })
+  }
+
   static async getTeacherBy(teacherId) {
     const teacher = await Teacher._findUnique('id', teacherId)
     return teacher
