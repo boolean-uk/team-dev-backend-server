@@ -123,7 +123,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-   /students:
+  /students:
     get:
       tags:
         - students
