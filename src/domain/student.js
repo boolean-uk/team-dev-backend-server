@@ -65,6 +65,25 @@ export class Student {
     return allStudents
   }
 
+  static async changeCohort(studentId, newCohortId) {
+    const studentExists = await dbClient.student.findUnique({
+      where: { id: studentId }
+    })
+    if (!studentExists) throw new Error('Student not found')
+
+    const cohortExists = await dbClient.cohort.findUnique({
+      where: { id: newCohortId }
+    })
+    if (!cohortExists) throw new Error('Cohort not found')
+
+    const updatedStudent = await dbClient.student.update({
+      where: { id: studentId },
+      data: { cohortId: newCohortId }
+    })
+
+    return updatedStudent
+  }
+
   toJSON() {
     return {
       id: this.id,
