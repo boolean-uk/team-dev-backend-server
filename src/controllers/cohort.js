@@ -55,8 +55,7 @@ export const changeStudentCohort = async (req, res) => {
   }
 
   try {
-    const changeResult = await Student.changeCohort(studentId, newCohortId)
-    console.log(changeResult)
+    await Student.changeCohort(studentId, newCohortId)
     return sendMessageResponse(res, 200, 'Student cohort changed successfully')
   } catch (e) {
     console.error('Error changing student cohort:', e)
