@@ -18,5 +18,6 @@ router.get('/', validateAuthentication, getAll)
 router.get('/me', validateAuthentication, getSelf)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
+router.put('/:id', validateAuthentication, updateById)
 
 export default router
