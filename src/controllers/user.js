@@ -72,3 +72,12 @@ export const updateById = async (req, res) => {
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
+
+export const createProfile = async (req, res) => {
+  const { email } = req.body
+
+  const existingUser = await User.findByEmail(email)
+  const profile = await User.createProfileDb(existingUser.id, req.body)
+
+  return sendDataResponse(res, 201, { profile })
+}

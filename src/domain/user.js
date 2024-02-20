@@ -244,4 +244,27 @@ export default class User {
 
     return foundUsers.map((user) => User.fromDb(user))
   }
+
+  static async createProfileDb(id, user) {
+    const createdProfile = await dbClient.profile.update({
+      where: {
+        id
+      },
+      data: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        githubUrl: user.githubUrl,
+        bio: user.bio,
+        role: user.role,
+        specialism: user.specialism,
+        cohort: user.cohort,
+        startDate: user.startDate,
+        endDate: user.endDate,
+        email: user.email,
+        mobile: user.mobile,
+        password: user.password
+      }
+    })
+    return createdProfile
+  }
 }
