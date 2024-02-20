@@ -6,12 +6,14 @@ export default class Student {
     title = null,
     user = null,
     userId = null,
+    cohort = null,
     cohortId = null
   ) {
     this.id = id
     this.title = title
     this.user = user
     this.userId = userId
+    this.cohort = cohort
     this.cohortId = cohortId
   }
 
@@ -21,6 +23,7 @@ export default class Student {
       student.title,
       student.user,
       student.userId,
+      student.cohort,
       student.cohortId
     )
   }
@@ -30,7 +33,9 @@ export default class Student {
       include: {
         cohort: true,
         user: {
-          profile: true
+          select: {
+            profile: true
+          }
         }
       }
     })
@@ -43,7 +48,7 @@ export default class Student {
       },
       include: {
         user: {
-          include: {
+          select: {
             profile: true
           }
         }
@@ -58,11 +63,16 @@ export default class Student {
       },
       include: {
         user: {
-          include: {
+          select: {
             profile: true
           }
         },
-        cohort: true
+        cohort: {
+          select: {
+            name: true,
+            departmentId: true
+          }
+        }
       }
     })
   }
@@ -114,7 +124,8 @@ export default class Student {
       firstName: this.user.profile.firstName,
       lastName: this.user.profile.lastName,
       userId: this.userId,
-      cohortId: this.cohortId
+      cohortId: this.cohortId,
+      cohort: this.cohort
     }
   }
 }
