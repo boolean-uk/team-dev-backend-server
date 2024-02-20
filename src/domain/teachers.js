@@ -11,6 +11,22 @@ export default class Teacher {
     return new Teacher(teacher.id, teacher.user, teacher.departmentId)
   }
 
+  static async _findUnique(id) {
+    return dbClient.teacher.findUnique({
+      where: {
+        id: id
+      },
+      include: {
+        department: true,
+        user: {
+          include: {
+            profile: true
+          }
+        }
+      }
+    })
+  }
+
   static async _findMany() {
     return dbClient.teacher.findMany({
       include: {
@@ -24,9 +40,14 @@ export default class Teacher {
     })
   }
 
+  static async getTeacherBy(teacherId) {
+    const teacher = await Teacher._findUnique(teacherId)
+    console.log(teacher)
+    return teacher
+  }
+
   static async getAll() {
     const foundTeachers = await Teacher._findMany()
-
     const allTeachers = foundTeachers.map(Teacher.fromDb)
 
     return allTeachers

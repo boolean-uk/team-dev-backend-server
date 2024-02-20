@@ -93,13 +93,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /students:
+
+  /teachers/:id:
     get:
       tags:
-        - student
-      summary: Get all students
+        - teacher
+      summary: Get a teacher by id
       description: ''
-      operationId: getAllStudents
+      operationId: getTeacherById
       security:
         - bearerAuth: []
       responses:
@@ -108,7 +109,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AllStudents'
+                $ref: '#/components/schemas/Teacher'
         '400':
           description: fail
           content:
@@ -564,7 +565,7 @@ components:
                   department:
                     type: object
 
-   AllStudents:
+    Teacher: 
       type: object
       properties:
         status:
@@ -572,26 +573,21 @@ components:
         data:
           type: object
           properties:
-            students:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  userId:
-                    type: integer
-                  cohortId:
-                    type: integer
-                  createdAt:
-                    type: string
-                  updatedAt:
-                    type: string
-                  user:
-                    type: object
-                  title:
-                    type: string
-
+            id:
+              type: integer
+            userId:
+              type: integer
+            departmentId:
+              type: integer
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+            user:
+              $ref: '#/components/schemas/User'
+            department:
+              type: object
+    
     User:
       type: object
       properties:
