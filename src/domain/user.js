@@ -117,7 +117,15 @@ export default class User {
         lastName: this.lastName,
         bio: this.bio,
         githubUrl: this.githubUrl,
-        imageUrl: this.imageUrl
+        imageUrl: this.imageUrl,
+        role: this.role,
+        specialism: this.specialism,
+        cohort: this.cohort,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        email: this.email,
+        mobile: this.mobile,
+        password: this.passwordHash
       }
     }
 
