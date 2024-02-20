@@ -1,14 +1,20 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Teacher {
-  constructor(id = null, user = null, departmentId = null) {
+  constructor(id = null, user = null, departmentId = null, department = null) {
     this.id = id
     this.user = user
     this.departmentId = departmentId
+    this.department = department
   }
 
   static fromDb(teacher) {
-    return new Teacher(teacher.id, teacher.user, teacher.departmentId)
+    return new Teacher(
+      teacher.id,
+      teacher.user,
+      teacher.departmentId,
+      teacher.department
+    )
   }
 
   static async _findUnique(key, value) {
@@ -17,9 +23,13 @@ export default class Teacher {
         [key]: value
       },
       include: {
-        department: true,
+        department: {
+          select: {
+            name: true
+          }
+        },
         user: {
-          include: {
+          select: {
             profile: true
           }
         }
@@ -41,7 +51,7 @@ export default class Teacher {
   }
 
   static async getTeacherBy(teacherId) {
-    const teacher = await Teacher._findUnique('teacherId', teacherId)
+    const teacher = await Teacher._findUnique('id', teacherId)
     return teacher
   }
 
