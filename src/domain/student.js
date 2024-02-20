@@ -1,6 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 
-export class Student {
+export default class Student {
   constructor(
     id = null,
     title = null,

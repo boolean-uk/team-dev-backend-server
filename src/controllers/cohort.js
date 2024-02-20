@@ -1,5 +1,5 @@
 import { createCohort, Cohort } from '../domain/cohort.js'
-import { Student } from '../domain/student.js'
+import Student from '../domain/student.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
