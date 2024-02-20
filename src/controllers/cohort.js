@@ -46,3 +46,20 @@ export const getStudentsByCohortId = async (req, res) => {
     return sendMessageResponse(res, 500, 'Unable to get students')
   }
 }
+
+export const changeStudentCohort = async (req, res) => {
+  const { studentId, newCohortId } = req.body
+
+  if (!studentId || !newCohortId) {
+    return sendMessageResponse(res, 400, 'Missing student ID or new cohort ID')
+  }
+
+  try {
+    const changeResult = await Student.changeCohort(studentId, newCohortId)
+    console.log(changeResult)
+    return sendMessageResponse(res, 200, 'Student cohort changed successfully')
+  } catch (e) {
+    console.error('Error changing student cohort:', e)
+    return sendMessageResponse(res, 500, 'Internal server error')
+  }
+}
