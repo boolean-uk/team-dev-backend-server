@@ -8,6 +8,7 @@ import {
 const router = Router()
 
 router.get('/', validateAuthentication, getAllTeachers)
-router.get('/:id', validateAuthentication, getTeacher)
 router.get('/me', validateAuthentication, validateTeacherRole, getSelf)
+router.get('/:id', validateAuthentication, getTeacher)
+
 export default router
