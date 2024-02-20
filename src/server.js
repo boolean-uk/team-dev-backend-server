@@ -12,6 +12,7 @@ import cohortRouter from './routes/cohort.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
 import commentRouter from './routes/comment.js'
 import teachersRoute from './routes/teachers.js'
+import studentsRouter from './routes/student.js'
 
 const app = express()
 app.disable('x-powered-by')
@@ -32,6 +33,7 @@ app.use('/logs', deliveryLogRouter)
 app.use('/', authRouter)
 app.use('/comments', commentRouter)
 app.use('/teachers', teachersRoute)
+app.use('/students', studentsRouter)
 
 app.use((err, req, res, next) => {
   res.status(err.status ?? 500).json({
