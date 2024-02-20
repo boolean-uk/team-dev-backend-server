@@ -51,11 +51,33 @@ export default class Student {
     })
   }
 
+  static async _findUniqueWhere(key, value) {
+    return dbClient.student.findUnique({
+      where: {
+        [key]: value
+      },
+      include: {
+        user: {
+          include: {
+            profile: true
+          }
+        },
+        cohort: true
+      }
+    })
+  }
+
   static async getAll() {
     const foundStudents = await Student._findMany()
 
     const allStudents = foundStudents.map(Student.fromDb)
     return allStudents
+  }
+
+  static async findByUserId(userId) {
+    const foundStudent = await Student._findUniqueWhere('userId', userId)
+    const student = Student.fromDb(foundStudent)
+    return student
   }
 
   static async getAllStudentsByCohortId(id) {
