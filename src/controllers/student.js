@@ -6,3 +6,5 @@ export const getAllStudents = async (req, res) => {
 
   return sendDataResponse(res, 200, { students })
 }
+
+export const getSelf = async (req, res) => res.json({ data: req.student })
