@@ -12,3 +12,5 @@ export const getTeacher = async (req, res) => {
   const teacher = await Teacher.getTeacherBy(id)
   return sendDataResponse(res, 200, { teacher })
 }
+
+export const getSelf = async (req, res) => res.json({ data: req.teacher })
