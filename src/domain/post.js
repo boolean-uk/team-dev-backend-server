@@ -76,7 +76,9 @@ export default class Post {
   }
 
   static async deleteById(postId) {
-    const deletedPost = await dbClient.post.delete({ where: { id: postId } })
+    const deletedPost = await dbClient.post.delete({
+      where: { id: Number(postId) }
+    })
 
     return deletedPost
   }

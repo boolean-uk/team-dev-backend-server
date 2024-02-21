@@ -33,14 +33,14 @@ model User {
 }
 
 model Student {
-  id           Int           @id @default(autoincrement())
-  title        String
-  userId       Int           @unique
-  user         User          @relation(fields: [userId], references: [id])
-  cohortId     Int?
-  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  title     String
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  cohortId  Int?
+  cohort    Cohort?  @relation(fields: [cohortId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
@@ -57,33 +57,33 @@ model Profile {
 }
 
 model Teacher {
-  id            Int         @id @default(autoincrement())
-  userId        Int         @unique
-  user          User        @relation(fields: [userId], references: [id])
-  departmentId  Int       
-  department    Department  @relation(fields: [departmentId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id           Int        @id @default(autoincrement())
+  userId       Int        @unique
+  user         User       @relation(fields: [userId], references: [id])
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  name          String
-  students      Student[]
-  departmentId  Int       
-  department    Department    @relation(fields: [departmentId], references: [id])
-  deliveryLogs  DeliveryLog[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id           Int           @id @default(autoincrement())
+  name         String
+  students     Student[]
+  departmentId Int
+  department   Department    @relation(fields: [departmentId], references: [id])
+  deliveryLogs DeliveryLog[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Department {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  teachers     Teacher[]
-  cohorts      Cohort[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  teachers  Teacher[]
+  cohorts   Cohort[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Post {
@@ -100,7 +100,7 @@ model Post {
 model Like {
   id        Int      @id @default(autoincrement())
   postId    Int
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
