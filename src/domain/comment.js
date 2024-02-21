@@ -25,8 +25,8 @@ export default class Comment {
       comment.content,
       comment.post.id,
       comment.user.id,
-      comment.createdAt,
       author,
+      comment.createdAt,
       comment.updatedAt
     )
   }
