@@ -867,12 +867,9 @@ components:
                     type: integer
                   userId:
                     type: integer
-                  user:
+                  author:
                     type: object
                     properties:
-                      profile:
-                        type: object
-                        properties:
                           firstName:
                             type: string
                           lastName:
