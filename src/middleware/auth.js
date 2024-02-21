@@ -2,6 +2,8 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
+import Teacher from '../domain/teachers.js'
+import Student from '../domain/student.js'
 
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
@@ -9,6 +11,20 @@ export async function validateTeacherRole(req, res, next) {
   }
 
   if (req.user.role !== 'TEACHER') {
+    return sendDataResponse(res, 403, {
+      authorization: 'You are not authorized to perform this action'
+    })
+  }
+
+  next()
+}
+
+export async function validateStudentRole(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 500, 'Unable to verify user')
+  }
+
+  if (req.user.role !== 'STUDENT') {
     return sendDataResponse(res, 403, {
       authorization: 'You are not authorized to perform this action'
     })
@@ -47,6 +63,15 @@ export async function validateAuthentication(req, res, next) {
   delete foundUser.passwordHash
 
   req.user = foundUser
+
+  if (decodedToken.userRole === 'TEACHER') {
+    const foundTeacher = await Teacher.findByUserId(decodedToken.userId)
+    req.teacher = foundTeacher
+  }
+  if (decodedToken.userRole === 'STUDENT') {
+    const foundStudent = await Student.findByUserId(decodedToken.userId)
+    req.student = foundStudent
+  }
 
   next()
 }

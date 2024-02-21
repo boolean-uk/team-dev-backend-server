@@ -67,6 +67,13 @@ async function seed() {
   )
   await createPost(teacher1.id, 'Hello, students', [], [{ userId: 1 }])
 
+  await createNote(
+    student1.id,
+    teacher1.id,
+    'note on student 1',
+    'they be learnin'
+  )
+
   process.exit(0)
 }
 
@@ -92,6 +99,17 @@ async function createPost(userId, content, comments, likes) {
   console.info('Post created', post)
 
   return post
+}
+
+async function createNote(studentUserId, teacherUserId, title, content) {
+  return await prisma.note.create({
+    data: {
+      title,
+      content,
+      student: { connect: { userId: studentUserId } },
+      teacher: { connect: { userId: teacherUserId } }
+    }
+  })
 }
 
 async function createDepartment(name) {
