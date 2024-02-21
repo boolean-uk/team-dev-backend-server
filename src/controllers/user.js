@@ -76,8 +76,16 @@ export const updateById = async (req, res) => {
 export const createProfile = async (req, res) => {
   const { email } = req.body
 
-  const existingUser = await User.findByEmail(email)
-  const profile = await User.createProfileDb(existingUser.id, req.body)
+  try {
+    const existingUser = await User.findByEmail(email)
 
-  return sendDataResponse(res, 201, { profile })
+    if (!existingUser) {
+      return sendDataResponse(res, 404, { error: 'User not found' })
+    }
+
+    const profile = await User.createProfileDb(existingUser.id, req.body)
+    return sendDataResponse(res, 201, { profile })
+  } catch (e) {
+    return sendMessageResponse(res, 500, 'Unable create user profile')
+  }
 }
