@@ -7,7 +7,7 @@ import {
   likePost
 } from '../controllers/post.js'
 import { validateAuthentication } from '../middleware/auth.js'
-import { postExist } from '../middleware/postError.js'
+import { checkPostOwner, postExist } from '../middleware/postError.js'
 
 const router = Router()
 
@@ -15,6 +15,12 @@ router.post('/', validateAuthentication, create)
 router.post('/:postId/like', validateAuthentication, likePost)
 router.get('/', validateAuthentication, getAll)
 router.put('/:postId', validateAuthentication, editPost)
-router.delete('/:postId', postExist, deletePost)
+router.delete(
+  '/:postId',
+  validateAuthentication,
+  postExist,
+  checkPostOwner,
+  deletePost
+)
 
 export default router
