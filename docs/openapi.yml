@@ -423,7 +423,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  
+  /notes:
+    post:
+      tags:
+        - note
+      summary: Create note
+      description: Can only be done by users with the teacher role
+      operationId: postNote
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created note object
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Outstanding use of commas
+                content:
+                  type: string
+                  example: This student's mastery over using commas is unlike anything I've ever seen. To the extent I never want to use a comma again.
+                studentUserId:
+                  type: integer
+                  example: 1
+                teacherUserId:
+                  type: integer
+                  example: 3      
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -913,6 +954,52 @@ components:
                 updatedAt:
                   type: string
                   format: string
+
+    Note: 
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            note:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                title:
+                  type: string
+                  example: Outstanding use of commas
+                content:
+                  type: string
+                  example: This student's mastery over using commas is unlike anything I've ever seen. To the extent I never want to use a comma again.
+                student:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+                      example: 1
+                    firstName:
+                      type: string
+                      example: Joe
+                    lastName:
+                      type: string
+                      example: Bloggs
+                teacher:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+                      example: 3
+                    firstName:
+                      type: string
+                      example: Rick
+                    lastName:
+                      type: string
+                      example: Sanchez
 
     CreatedUser:
       type: object
