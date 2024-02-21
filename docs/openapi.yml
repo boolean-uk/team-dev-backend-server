@@ -867,13 +867,16 @@ components:
                     type: integer
                   userId:
                     type: integer
-                  author:
+                  user:
                     type: object
                     properties:
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
+                      profile:
+                        type: object
+                        properties:
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
                   createdAt:
                     type: string
                     format: string
