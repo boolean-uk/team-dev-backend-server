@@ -6,12 +6,14 @@ export default class Student {
     title = null,
     user = null,
     userId = null,
+    cohort = null,
     cohortId = null
   ) {
     this.id = id
     this.title = title
     this.user = user
     this.userId = userId
+    this.cohort = cohort
     this.cohortId = cohortId
   }
 
@@ -21,6 +23,7 @@ export default class Student {
       student.title,
       student.user,
       student.userId,
+      student.cohort,
       student.cohortId
     )
   }
@@ -30,7 +33,9 @@ export default class Student {
       include: {
         cohort: true,
         user: {
-          profile: true
+          select: {
+            profile: true
+          }
         }
       }
     })
@@ -43,8 +48,29 @@ export default class Student {
       },
       include: {
         user: {
-          include: {
+          select: {
             profile: true
+          }
+        }
+      }
+    })
+  }
+
+  static async _findUniqueWhere(key, value) {
+    return dbClient.student.findUnique({
+      where: {
+        [key]: value
+      },
+      include: {
+        user: {
+          select: {
+            profile: true
+          }
+        },
+        cohort: {
+          select: {
+            name: true,
+            departmentId: true
           }
         }
       }
@@ -56,6 +82,12 @@ export default class Student {
 
     const allStudents = foundStudents.map(Student.fromDb)
     return allStudents
+  }
+
+  static async findByUserId(userId) {
+    const foundStudent = await Student._findUniqueWhere('userId', userId)
+    const student = Student.fromDb(foundStudent)
+    return student
   }
 
   static async getAllStudentsByCohortId(id) {
@@ -92,7 +124,8 @@ export default class Student {
       firstName: this.user.profile.firstName,
       lastName: this.user.profile.lastName,
       userId: this.userId,
-      cohortId: this.cohortId
+      cohortId: this.cohortId,
+      cohort: this.cohort
     }
   }
 }

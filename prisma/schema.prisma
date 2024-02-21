@@ -33,14 +33,15 @@ model User {
 }
 
 model Student {
-  id        Int      @id @default(autoincrement())
-  title     String
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  cohortId  Int?
-  cohort    Cohort?  @relation(fields: [cohortId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  title        String
+  userId       Int           @unique
+  user         User          @relation(fields: [userId], references: [id])
+  cohortId     Int?
+  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
+  notes        Note[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Profile {
@@ -57,13 +58,14 @@ model Profile {
 }
 
 model Teacher {
-  id           Int        @id @default(autoincrement())
-  userId       Int        @unique
-  user         User       @relation(fields: [userId], references: [id])
-  departmentId Int
-  department   Department @relation(fields: [departmentId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id            Int         @id @default(autoincrement())
+  userId        Int         @unique
+  user          User        @relation(fields: [userId], references: [id])
+  departmentId  Int       
+  department    Department  @relation(fields: [departmentId], references: [id])
+  notes         Note[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Cohort {
@@ -137,4 +139,14 @@ model DeliveryLogLine {
   log       DeliveryLog @relation(fields: [logId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+}
+
+model Note {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  studentId Int
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacherId Int
+  teacher Teacher @relation(fields: [teacherId], references: [id])
 }
