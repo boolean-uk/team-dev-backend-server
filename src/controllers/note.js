@@ -10,18 +10,18 @@ export const createNote = async (req, res) => {
   try {
     await Student.findByUserId(studentUserId)
   } catch (error) {
-    return sendDataResponse(res, 404, {
+    return sendDataResponse(res, 400, {
       error: 'Student not found',
-      status: 404
+      status: 400
     })
   }
 
   try {
     await Teacher.findByUserId(teacherUserId)
   } catch (error) {
-    return sendDataResponse(res, 404, {
+    return sendDataResponse(res, 400, {
       error: 'Teacher not found',
-      status: 404
+      status: 400
     })
   }
 
