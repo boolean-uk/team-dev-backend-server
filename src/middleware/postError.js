@@ -29,8 +29,6 @@ export const checkPostOwner = async (req, res, next) => {
   const userId = req.user.id
   const userRole = req.user.role
 
-  console.log(postUserId, userId, userRole)
-
   try {
     if (userRole === 'TEACHER') {
       return next()
