@@ -4,24 +4,24 @@ import errorCreator from '../helpers/errorCreator.js'
 export const postExist = async (req, res, next) => {
   const { postId } = req.params
 
-  try {
-    const post = await Post.getById(postId)
+  const post = await Post.getById(postId)
 
+  try {
     if (!post) {
       throw errorCreator('Post not found', 404)
     }
-
-    const postData = {
-      id: post.id,
-      userId: post.userId
-    }
-
-    req.post = postData
-
-    next()
   } catch (err) {
     next(err)
   }
+
+  const postData = {
+    id: post.id,
+    userId: post.userId
+  }
+
+  req.post = postData
+
+  next()
 }
 
 export const checkPostOwner = async (req, res, next) => {
@@ -30,16 +30,12 @@ export const checkPostOwner = async (req, res, next) => {
   const userRole = req.user.role
 
   try {
-    if (userRole === 'TEACHER') {
-      return next()
-    }
-
-    if (postUserId !== userId) {
+    if (postUserId !== userId && userRole !== 'TEACHER') {
       throw errorCreator('You are not authorized to delete this post', 403)
     }
-
-    next()
   } catch (err) {
     next(err)
   }
+
+  next()
 }
