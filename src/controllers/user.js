@@ -100,7 +100,7 @@ export const getUserProfile = async (req, res) => {
       return sendDataResponse(res, 404, { error: 'User not found' })
     }
 
-    return sendDataResponse(res, 200, foundUserProfile)
+    return sendDataResponse(res, 200, { profile: foundUserProfile })
   } catch (e) {
     return sendMessageResponse(res, 500, 'Unable to get user')
   }
