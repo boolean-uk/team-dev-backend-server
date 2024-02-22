@@ -310,6 +310,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  
+    put:
+      tags:
+        - user
+      summary: Update a user profile
+      description: Allows a user to complete profile details after registering for the first time.
+      operationId: userUpdate
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id of the profile'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The profile info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedProfile'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /posts:
     post:
@@ -854,6 +889,36 @@ components:
           type: string
         imageUrl:
           type: string
+          
+    UserProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        githubUrl:
+          type: string
+        imageUrl:
+          type: string
+        bio:
+          type: string
+        role:
+          type: string
+        specialism:
+          type: string
+        cohort:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        email:
+          type: string
+        mobile:
+          type: string
+        password:
+          type: string
 
     Posts:
       type: object
@@ -1129,3 +1194,44 @@ components:
                         type: integer
                       content:
                         type: string
+
+    UpdatedProfile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            profile:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                githubUrl:
+                  type: string
+                imageUrl:
+                  type: string
+                bio:
+                  type: string
+                role:
+                  type: string
+                specialism:
+                  type: string
+                cohort:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                email:
+                  type: string
+                mobile:
+                  type: string
+                password:
+                  type: string

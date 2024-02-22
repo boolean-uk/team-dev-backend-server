@@ -4,7 +4,8 @@ import {
   getById,
   getSelf,
   getAll,
-  updateById
+  updateById,
+  createProfile
 } from '../controllers/user.js'
 import {
   validateAuthentication,
@@ -18,5 +19,6 @@ router.get('/', validateAuthentication, getAll)
 router.get('/me', validateAuthentication, getSelf)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validateTeacherRole, updateById)
+router.put('/:id', validateAuthentication, createProfile)
 
 export default router

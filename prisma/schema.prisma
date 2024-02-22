@@ -45,16 +45,24 @@ model Student {
 }
 
 model Profile {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  firstName String
-  lastName  String
-  bio       String?
-  githubUrl String?
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id])
+  firstName  String
+  lastName   String
+  bio        String?
+  githubUrl  String?
+  imageUrl   String?
+  role       String?
+  specialism String?
+  cohort     String?
+  startDate  String?
+  endDate    String?
+  email      String?
+  mobile     String?
+  password   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Teacher {
