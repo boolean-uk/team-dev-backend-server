@@ -72,8 +72,9 @@ export default class Teacher {
   }
 
   static async findByUserId(userId) {
-    const teacher = await Teacher._findUnique('userId', userId)
-    return Teacher.fromDb(teacher)
+    const foundTeacher = await Teacher._findUnique('userId', userId)
+    if (!foundTeacher) throw new Error('No teacher connected to this user')
+    return Teacher.fromDb(foundTeacher)
   }
 
   static async getAll() {
