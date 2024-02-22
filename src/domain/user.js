@@ -251,19 +251,19 @@ export default class User {
         id
       },
       data: {
-        firstName: user.firstName || 'unknown',
-        lastName: user.lastName || 'unknown',
-        githubUrl: user.githubUrl || 'unknown',
-        imageUrl: user.imageUrl || 'unknown',
-        bio: user.bio || 'unknown',
-        role: user.role || 'unknown',
-        specialism: user.specialism || 'unknown',
-        cohort: user.cohort || 'unknown',
-        startDate: user.startDate || 'unknown',
-        endDate: user.endDate || 'unknown',
-        email: user.email || 'unknown',
-        mobile: user.mobile || 'unknown',
-        password: user.password || 'unknown'
+        firstName: user.firstName || null,
+        lastName: user.lastName || null,
+        githubUrl: user.githubUrl || null,
+        imageUrl: user.imageUrl || null,
+        bio: user.bio || null,
+        role: user.role || null,
+        specialism: user.specialism || null,
+        cohort: user.cohort || null,
+        startDate: user.startDate || null,
+        endDate: user.endDate || null,
+        email: user.email || null,
+        mobile: user.mobile || null,
+        password: user.password || null
       }
     })
     return createdProfile
