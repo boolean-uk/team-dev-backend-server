@@ -1,10 +1,5 @@
 import Post from '../domain/post.js'
-
-const errorCreator = (message, status) => {
-  const error = new Error(message)
-  error.status = status
-  return error
-}
+import errorCreator from '../helpers/errorCreator.js'
 
 export const checkFields = (requiredFields) => {
   return (req, res, next) => {

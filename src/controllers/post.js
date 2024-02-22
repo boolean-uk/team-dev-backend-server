@@ -24,22 +24,11 @@ export const getAll = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  const postId = Number(req.params.postId)
-  const userId = req.user.id
+  const postId = req.post.id
 
-  try {
-    const result = await Post.deleteByIdAndUserId(postId, userId)
-    if (result && result.error) {
-      return sendDataResponse(res, result.status, { error: result.error })
-    } else {
-      return sendDataResponse(res, 200, {
-        message: 'Post deleted successfully'
-      })
-    }
-  } catch (error) {
-    console.error('Error deleting post:', error)
-    return sendDataResponse(res, 500, { error: 'Something went wrong' })
-  }
+  const deletedPost = await Post.deleteById(postId)
+
+  return sendDataResponse(res, 200, deletedPost)
 }
 
 export const editPost = async (req, res) => {
