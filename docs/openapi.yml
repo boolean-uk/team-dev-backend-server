@@ -344,6 +344,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - cohort
+      summary: change a student's cohort
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: changeStudentCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'            
     get:
       tags:
         - cohort
