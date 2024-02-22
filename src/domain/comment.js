@@ -23,8 +23,8 @@ export default class Comment {
     return new Comment(
       comment.id,
       comment.content,
-      comment.post.id,
-      comment.user.id,
+      comment.postId,
+      comment.userId,
       author,
       comment.createdAt,
       comment.updatedAt
@@ -49,6 +49,26 @@ export default class Comment {
       }
     })
     return comments
+  }
+
+  static async _findManyWhere(key, value) {
+    return await dbClient.comment.findMany({
+      where: {
+        [key]: value
+      },
+      include: {
+        user: {
+          select: {
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        }
+      }
+    })
   }
 
   async save() {
@@ -92,12 +112,8 @@ export default class Comment {
   }
 
   static async getCommentsByPostId(postId) {
-    const foundComments = await dbClient.comment.findMany({
-      where: {
-        postId: Number(postId)
-      }
-    })
-
-    return foundComments
+    const foundComments = await Comment._findManyWhere('postId', postId)
+    const commentList = foundComments.map(Comment.fromDb)
+    return commentList
   }
 }

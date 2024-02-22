@@ -65,7 +65,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  
+
   /teachers:
     get:
       tags:
@@ -209,7 +209,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'    
+                $ref: '#/components/schemas/Error'
 
   /login:
     post:
@@ -234,7 +234,7 @@ paths:
 
         '400':
           description: Invalid username/password supplied
-  
+
   /users/{id}:
     get:
       tags:
@@ -411,7 +411,7 @@ paths:
       tags:
         - post
       summary: Delete post
-      description: you can delete your own post
+      description: If you are user with role "STUDENT" you can delete only own post. If you are user with role "TEACHER" you will be able to delete any posts.
       operationId: deletePost
       security:
         - bearerAuth: []
@@ -500,7 +500,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
   /logs:
     post:
       tags:
@@ -541,7 +540,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  
+
   /cohorts:
     post:
       tags:
@@ -571,6 +570,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - cohort
+      summary: change a student's cohort
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: changeStudentCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'            
     get:
       tags:
         - cohort
@@ -733,9 +754,9 @@ components:
                   user:
                     type: object
                   department:
-                    type: object               
+                    type: object
 
-    Teacher: 
+    Teacher:
       type: object
       properties:
         status:
@@ -782,9 +803,9 @@ components:
                   user:
                     type: object
                   title:
-                    type: object          
-    
-    Student: 
+                    type: object
+
+    Student:
       type: object
       properties:
         status:
@@ -805,7 +826,7 @@ components:
             user:
               type: object
             title:
-              type: object      
+              type: object
 
     User:
       type: object
@@ -977,10 +998,10 @@ components:
                   author:
                     type: object
                     properties:
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
                   createdAt:
                     type: string
                     format: string
@@ -1093,7 +1114,7 @@ components:
                   type: string
                 githubUrl:
                   type: string
-    
+
     login:
       type: object
       properties:
@@ -1129,7 +1150,7 @@ components:
                   type: string
                 githubUrl:
                   type: string
-    
+
     Error:
       type: object
       properties:

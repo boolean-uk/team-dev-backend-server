@@ -17,7 +17,7 @@ export const createComment = async (req, res) => {
 }
 
 export const getCommentsByPost = async (req, res) => {
-  const { postId } = req.params
+  const postId = Number(req.params.postId)
 
   const comments = await Comment.getCommentsByPostId(postId)
 

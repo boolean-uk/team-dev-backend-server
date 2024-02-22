@@ -75,22 +75,12 @@ export default class Post {
     })
   }
 
-  static async deleteByIdAndUserId(postId, userId) {
-    const post = await dbClient.post.findUnique({ where: { id: postId } })
+  static async deleteById(postId) {
+    const deletedPost = await dbClient.post.delete({
+      where: { id: Number(postId) }
+    })
 
-    if (!post) {
-      return { error: 'Post not found', status: 404 }
-    }
-
-    if (post.userId !== userId) {
-      return {
-        error: 'You are not authorized to delete this post',
-        status: 403
-      }
-    }
-
-    await dbClient.post.delete({ where: { id: postId } })
-    return { message: 'Post deleted successfully' }
+    return deletedPost
   }
 
   static async updateByIdAndUserId(postId, userId, content) {
