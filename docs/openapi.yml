@@ -912,10 +912,10 @@ components:
                   author:
                     type: object
                     properties:
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
                   createdAt:
                     type: string
                     format: string
