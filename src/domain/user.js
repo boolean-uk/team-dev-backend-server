@@ -251,7 +251,7 @@ export default class User {
         id
       },
       data: {
-        firstName: user.firstName || null,
+        firstName: user.firstName,
         lastName: user.lastName || null,
         githubUrl: user.githubUrl || null,
         imageUrl: user.imageUrl || null,
