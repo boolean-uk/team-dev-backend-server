@@ -70,7 +70,12 @@ export default class Student {
         cohort: {
           select: {
             name: true,
-            departmentId: true
+            departmentId: true,
+            department: {
+              select: {
+                name: true
+              }
+            }
           }
         }
       }
