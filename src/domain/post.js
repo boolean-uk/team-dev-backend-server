@@ -22,7 +22,9 @@ export default class Post {
         }
       },
       include: {
-        user: true
+        user: {
+          select: { profile: true }
+        }
       }
     })
 
@@ -99,7 +101,14 @@ export default class Post {
 
     const updatedPost = await dbClient.post.update({
       where: { id: postId },
-      data: { content }
+      data: { content },
+      include: {
+        user: {
+          select: {
+            profile: { select: { firstName: true, lastName: true } }
+          }
+        }
+      }
     })
 
     return {
