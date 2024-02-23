@@ -358,7 +358,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'The id of the user's profile required.'
+          description: 'The id of the user profile required'
           required: true
           schema:
             type: string
