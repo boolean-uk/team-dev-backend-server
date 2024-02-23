@@ -86,6 +86,7 @@ export default class Student {
 
   static async findByUserId(userId) {
     const foundStudent = await Student._findUniqueWhere('userId', userId)
+    if (!foundStudent) throw new Error('No student connected to this user')
     const student = Student.fromDb(foundStudent)
     return student
   }

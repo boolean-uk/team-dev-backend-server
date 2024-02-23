@@ -62,7 +62,7 @@ export default class User {
     githubUrl,
     imageUrl,
     passwordHash = null,
-    role = 'STUDENT'
+    role = 'TBA'
   ) {
     this.id = id
     this.cohortId = cohortId
