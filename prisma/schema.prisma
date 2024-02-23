@@ -14,56 +14,148 @@ datasource db {
 enum Role {
   STUDENT
   TEACHER
+  TBA
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  password      String
-  role          Role      @default(STUDENT)
-  profile       Profile?
-  cohortId      Int?
-  cohort        Cohort?   @relation(fields: [cohortId], references: [id])
-  posts         Post[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  role         Role          @default(STUDENT)
+  profile      Profile?
+  posts        Post[]
+  comments     Comment[]
+  likes        Like[]
+  deliveryLogs DeliveryLog[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  Teacher      Teacher?
+  Student      Student?
+}
+
+model Student {
+  id           Int           @id @default(autoincrement())
+  title        String
+  userId       Int           @unique
+  user         User          @relation(fields: [userId], references: [id])
+  cohortId     Int?
+  cohort       Cohort?       @relation(fields: [cohortId], references: [id])
+  notes        Note[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id])
+  firstName  String
+  lastName   String
+  bio        String?
+  githubUrl  String?
+  imageUrl   String?
+  role       String?
+  specialism String?
+  cohort     String?
+  startDate  String?
+  endDate    String?
+  email      String?
+  mobile     String?
+  password   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Teacher {
+  id            Int         @id @default(autoincrement())
+  userId        Int         @unique
+  user          User        @relation(fields: [userId], references: [id])
+  departmentId  Int       
+  department    Department  @relation(fields: [departmentId], references: [id])
+  notes         Note[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  students     Student[]
+  departmentId Int
+  department   Department    @relation(fields: [departmentId], references: [id])
+  deliveryLogs DeliveryLog[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Department {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  teachers  Teacher[]
+  cohorts   Cohort[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Post {
-  id      Int           @id @default(autoincrement())
-  content String
-  userId  Int
-  user    User          @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DeliveryLog {
-  id        Int           @id @default(autoincrement())
+  id        Int               @id @default(autoincrement())
   date      DateTime
   userId    Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User              @relation(fields: [userId], references: [id])
   cohortId  Int
-  cohort    Cohort        @relation(fields: [cohortId], references: [id])
+  cohort    Cohort            @relation(fields: [cohortId], references: [id])
   lines     DeliveryLogLine[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 }
 
 model DeliveryLogLine {
-  id        Int           @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   content   String
   logId     Int
-  log       DeliveryLog   @relation(fields: [logId], references: [id])
+  log       DeliveryLog @relation(fields: [logId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Note {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  studentId Int
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacherId Int
+  teacher Teacher @relation(fields: [teacherId], references: [id])
 }

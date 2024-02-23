@@ -9,7 +9,7 @@ export const login = async (req, res) => {
 
   if (!email) {
     return sendDataResponse(res, 400, {
-      email: 'Invalid email and/or password provided'
+      error: 'Invalid email and/or password provided'
     })
   }
 
@@ -18,21 +18,22 @@ export const login = async (req, res) => {
     const areCredentialsValid = await validateCredentials(password, foundUser)
 
     if (!areCredentialsValid) {
-      return sendDataResponse(res, 400, {
-        email: 'Invalid email and/or password provided'
+      return sendDataResponse(res, 401, {
+        error: 'Invalid email and/or password provided'
       })
     }
 
-    const token = generateJwt(foundUser.id)
+    const token = generateJwt(foundUser.id, foundUser.role)
 
     return sendDataResponse(res, 200, { token, ...foundUser.toJSON() })
   } catch (e) {
+    console.log('Error Login:', e)
     return sendMessageResponse(res, 500, 'Unable to process request')
   }
 }
 
-function generateJwt(userId) {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRY })
+function generateJwt(userId, userRole = 'STUDENT') {
+  return jwt.sign({ userId, userRole }, JWT_SECRET, { expiresIn: JWT_EXPIRY })
 }
 
 async function validateCredentials(password, user) {

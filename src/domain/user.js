@@ -19,6 +19,7 @@ export default class User {
       user.email,
       user.profile?.bio,
       user.profile?.githubUrl,
+      user.profile?.imageUrl,
       user.password,
       user.role
     )
@@ -26,7 +27,15 @@ export default class User {
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
+    const {
+      firstName,
+      lastName,
+      email,
+      biography,
+      githubUrl,
+      password,
+      imageUrl
+    } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
@@ -38,6 +47,7 @@ export default class User {
       email,
       biography,
       githubUrl,
+      imageUrl,
       passwordHash
     )
   }
@@ -50,16 +60,18 @@ export default class User {
     email,
     bio,
     githubUrl,
+    imageUrl,
     passwordHash = null,
-    role = 'STUDENT'
+    role = 'TBA'
   ) {
     this.id = id
     this.cohortId = cohortId
-    this.firstName = firstName
-    this.lastName = lastName
+    this.firstName = firstName || 'unknown'
+    this.lastName = lastName || 'unknown'
     this.email = email
     this.bio = bio
     this.githubUrl = githubUrl
+    this.imageUrl = imageUrl
     this.passwordHash = passwordHash
     this.role = role
   }
@@ -74,7 +86,8 @@ export default class User {
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        imageUrl: this.imageUrl
       }
     }
   }
@@ -98,16 +111,24 @@ export default class User {
       }
     }
 
-    if (this.firstName && this.lastName) {
-      data.profile = {
-        create: {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          bio: this.bio,
-          githubUrl: this.githubUrl
-        }
+    data.profile = {
+      create: {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        bio: this.bio,
+        githubUrl: this.githubUrl,
+        imageUrl: this.imageUrl,
+        role: this.role,
+        specialism: this.specialism,
+        cohort: this.cohort,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        email: this.email,
+        mobile: this.mobile,
+        password: this.passwordHash
       }
     }
+
     const createdUser = await dbClient.user.create({
       data,
       include: {
@@ -128,6 +149,40 @@ export default class User {
 
   static async findManyByFirstName(firstName) {
     return User._findMany('firstName', firstName)
+  }
+
+  static async findManyByFirstNameOrLastName(name) {
+    const splitName = name.split(' ')
+
+    const promise = Promise.all(
+      splitName.map((word) => {
+        return User._findManyOr(
+          {
+            key: 'firstName',
+            value: { mode: 'insensitive', contains: word }
+          },
+          { key: 'lastName', value: { mode: 'insensitive', contains: word } }
+        )
+      })
+    )
+
+    let results = await promise
+    results = results.flat()
+
+    const foundUsers = []
+    results.forEach((user) => {
+      const { id } = user
+      const match = foundUsers.some((entry) => entry.id === id)
+      if (!match) {
+        user.count = 1
+        foundUsers.push(user)
+      } else {
+        const dupeResult = foundUsers.find((entry) => entry.id === id)
+        dupeResult.count++
+      }
+    })
+
+    return foundUsers.sort((a, b) => b.count - a.count)
   }
 
   static async findAll() {
@@ -169,5 +224,62 @@ export default class User {
     const foundUsers = await dbClient.user.findMany(query)
 
     return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async _findManyOr(...keyValue) {
+    const query = keyValue.map(({ key, value }) => ({
+      [key]: value
+    }))
+
+    const foundUsers = await dbClient.user.findMany({
+      where: {
+        profile: {
+          OR: query
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
+
+  static async createProfileDb(id, user) {
+    const createdProfile = await dbClient.profile.update({
+      where: {
+        id
+      },
+      data: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        githubUrl: user.githubUrl,
+        imageUrl: user.imageUrl,
+        bio: user.bio,
+        role: user.role,
+        specialism: user.specialism,
+        cohort: user.cohort,
+        startDate: user.startDate,
+        endDate: user.endDate,
+        email: user.email,
+        mobile: user.mobile,
+        password: user.password
+      }
+    })
+    return createdProfile
+  }
+
+  static async findProfileById(id) {
+    const foundProfile = await dbClient.profile.findUnique({
+      where: {
+        id
+      }
+    })
+
+    if (foundProfile) {
+      return foundProfile
+    }
+
+    return null
   }
 }

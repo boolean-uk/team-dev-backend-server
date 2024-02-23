@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
   - url: http://localhost:4000/
@@ -35,15 +35,15 @@ paths:
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users by name if provided
       description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by name if provided. Name is case insensitive and will return matches for both first name and last name.
           schema:
             type: string
       responses:
@@ -65,6 +65,152 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /teachers:
+    get:
+      tags:
+        - teacher
+      summary: Get all teachers
+      description: ''
+      operationId: getAllTeachers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllTeachers'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /teachers/:id:
+    get:
+      tags:
+        - teacher
+      summary: Get a teacher by id
+      description: ''
+      operationId: getTeacherById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /teachers/me:
+    get:
+      tags:
+        - teacher
+      summary: Get a teacher by userId
+      description: ''
+      operationId: getTeacherByUserId
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /students:
+    get:
+      tags:
+        - student
+      summary: Get all students
+      description: ''
+      operationId: getAllStudents
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllStudents'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /students/me:
+    get:
+      tags:
+        - student
+      summary: Get a student by userId
+      description: ''
+      operationId: getStudentByUserId
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /login:
     post:
       tags:
@@ -164,6 +310,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  
+    put:
+      tags:
+        - user
+      summary: Update a user profile
+      description: Allows a user to complete profile details after registering for the first time.
+      operationId: userUpdate
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id of the profile'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The profile info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedProfile'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/profile/{id}:
+    get:
+      tags:
+        - user
+      summary: Get user profile by user id
+      description: ''
+      operationId: getUserProfile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The id of the user profile required'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+        '404':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /posts:
     post:
       tags:
@@ -183,13 +406,73 @@ paths:
                 content:
                   type: string
       responses:
-        201:
+        '201':
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        400:
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - post
+      summary: Update post
+      description: you can update your own post
+      operationId: editPost
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Updated post object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - post
+      summary: Delete post
+      description: If you are user with role "STUDENT" you can delete only own post. If you are user with role "TEACHER" you will be able to delete any posts.
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Updated post object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '500':
           description: fail
           content:
             application/json:
@@ -204,13 +487,55 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Posts'
-        '401':
+        401:
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /notes:
+    post:
+      tags:
+        - note
+      summary: Create note
+      description: Can only be done by users with the teacher role
+      operationId: postNote
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Created note object
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Outstanding use of commas
+                content:
+                  type: string
+                  example: This student's mastery over using commas is unlike anything I've ever seen. To the extent I never want to use a comma again.
+                studentUserId:
+                  type: integer
+                  example: 1
+                teacherUserId:
+                  type: integer
+                  example: 3      
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
           description: fail
           content:
             application/json:
@@ -256,6 +581,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
@@ -285,6 +611,98 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - cohort
+      summary: change a student's cohort
+      description: This can only be done by the logged in user with role TEACHER.
+      operationId: changeStudentCohort
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'            
+    get:
+      tags:
+        - cohort
+      summary: Get a list of all the /cohorts
+      description: This can only be done is the logged in user has a role of TEACHER
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cohorts'
+
+  /comments:
+    get:
+      tags:
+        - comments
+      summary: Retrieve comments
+      description: only registered users can view these
+      operationId: getComments
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
+    post:
+      tags:
+        - comments
+      summary: Create a new comment
+      description: only registered users can do this
+      operationId: postComment
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /comments/{postId}:
+    get:
+      tags:
+        - comments
+      summary: Retrieve comments by post id
+      description: only registered users can view these
+      operationId: getCommentsByPostId
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
 
 components:
   securitySchemes:
@@ -312,12 +730,31 @@ components:
       properties:
         id:
           type: integer
+        name:
+          type: string
+          format: string
+        departmentId:
+          type: integer
+        department:
+          type: object
+          properties:
+            name:
+              type: string
         createdAt:
           type: string
           format: string
         updatedAt:
           type: string
           format: string
+
+    Cohorts:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          $ref: '#/components/schemas/Cohort'
 
     AllUsers:
       type: object
@@ -331,6 +768,106 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
+
+    AllTeachers:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            teachers:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  departmentId:
+                    type: integer
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  user:
+                    type: object
+                  department:
+                    type: object
+
+    Teacher:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            userId:
+              type: integer
+            departmentId:
+              type: integer
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+            department:
+              type: object
+
+    AllStudents:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            students:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userId:
+                    type: integer
+                  cohortId:
+                    type: integer
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  user:
+                    type: object
+                  title:
+                    type: object
+
+    Student:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            userId:
+              type: integer
+            cohortId:
+              type: integer
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+            user:
+              type: object
+            title:
+              type: object
 
     User:
       type: object
@@ -351,6 +888,8 @@ components:
           type: string
         githubUrl:
           type: string
+        imageUrl:
+          type: string
 
     CreateUser:
       type: object
@@ -366,6 +905,8 @@ components:
         githubUrl:
           type: string
         password:
+          type: string
+        imageUrl:
           type: string
 
     UpdateUser:
@@ -387,6 +928,38 @@ components:
           type: string
         githubUrl:
           type: string
+        imageUrl:
+          type: string
+          
+    UserProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        githubUrl:
+          type: string
+        imageUrl:
+          type: string
+        bio:
+          type: string
+        role:
+          type: string
+        specialism:
+          type: string
+        cohort:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        email:
+          type: string
+        mobile:
+          type: string
+        password:
+          type: string
 
     Posts:
       type: object
@@ -404,11 +977,6 @@ components:
                   id:
                     type: integer
                   content:
-                    type: string
-                  createdAt:
-                    type: string
-                    format: string
-                  updatedAt:
                     type: string
                     format: string
                   author:
@@ -430,7 +998,137 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
+                  likes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        userId:
+                          type: integer
+                        postId:
+                          type: integer
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+
+    Comments:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comments:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  postId:
+                    type: integer
+                  userId:
+                    type: integer
+                  author:
+                    type: object
+                    properties:
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                  createdAt:
+                    type: string
+                    format: string
+                  updatedAt:
+                    type: string
+                    format: string
+
+    Comment:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            comment:
+              type: object
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+                postId:
+                  type: integer
+                userId:
+                  type: integer
+                author:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                createdAt:
+                  type: string
+                  format: string
+                updatedAt:
+                  type: string
+                  format: string
+
+    Note: 
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            note:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                title:
+                  type: string
+                  example: Outstanding use of commas
+                content:
+                  type: string
+                  example: This student's mastery over using commas is unlike anything I've ever seen. To the extent I never want to use a comma again.
+                student:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+                      example: 1
+                    firstName:
+                      type: string
+                      example: Joe
+                    lastName:
+                      type: string
+                      example: Bloggs
+                teacher:
+                  type: object
+                  properties:
+                    userId:
+                      type: integer
+                      example: 3
+                    firstName:
+                      type: string
+                      example: Rick
+                    lastName:
+                      type: string
+                      example: Sanchez
+
     CreatedUser:
       type: object
       properties:
@@ -457,6 +1155,7 @@ components:
                   type: string
                 githubUrl:
                   type: string
+
     login:
       type: object
       properties:
@@ -492,6 +1191,7 @@ components:
                   type: string
                 githubUrl:
                   type: string
+
     Error:
       type: object
       properties:
@@ -535,3 +1235,44 @@ components:
                         type: integer
                       content:
                         type: string
+
+    UpdatedProfile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          properties:
+            profile:
+              properties:
+                id:
+                  type: integer
+                userId:
+                  type: integer
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                githubUrl:
+                  type: string
+                imageUrl:
+                  type: string
+                bio:
+                  type: string
+                role:
+                  type: string
+                specialism:
+                  type: string
+                cohort:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                email:
+                  type: string
+                mobile:
+                  type: string
+                password:
+                  type: string
