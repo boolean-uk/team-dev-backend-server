@@ -268,4 +268,18 @@ export default class User {
     })
     return createdProfile
   }
+
+  static async findProfileById(id) {
+    const foundProfile = await dbClient.profile.findUnique({
+      where: {
+        id
+      }
+    })
+
+    if (foundProfile) {
+      return foundProfile
+    }
+
+    return null
+  }
 }
