@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
-  - url: http://localhost:4000/
+  - url: https://team-dev-backend-api-nameless-cherry-5503.fly.dev/
 tags:
   - name: user
   - name: post
@@ -32,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
+        '400':
+          description: Invalid email/password supplied
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'     
     get:
       tags:
         - user
@@ -54,7 +60,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AllUsers'
         '400':
-          description: fail
+          description: Incomplete Request
           content:
             application/json:
               schema:
@@ -69,7 +75,7 @@ paths:
     post:
       tags:
         - user
-      summary: Localhost Login
+      summary: Login
       description: ''
       operationId: loginUser
       requestBody:
@@ -87,7 +93,11 @@ paths:
                 $ref: '#/components/schemas/loginRes'
 
         '400':
-          description: Invalid username/password supplied
+          description: Incomplete Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /users/{id}:
     get:
@@ -118,14 +128,14 @@ paths:
                   data:
                     $ref: '#/components/schemas/User'
 
-        '400':
-          description: fail
+        '500':
+          description: Unable to get user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: fail
+          description: User not found by that id
           content:
             application/json:
               schema:
@@ -152,14 +162,26 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateUser'
       responses:
-        '201':
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
-        '401':
-          description: fail
+        '400':
+          description: Incomplete Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: A user does not exist with that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User is unauthorised to make a change
           content:
             application/json:
               schema:
@@ -190,7 +212,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Post'
         400:
-          description: fail
+          description: Incomplete Request
           content:
             application/json:
               schema:
@@ -216,17 +238,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{id}:
+    get:
+      tags:
+        - post
+      summary: Get post by ID
+      description: get post by id
+      operationId: getPost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ' '
+          required: true
+          schema:
+            type: int
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Posts'
+        '401':
+          description: Post not found with that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
-        - log
+        - logs
       summary: Create delivery log
-      description: This can only be done by an authorised teacher user.
-      operationId: createLog
+      description: This can only be done by an authorised user with role of TEACHER
+      operationId: createDeliveryLog
       security:
         - bearerAuth: []
       requestBody:
-        description: Created log object
+        description: Create log object
         content:
           application/json:
             schema:
@@ -250,12 +306,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-        '401':
+        400:
+          description: Incomplete Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
           description: Unauthorised
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        404:
+          description: Cohort not found by that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: An error occured while creating the delivery log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
@@ -281,6 +356,12 @@ paths:
                         $ref: '#/components/schemas/Cohort'
         400:
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unable to create cohort
           content:
             application/json:
               schema:
@@ -349,7 +430,11 @@ components:
           type: string
         bio:
           type: string
-        githubUrl:
+        githubUsername:
+          type: string
+        username: 
+          type: string
+        mobile:
           type: string
 
     CreateUser:
@@ -363,9 +448,13 @@ components:
           type: string
         bio:
           type: string
-        githubUrl:
+        githubUsername:
           type: string
         password:
+          type: string
+        username: 
+          type: string
+        mobile:
           type: string
 
     UpdateUser:
@@ -385,7 +474,11 @@ components:
           type: string
         bio:
           type: string
-        githubUrl:
+        githubUsername:
+          type: string
+        username: 
+          type: string
+        mobile:
           type: string
 
     Posts:
@@ -426,9 +519,13 @@ components:
                         type: string
                       bio:
                         type: string
-                      githubUrl:
+                      githubUsername:
                         type: string
                       profileImageUrl:
+                        type: string
+                      username: 
+                        type: string
+                      mobile:
                         type: string
     
     CreatedUser:
@@ -455,7 +552,11 @@ components:
                   type: string
                 bio:
                   type: string
-                githubUrl:
+                githubUsername:
+                  type: string
+                username: 
+                  type: string
+                mobile:
                   type: string
     login:
       type: object
@@ -490,7 +591,11 @@ components:
                   type: string
                 bio:
                   type: string
-                githubUrl:
+                githubUsername:
+                  type: string
+                username: 
+                  type: string
+                mobile:
                   type: string
     Error:
       type: object

@@ -25,3 +25,11 @@ export class Cohort {
     }
   }
 }
+
+export const getCohortById = (cohortId) => {
+  return dbClient.cohort.findFirst({
+    where: {
+      id: cohortId
+    }
+  })
+}

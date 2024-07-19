@@ -1,5 +1,6 @@
 import { createCohort } from '../domain/cohort.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
+import ERR from '../utils/errors.js'
 
 export const create = async (req, res) => {
   try {
@@ -7,6 +8,7 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdCohort)
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to create cohort')
+    console.log('An error occured while trying to create a cohort:', e)
+    return sendMessageResponse(res, 500, { error: ERR.INTERNAL_ERROR })
   }
 }

@@ -2,6 +2,7 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import { JWT_SECRET } from '../utils/config.js'
 import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
+import ERR from '../utils/errors.js'
 
 export async function validateTeacherRole(req, res, next) {
   if (!req.user) {
@@ -10,7 +11,7 @@ export async function validateTeacherRole(req, res, next) {
 
   if (req.user.role !== 'TEACHER') {
     return sendDataResponse(res, 403, {
-      authorization: 'You are not authorized to perform this action'
+      error: ERR.UNAUTHORISED
     })
   }
 
@@ -22,7 +23,7 @@ export async function validateAuthentication(req, res, next) {
 
   if (!header) {
     return sendDataResponse(res, 401, {
-      authorization: 'Missing Authorization header'
+      error: ERR.MISSING_AUTH_HEADER
     })
   }
 
@@ -31,14 +32,14 @@ export async function validateAuthentication(req, res, next) {
   const isTypeValid = validateTokenType(type)
   if (!isTypeValid) {
     return sendDataResponse(res, 401, {
-      authentication: `Invalid token type, expected Bearer but got ${type}`
+      error: `Invalid token type, expected Bearer but got ${type}`
     })
   }
 
   const isTokenValid = validateToken(token)
   if (!isTokenValid) {
     return sendDataResponse(res, 401, {
-      authentication: 'Invalid or missing access token'
+      error: ERR.TOKEN_FAILED
     })
   }
 
@@ -69,6 +70,5 @@ function validateTokenType(type) {
   if (type.toUpperCase() !== 'BEARER') {
     return false
   }
-
   return true
 }
