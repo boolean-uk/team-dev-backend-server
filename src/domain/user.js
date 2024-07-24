@@ -159,13 +159,28 @@ export default class User {
       where: {
         [key]: value
       },
-      include: {
-        profile: true
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        cohortId: true,
+        profile: {
+          select: {
+            id: true,
+            userId: true,
+            firstName: true,
+            lastName: true,
+            username: true,
+            mobile: true,
+            bio: true,
+            githubUsername: true
+          }
+        }
       }
     })
 
     if (foundUser) {
-      return User.fromDb(foundUser)
+      return foundUser
     }
 
     return null
