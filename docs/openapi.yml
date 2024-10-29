@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: "1.0"
 
 servers:
-  - url: http://localhost:4000/
+  - url: http://localhost:4000
 tags:
   - name: user
   - name: post
@@ -183,13 +183,13 @@ paths:
                 content:
                   type: string
       responses:
-        201:
+        "201":
           description: success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        400:
+        "400":
           description: fail
           content:
             application/json:
@@ -244,7 +244,7 @@ paths:
                       content:
                         type: string
       responses:
-        201:
+        "201":
           description: success
           content:
             application/json:
@@ -266,7 +266,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        201:
+        "201":
           description: success
           content:
             application/json:
@@ -279,12 +279,27 @@ paths:
                     properties:
                       cohort:
                         $ref: '#/components/schemas/Cohort'
-        400:
+        "400":
           description: fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      description: get all cohorts
+      operationId: getCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCohorts'
 
 components:
   securitySchemes:
@@ -312,12 +327,57 @@ components:
       properties:
         id:
           type: integer
+        name:
+          type: string
         createdAt:
           type: string
           format: string
         updatedAt:
           type: string
           format: string
+        startDate:
+          type: string
+          format: string
+        endDate:
+          type: string
+          format: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserNoCohorts'
+
+    CohortNoUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: string
+        updatedAt:
+          type: string
+          format: string
+        startDate:
+          type: string
+          format: string
+        endDate:
+          type: string
+          format: string            
+            
+    AllCohorts:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/Cohort'
 
     AllUsers:
       type: object
@@ -333,6 +393,30 @@ components:
                 $ref: '#/components/schemas/User'
 
     User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        role:
+          type: string
+        cohortId:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        bio:
+          type: string
+        githubUrl:
+          type: string
+        cohorts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CohortNoUser'
+
+    UserNoCohorts:
       type: object
       properties:
         id:
