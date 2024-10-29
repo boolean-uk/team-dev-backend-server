@@ -14,7 +14,7 @@ CREATE TABLE "Profile" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "bio" TEXT,
-    "githubUrl" TEXT,
+    "githubUsername" TEXT,
 
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
 );

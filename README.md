@@ -42,4 +42,4 @@ The users that are seeded can be used to test the API endpoints and to log into 
 
 [todo]: <Update this with your ERD>
 
-TODO
+TODO - still not done

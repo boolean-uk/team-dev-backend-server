@@ -29,13 +29,19 @@ model User {
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id             Int       @id @default(autoincrement())
+  userId         Int       @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String
+  bio            String?
+  githubUsername String?
+  mobile         String?
+  specialism     String?
+  imageUrl       String?
+  jobTitle       String?
+  startDate      DateTime?
+  endDate        DateTime?
 }
 
 model Cohort {
@@ -48,14 +54,14 @@ model Post {
   id      Int           @id @default(autoincrement())
   content String
   userId  Int
-  user    User          @relation(fields: [userId], references: [id])
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model DeliveryLog {
   id        Int           @id @default(autoincrement())
   date      DateTime
   userId    Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   cohortId  Int
   cohort    Cohort        @relation(fields: [cohortId], references: [id])
   lines     DeliveryLogLine[]
@@ -65,5 +71,5 @@ model DeliveryLogLine {
   id        Int           @id @default(autoincrement())
   content   String
   logId     Int
-  log       DeliveryLog   @relation(fields: [logId], references: [id])
+  log       DeliveryLog   @relation(fields: [logId], references: [id], onDelete: Cascade)
 }

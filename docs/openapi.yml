@@ -31,19 +31,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedUser'
+                $ref: '#/components/schemas/User'
     get:
       tags:
         - user
-      summary: Get all users by first name if provided
+      summary: Get all users by name if provided
       description: ''
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: firstName
+        - name: name
           in: query
-          description: Search all users by first name if provided (case-sensitive and exact string matches only)
+          description: Search all users by name if provided (case-sensitive and exact string matches only) can be full name or only last or first name
           schema:
             type: string
       responses:
@@ -134,7 +134,7 @@ paths:
       tags:
         - user
       summary: Update a user
-      description: Only users with a TEACHER role can update the cohortId or role. Users with Students role can only update their own details.
+      description: Only users with a TEACHER role can update the cohort_id or role. Users with Students role can only update their own details.
       operationId: userUpdate
       security:
         - bearerAuth: []
@@ -157,9 +157,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedUser'
+                $ref: '#/components/schemas/User'
         '401':
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - user
+      summary: Delete a user by ID
+      description: Removes a user from the system using their unique identifier
+      operationId: deleteById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
@@ -216,6 +244,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /posts/{id}:
+    delete:
+      tags:
+        - post
+      summary: Delete a post
+      description: Delete a post by its ID. This action can only be performed by the post owner or an admin.
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Post deleted successfully
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
@@ -234,7 +311,7 @@ paths:
               properties:
                 date:
                   type: string
-                cohortId:
+                cohort_id:
                   type: integer
                 lines:
                   type: array
@@ -332,26 +409,6 @@ components:
               items:
                 $ref: '#/components/schemas/User'
 
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        email:
-          type: string
-        role:
-          type: string
-        cohortId:
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        bio:
-          type: string
-        githubUrl:
-          type: string
-
     CreateUser:
       type: object
       properties:
@@ -363,9 +420,15 @@ components:
           type: string
         bio:
           type: string
-        githubUrl:
+        githubUsername:
           type: string
         password:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        imageUrl:
           type: string
 
     UpdateUser:
@@ -375,7 +438,7 @@ components:
           type: string
         password:
           type: string
-        cohortId:
+        cohort_id:
           type: integer
         role:
           type: string
@@ -385,7 +448,13 @@ components:
           type: string
         bio:
           type: string
-        githubUrl:
+        githubUsername:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        imageUrl:
           type: string
 
     Posts:
@@ -416,7 +485,7 @@ components:
                     properties:
                       id:
                         type: integer
-                      cohortId:
+                      cohort_id:
                         type: integer
                       role:
                         type: string
@@ -426,12 +495,12 @@ components:
                         type: string
                       bio:
                         type: string
-                      githubUrl:
+                      githubUsername:
                         type: string
                       profileImageUrl:
                         type: string
-    
-    CreatedUser:
+
+    User:
       type: object
       properties:
         status:
@@ -445,7 +514,7 @@ components:
                   type: integer
                 email:
                   type: string
-                cohortId:
+                cohort_id:
                   type: integer
                 role:
                   type: string
@@ -455,7 +524,13 @@ components:
                   type: string
                 bio:
                   type: string
-                githubUrl:
+                githubUsername:
+                  type: string
+                mobile:
+                  type: string
+                specialism:
+                  type: string
+                imageUrl:
                   type: string
     login:
       type: object
@@ -480,7 +555,7 @@ components:
                   type: integer
                 email:
                   type: string
-                cohortId:
+                cohort_id:
                   type: integer
                 role:
                   type: string
@@ -490,7 +565,7 @@ components:
                   type: string
                 bio:
                   type: string
-                githubUrl:
+                githubUsername:
                   type: string
     Error:
       type: object
@@ -513,7 +588,7 @@ components:
               properties:
                 id:
                   type: integer
-                cohortId:
+                cohort_id:
                   type: integer
                 date:
                   type: string
