@@ -3,26 +3,43 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function seed() {
-  const cohort = await createCohort()
+  const cohort = await createCohort(
+    'Boolean 2024',
+    new Date('2024-08-08'),
+    new Date('2024-11-01')
+  )
 
   const student = await createUser(
     'student@test.com',
-    'Testpassword1!',
     cohort.id,
     'Joe',
     'Bloggs',
     'Hello, world!',
-    'student1'
+    'student1@github.com',
+    'student1',
+    '123-456-7890', // mobile
+    'Software Engineering', // specialism
+    new Date('2023-01-01'), // startDate
+    new Date('2023-12-31'),
+    null,
+    'STUDENT',
+    'Testpassword1!'
   )
   const teacher = await createUser(
     'teacher@test.com',
-    'Testpassword1!',
     null,
     'Rick',
     'Sanchez',
     'Hello there!',
+    'teacher1@git.com',
     'teacher1',
-    'TEACHER'
+    '987-654-3210',
+    'Teaching',
+    new Date('2022-01-01'),
+    new Date('2022-12-31'),
+    null,
+    'TEACHER',
+    'Testpassword1!'
   )
 
   await createPost(student.id, 'My first post!')
@@ -47,25 +64,33 @@ async function createPost(userId, content) {
   return post
 }
 
-async function createCohort() {
+async function createCohort(cohortName, startDate, endDate) {
   const cohort = await prisma.cohort.create({
-    data: {}
+    data: {
+      cohortName,
+      startDate,
+      endDate
+    }
   })
-
   console.info('Cohort created', cohort)
-
   return cohort
 }
 
 async function createUser(
   email,
-  password,
   cohortId,
   firstName,
   lastName,
   bio,
   githubUrl,
-  role = 'STUDENT'
+  username,
+  mobile,
+  specialism,
+  startDate,
+  endDate,
+  profileImage,
+  role = 'STUDENT',
+  password
 ) {
   const user = await prisma.user.create({
     data: {
@@ -78,7 +103,13 @@ async function createUser(
           firstName,
           lastName,
           bio,
-          githubUrl
+          githubUrl,
+          profileImage,
+          username,
+          mobile,
+          specialism,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate)
         }
       }
     },

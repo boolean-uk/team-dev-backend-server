@@ -36,12 +36,21 @@ model Profile {
   lastName    String
   bio         String?
   githubUrl   String?
+  username    String    @default("")
+  mobile      String    @default("")
+  specialism  String    @default("")
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  profileImage String?
 }
 
 model Cohort {
   id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  cohortName    String
+  startDate     DateTime      @default(now())
+  endDate       DateTime?
+  students      User[]
+  deliveryLogs  DeliveryLog[] 
 }
 
 model Post {
@@ -49,6 +58,8 @@ model Post {
   content String
   userId  Int
   user    User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
 }
 
 model DeliveryLog {
