@@ -21,34 +21,57 @@ model User {
   email         String    @unique
   password      String
   role          Role      @default(STUDENT)
+  specialism    String    @default("Software Developer")
   profile       Profile?
   cohortId      Int?
-  cohort        Cohort?   @relation(fields: [cohortId], references: [id])
+  cohorts       Cohort[]
   posts         Post[]
+  comments      Comment[]
   deliveryLogs  DeliveryLog[]
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  firstName   String
-  lastName    String
-  bio         String?
-  githubUrl   String?
+  id                Int       @id @default(autoincrement())
+  userId            Int       @unique
+  user              User      @relation(fields: [userId], references: [id])
+  firstName         String    @default("")
+  lastName          String    @default("")
+  username          String    @default("")
+  githubUsername    String    @default("")
+  bio               String    @default("")
+  profilePicture    String    @default("")
+  mobile            String    @default("")
 }
 
 model Cohort {
-  id            Int           @id @default(autoincrement())
-  users         User[]
-  deliveryLogs  DeliveryLog[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  startDate    DateTime     @default(now())
+  endDate      DateTime     @default(now())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  users        User[]
+  deliveryLogs DeliveryLog[] // keep
 }
 
 model Post {
-  id      Int           @id @default(autoincrement())
-  content String
-  userId  Int
-  user    User          @relation(fields: [userId], references: [id])
+  id        Int           @id @default(autoincrement())
+  content   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  userId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  comments  Comment[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post      @relation(fields: [postId], references: [id])
+  createdAt DateTime  @default(now())
 }
 
 model DeliveryLog {
